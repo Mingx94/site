@@ -1,0 +1,108 @@
+---
+import RiBlueskyLine from "~icons/ri/bluesky-line";
+import RiCodepenLine from "~icons/ri/codepen-line";
+import RiDiscordLine from "~icons/ri/discord-line";
+import RiFacebookCircleLine from "~icons/ri/facebook-circle-line";
+import RiGithubLine from "~icons/ri/github-line";
+import RiInstagramLine from "~icons/ri/instagram-line";
+import RiLinkedinBoxLine from "~icons/ri/linkedin-box-line";
+import RiMailLine from "~icons/ri/mail-line";
+import RiMastodonLine from "~icons/ri/mastodon-line";
+import RiRedditLine from "~icons/ri/reddit-line";
+import RiRssLine from "~icons/ri/rss-line";
+import RiTwitterXLine from "~icons/ri/twitter-x-line";
+import RiYoutubeLine from "~icons/ri/youtube-line";
+import RiThreadsLine from "~icons/ri/threads-line";
+
+interface Props {
+  source: Record<string, string>;
+  className?: {
+    list?: string;
+    item?: string;
+    link?: string;
+    icon?: string;
+  };
+}
+
+const { source, className } = Astro.props;
+
+const renderMap = {
+  bluesky: {
+    Icon: RiBlueskyLine,
+    ariaLabel: "bluesky",
+  },
+  facebook: {
+    Icon: RiFacebookCircleLine,
+    ariaLabel: "facebook",
+  },
+  twitter: {
+    Icon: RiTwitterXLine,
+    ariaLabel: "twitter",
+  },
+  mastodon: {
+    Icon: RiMastodonLine,
+    ariaLabel: "mastodon",
+  },
+  instagram: {
+    Icon: RiInstagramLine,
+    ariaLabel: "instagram",
+  },
+  threads: {
+    Icon: RiThreadsLine,
+    ariaLabel: "threads",
+  },
+  reddit: {
+    Icon: RiRedditLine,
+    ariaLabel: "reddit",
+  },
+  discord: {
+    Icon: RiDiscordLine,
+    ariaLabel: "discord",
+  },
+  youtube: {
+    Icon: RiYoutubeLine,
+    ariaLabel: "youtube",
+  },
+  linkedin: {
+    Icon: RiLinkedinBoxLine,
+    ariaLabel: "linkedin",
+  },
+  codepen: {
+    Icon: RiCodepenLine,
+    ariaLabel: "codepen",
+  },
+  github: {
+    Icon: RiGithubLine,
+    ariaLabel: "github",
+  },
+  email: {
+    Icon: RiMailLine,
+    ariaLabel: "email",
+  },
+  rss: {
+    Icon: RiRssLine,
+    ariaLabel: "rss feed",
+  },
+};
+---
+
+<ul class={className?.list}>
+  {
+    Object.entries(renderMap).map(
+      ([key, value]) =>
+        source[key] && (
+          <li class={className?.item}>
+            <a
+              class={className?.link}
+              aria-label={value.ariaLabel}
+              href={source[key]}
+              target="_blank"
+              rel="noopener noreferrer nofollow"
+            >
+              <value.Icon class={className?.icon} />
+            </a>
+          </li>
+        )
+    )
+  }
+</ul>

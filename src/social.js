@@ -1,0 +1,15 @@
+export default {
+  facebook: "",
+  twitter: "",
+  instagram: "https://instagram.com/michael.tsai_94",
+  youtube: "",
+  linkedin: "https://www.linkedin.com/in/ming-xuan-tsai-821157171",
+  mastodon: "",
+  github: "https://github.com/Mingx94",
+  codepen: "",
+  reddit: "",
+  rss: "/rss.xml",
+  email: "",
+  bluesky: "https://bsky.app/profile/vartifact.cc",
+  threads: "https://threads.net/@michael.tsai_94",
+};

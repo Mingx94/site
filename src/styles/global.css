@@ -1,0 +1,200 @@
+@import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-border: var(--color-gray-400);
+  --color-primary: var(--color-neutral-300);
+
+  --font-sans: "Inter", "Noto Sans TC", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+@layer base {
+  html {
+    overflow-y: scroll;
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  html,
+  body {
+    @apply size-full;
+  }
+
+  body {
+    @apply font-sans antialiased;
+    @apply flex flex-col;
+    @apply bg-stone-100 dark:bg-stone-900;
+    @apply text-black/50 dark:text-white/75;
+  }
+
+  header {
+    @apply fixed top-0 right-0 left-0 z-50 py-5;
+    @apply bg-stone-100/75 dark:bg-stone-900/25;
+    @apply saturate-200 backdrop-blur-sm;
+  }
+
+  main {
+    @apply flex-1 py-32;
+  }
+
+  footer {
+    @apply py-5 text-sm;
+  }
+
+  html #back-to-top {
+    @apply pointer-events-none opacity-0;
+  }
+}
+
+html.scrolled #back-to-top {
+  @apply pointer-events-auto opacity-100;
+}
+
+@layer components {
+  .animate {
+    @apply translate-y-3 opacity-0;
+    @apply transition-all duration-700 ease-out;
+  }
+
+  .animate.show {
+    @apply translate-y-0 opacity-100;
+  }
+
+  /* content style */
+  .content {
+    @apply max-w-none;
+    @apply prose dark:prose-invert prose-img:mx-auto prose-img:my-auto max-w-full;
+    @apply prose-headings:font-semibold prose-p:font-sans;
+    @apply prose-headings:text-black prose-headings:dark:text-white;
+    @apply prose-blockquote:px-5 prose-blockquote:text-lg;
+    @apply prose-pre:px-6 prose-pre:py-5;
+
+    lite-youtube {
+      @apply max-w-full rounded-lg;
+    }
+
+    a:not(.btn) {
+      @apply font-sans text-current underline underline-offset-2;
+      @apply decoration-black/15 dark:decoration-white/30;
+      @apply transition-colors duration-300 ease-in-out;
+
+      @variant hover {
+        @apply text-black dark:text-white;
+        @apply decoration-black/25 dark:decoration-white/50;
+      }
+    }
+  }
+
+  /* tab */
+  .tab {
+    @apply border-border overflow-hidden rounded-lg border;
+
+    .tab-nav {
+      @apply border-border bg-primary flex border-b;
+      @apply !m-0;
+      @apply !list-none;
+
+      .tab-nav-item {
+        @apply border-border cursor-pointer border-b-3 py-2 text-lg text-black opacity-80;
+        @apply !my-0;
+        @apply !px-8;
+
+        &.active {
+          @apply border-b-3 border-black opacity-100;
+        }
+      }
+    }
+    .tab-content {
+      .tab-content-panel {
+        @apply p-8;
+        p {
+          @apply mb-0;
+        }
+        &.active {
+          @apply block;
+        }
+      }
+    }
+  }
+
+  /* accordion */
+  .accordion {
+    @apply border-border bg-primary mb-6 overflow-hidden rounded-lg border;
+    .accordion-header {
+      @apply flex w-full cursor-pointer items-center justify-between px-8 py-4 text-lg text-black;
+    }
+    .accordion-icon {
+      @apply ml-auto h-[.8em] w-[.8em] rotate-[-90deg] transition-transform duration-200;
+    }
+    .accordion-content {
+      @apply max-h-0 overflow-hidden px-8 py-0;
+    }
+    &.active {
+      .accordion-icon {
+        @apply rotate-0;
+      }
+      .accordion-content {
+        @apply max-h-screen;
+      }
+    }
+  }
+
+  /* notice */
+  .notice {
+    @apply mb-6 rounded-lg border px-8 py-6;
+    .notice-head {
+      @apply flex items-center;
+      svg {
+        @apply mr-3;
+      }
+      p {
+        @apply font-sans text-xl font-semibold text-black;
+      }
+    }
+    .notice-body {
+      @apply mt-3;
+      p {
+        @apply my-0;
+      }
+    }
+
+    &.note {
+      @apply text-[#1B83E2];
+      @apply border-current;
+    }
+
+    &.tip {
+      @apply text-[#40D294];
+      @apply border-current;
+    }
+
+    &.info {
+      @apply text-[#E3A72C];
+      @apply border-current;
+    }
+
+    &.warning {
+      @apply text-[#DB2C23];
+      @apply border-current;
+    }
+  }
+
+  .btn {
+    @apply inline-block rounded-lg border px-4 py-1.5 font-semibold transition;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-stone-800 hover:text-stone-800;
+  }
+
+  .btn-outline-primary {
+    @apply border-primary hover:bg-primary bg-transparent hover:text-stone-800;
+  }
+}

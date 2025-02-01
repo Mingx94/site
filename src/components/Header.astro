@@ -1,0 +1,20 @@
+---
+import Container from "@/components/Container.astro";
+import Link from "@/components/Link.astro";
+import Logo from "@/components/Logo.astro";
+import config from "@/config";
+---
+
+<header class="pt-6">
+  <Container>
+    <div class="flex flex-wrap gap-y-2 justify-between items-center">
+      <Link href="/" underline={false}>
+        <Logo className="w-[150px]" />
+        <span class="sr-only">{config.site.title}</span>
+      </Link>
+      <nav class="flex gap-1">
+        <Link href="/blog">blog</Link>
+      </nav>
+    </div>
+  </Container>
+</header>
