@@ -14,7 +14,9 @@ import config from "./src/config";
 export default defineConfig({
   site: config.site.base_url,
   integrations: [
-    sitemap(),
+    sitemap({
+      filter: (page) => !page.endsWith("/elements/"),
+    }),
     AutoImport({
       imports: [
         "@/components/md/Button",
