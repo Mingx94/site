@@ -7,8 +7,8 @@ export default {
     favicon: "/images/favicon.svg",
     favicon_dark: "/images/favicon-dark.svg",
     logo: "/images/logo.svg",
-    logo_width: 286,
-    logo_height: 60,
+    logo_width: 344,
+    logo_height: 80,
   },
 
   settings: {
