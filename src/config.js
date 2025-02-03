@@ -6,9 +6,6 @@ export default {
       : "https://vartifact.cc",
     favicon: "/images/favicon.svg",
     favicon_dark: "/images/favicon-dark.svg",
-    logo: "/images/logo.svg",
-    logo_width: 344,
-    logo_height: 80,
   },
 
   settings: {

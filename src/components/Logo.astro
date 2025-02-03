@@ -1,8 +1,9 @@
 ---
 import config from "@/config";
 import { Image } from "astro:assets";
+import logo from "@/assets/logo.png";
 
-const { logo, logo_width, logo_height, title } = config.site;
+const { title } = config.site;
 
 interface Props {
   className?: string;
@@ -12,9 +13,9 @@ const { className } = Astro.props;
 ---
 
 <Image
-  width={logo_width}
-  height={logo_height}
+  height={80 / 2 * 1.2}
   src={logo}
+  densities={[1, 2]}
   alt={title}
   loading="eager"
   class:list={["dark:invert", className]}
