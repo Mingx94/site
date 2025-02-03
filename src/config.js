@@ -1,10 +1,9 @@
 export default {
   site: {
     title: "Vartifact | 部落格",
-    base_url:
-      import.meta.env.MODE === "development"
-        ? "http://localhost:4321"
-        : "https://vartifact.cc",
+    base_url: import.meta.env.DEV
+      ? "http://localhost:4321"
+      : "https://vartifact.cc",
     favicon: "/images/favicon.svg",
     favicon_dark: "/images/favicon-dark.svg",
     logo: "/images/logo.svg",
