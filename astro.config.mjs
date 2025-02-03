@@ -4,6 +4,7 @@ import preact from "@astrojs/preact";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import AutoImport from "astro-auto-import";
+import compressor from "astro-compressor";
 import { defineConfig } from "astro/config";
 import remarkToc from "remark-toc";
 import Icons from "unplugin-icons/vite";
@@ -33,7 +34,8 @@ export default defineConfig({
         wrap: true,
       },
     }),
-    preact()
+    preact(),
+    compressor({ brotli: true, gzip: false }),
   ],
 
   markdown: {
