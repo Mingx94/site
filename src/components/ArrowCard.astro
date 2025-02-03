@@ -11,7 +11,7 @@ const { entry } = Astro.props;
 
 <a
   href={`/blog/${entry.id}`}
-  class="relative group flex items-center flex-nowrap py-3 px-4 pr-10 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out"
+  class="relative group flex items-center flex-nowrap py-3 px-4 pr-12 md:pr-15 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out"
 >
   {
     entry.data.image && (
@@ -30,7 +30,7 @@ const { entry } = Astro.props;
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
-    class="absolute top-1/2 right-2 -translate-y-1/2 size-5 stroke-2 fill-none stroke-current"
+    class="absolute top-1/2 right-4 -translate-y-1/2 size-6 md:size-8 stroke-1 fill-none stroke-current"
   >
     <line
       x1="5"
