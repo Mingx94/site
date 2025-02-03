@@ -2,7 +2,6 @@
 import mdx from "@astrojs/mdx";
 import preact from "@astrojs/preact";
 import sitemap from "@astrojs/sitemap";
-import playformCompress from "@playform/compress";
 import tailwindcss from "@tailwindcss/vite";
 import AutoImport from "astro-auto-import";
 import { defineConfig } from "astro/config";
@@ -34,8 +33,7 @@ export default defineConfig({
         wrap: true,
       },
     }),
-    preact(),
-    playformCompress(),
+    preact()
   ],
 
   markdown: {
