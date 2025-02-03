@@ -1,8 +1,15 @@
 ---
-import "@/styles/global.css";
 import config from "@/config";
-import { ClientRouter } from "astro:transitions";
 import { plainify } from "@/lib/textConverter";
+import "@/styles/global.css";
+import { ClientRouter } from "astro:transitions";
+
+import "@fontsource-variable/inter";
+import interWoff2 from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
+import "@fontsource-variable/jetbrains-mono";
+import jetbrainsMonoWoff2 from "@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url";
+import "@fontsource-variable/noto-sans-tc";
+import notoSansTcWoff2 from "@fontsource-variable/noto-sans-tc/files/noto-sans-tc-latin-wght-normal.woff2?url";
 
 interface Props {
   title: string;
@@ -41,12 +48,23 @@ const plainifyDescription = plainify(description);
 <meta name="author" content={config.metadata.meta_author} />
 
 <!-- Font preloads -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- Font preloads -->
+<link rel="preload" href={interWoff2} as="font" type="font/woff2" crossorigin />
 <link
-  href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Noto+Sans+TC:wght@100..900&display=swap"
-  rel="stylesheet"
+  rel="preload"
+  href={jetbrainsMonoWoff2}
+  as="font"
+  type="font/woff2"
+  crossorigin
 />
+<link
+  rel="preload"
+  href={notoSansTcWoff2}
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
+
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
 

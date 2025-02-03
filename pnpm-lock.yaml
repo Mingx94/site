@@ -23,6 +23,15 @@ importers:
       '@astrojs/sitemap':
         specifier: ^3.2.1
         version: 3.2.1
+      '@fontsource-variable/inter':
+        specifier: ^5.1.1
+        version: 5.1.1
+      '@fontsource-variable/jetbrains-mono':
+        specifier: ^5.1.2
+        version: 5.1.2
+      '@fontsource-variable/noto-sans-tc':
+        specifier: ^5.1.1
+        version: 5.1.1
       '@iconify/json':
         specifier: ^2.2.301
         version: 2.2.301
@@ -521,6 +530,15 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@fontsource-variable/inter@5.1.1':
+    resolution: {integrity: sha512-OpXFTmiH6tHkYijMvQTycFKBLK4X+SRV6tet1m4YOUH7SzIIlMqDja+ocDtiCA72UthBH/vF+3ZtlMr2rN/wIw==}
+
+  '@fontsource-variable/jetbrains-mono@5.1.2':
+    resolution: {integrity: sha512-syGEJ/N4FFisAXegxtbe1etYpo2T630dqCbYufPf7Dli/hMKSoSUIm3wK4q5RsGFRxWno1WecfnsgZA1jRK0EQ==}
+
+  '@fontsource-variable/noto-sans-tc@5.1.1':
+    resolution: {integrity: sha512-hj381gYeKbPR/KYsjq4yTGke2looKSu/rJxtF3PSYhzP9zeqgK+MXdfUbmpeLriJMr69PkfFKlq77sNSdzPp1A==}
 
   '@iconify/json@2.2.301':
     resolution: {integrity: sha512-yGfm1JLJcPF/NzauU77yM2HoIkahizCL3XZ3JFb85RpWvMevpW1YYM/KiCfPzmO1nxPdfoCpi0sOrO30hYyhow==}
@@ -3773,6 +3791,12 @@ snapshots:
 
   '@esbuild/win32-x64@0.24.2':
     optional: true
+
+  '@fontsource-variable/inter@5.1.1': {}
+
+  '@fontsource-variable/jetbrains-mono@5.1.2': {}
+
+  '@fontsource-variable/noto-sans-tc@5.1.1': {}
 
   '@iconify/json@2.2.301':
     dependencies:
