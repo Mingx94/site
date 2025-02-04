@@ -39,43 +39,42 @@ const { Content } = await render(post);
     <div class="animate">
       <BackToPrev href="/blog">Back to blog</BackToPrev>
     </div>
-    <div class="space-y-1 my-10">
-      <div class="animate flex items-center gap-1.5">
-        <div class="text-sm">
-          <FormattedDate date={date} />
+    <article>
+      <div class="space-y-1 my-10">
+        <div class="animate flex items-center gap-1.5">
+          <div class="text-sm">
+            <FormattedDate date={date} />
+          </div>
+          {
+            draft && (
+              <div class="text-sm text-red-500 border border-red-500 rounded-lg px-2 py-0.5">
+                Draft
+              </div>
+            )
+          }
         </div>
-        {
-          draft && (
-            <div class="text-sm text-red-500 border border-red-500 rounded-lg px-2 py-0.5">
-              Draft
-            </div>
-          )
-        }
+        <h1
+          set:html={markdownify(title)}
+          class="animate text-2xl font-semibold text-black dark:text-white"
+        />
       </div>
-
-      <h1
-        set:html={markdownify(title)}
-        class="animate text-2xl font-semibold text-black dark:text-white"
-      />
-    </div>
-
-    {
-      image && (
-        <div class="animate mt-8 mb-2">
-          <Image
-            src={image}
-            alt={title}
-            widths={[400, 688, 1000]}
-            sizes={`(max-width: 480px) 400px, (max-width: 768px) 688px, 1000px`}
-            class="rounded-lg"
-            loading="eager"
-          />
-        </div>
-      )
-    }
-
-    <article class="animate content mb-16">
-      <Content />
+      {
+        image && (
+          <div class="animate mt-8 mb-2">
+            <Image
+              src={image}
+              alt={title}
+              widths={[400, 688, 1000]}
+              sizes={`(max-width: 480px) 400px, (max-width: 768px) 688px, 1000px`}
+              class="rounded-lg"
+              loading="eager"
+            />
+          </div>
+        )
+      }
+      <div class="animate content mb-16">
+        <Content />
+      </div>
     </article>
   </Container>
 </Base>
