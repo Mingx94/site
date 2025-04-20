@@ -8,8 +8,10 @@ import "@fontsource-variable/inter";
 import interWoff2 from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import "@fontsource-variable/jetbrains-mono";
 import jetbrainsMonoWoff2 from "@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url";
-import "@fontsource-variable/noto-sans-tc";
-import notoSansTcWoff2 from "@fontsource-variable/noto-sans-tc/files/noto-sans-tc-latin-wght-normal.woff2?url";
+// import "@fontsource-variable/noto-sans-tc";
+// import notoSansTcWoff2 from "@fontsource-variable/noto-sans-tc/files/noto-sans-tc-latin-wght-normal.woff2?url";
+import "@fontsource/iansui";
+import iansuiWoff2 from "@fontsource/iansui/files/iansui-latin-400-normal.woff2?url";
 
 interface Props {
   title: string;
@@ -57,9 +59,16 @@ const plainifyDescription = plainify(description);
   type="font/woff2"
   crossorigin
 />
-<link
+<!-- <link
   rel="preload"
   href={notoSansTcWoff2}
+  as="font"
+  type="font/woff2"
+  crossorigin
+/> -->
+<link
+  rel="preload"
+  href={iansuiWoff2}
   as="font"
   type="font/woff2"
   crossorigin

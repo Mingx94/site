@@ -32,6 +32,9 @@ importers:
       '@fontsource-variable/noto-sans-tc':
         specifier: ^5.2.5
         version: 5.2.5
+      '@fontsource/iansui':
+        specifier: ^5.2.1
+        version: 5.2.1
       '@iconify/json':
         specifier: ^2.2.319
         version: 2.2.319
@@ -539,6 +542,9 @@ packages:
 
   '@fontsource-variable/noto-sans-tc@5.2.5':
     resolution: {integrity: sha512-oaAn5hkLxraNBOWuiqyJ6+t1SmQ9Sszmcs+wJpmAmUO/1dsaHjDU5HXEjutvPpucqVeqdvVNr/kHRx+ghdiPeA==}
+
+  '@fontsource/iansui@5.2.1':
+    resolution: {integrity: sha512-chul4oi0d3fmpl4gVXZ/m7WBZSh4XUg4DAgAXaSUKmZKxR1Tguwk2KbPjnAyrlDqOnDfwXpI/5fz7cLregnDGg==}
 
   '@iconify/json@2.2.319':
     resolution: {integrity: sha512-ZGX8O3PXDxXdgltuW2JlXa7IuZ6uc34qKVIBRyPNo63fxjbw7rSOox7HKi3fJyhXqoL3aN0AtK1yOb5Cgcte8w==}
@@ -3744,6 +3750,8 @@ snapshots:
   '@fontsource-variable/jetbrains-mono@5.2.5': {}
 
   '@fontsource-variable/noto-sans-tc@5.2.5': {}
+
+  '@fontsource/iansui@5.2.1': {}
 
   '@iconify/json@2.2.319':
     dependencies:
