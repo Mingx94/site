@@ -11,24 +11,33 @@ import { getCollection } from "astro:content";
 
 const blog = sortByDate(filterDrafts(await getCollection("blog"))).slice(
   0,
-  config.settings.num_posts_on_homepage
+  config.settings.num_posts_on_homepage,
 );
 ---
 
 <Base>
   <Container>
-    <h4 class="animate font-semibold text-black dark:text-white mb-1">
-      嗨，我是 Michael<span class="text-xl">👋</span>
-    </h4>
     <div class="space-y-16">
       <section>
-        <article class="space-y-4">
-          <p class="animate">
+        <article>
+          <h4 class="animate font-semibold text-black dark:text-white mb-1">
+            嗨，我是 Michael<span class="text-xl">👋</span>
+          </h4>
+          <p class="animate mb-3">
             我是一名前端工程師。
             這邊主要分享我在前端領域的學習心得，擅長使用React、Next.js
             開發，Svelte 則是我主要使用在個人專案上的技術之一。
           </p>
         </article>
+        <Social
+          source={socialList}
+          className={{
+            list: "flex flex-wrap gap-2 animate",
+            item: "flex",
+            link: "inline-block decoration-black/15 dark:decoration-white/30 hover:decoration-black/25 hover:dark:decoration-white/50 text-current hover:text-black hover:dark:text-white transition-colors duration-300 ease-in-out underline underline-offset-2",
+            icon: "size-6",
+          }}
+        />
       </section>
 
       <section class="animate space-y-6">
@@ -45,18 +54,6 @@ const blog = sortByDate(filterDrafts(await getCollection("blog"))).slice(
             ))
           }
         </ul>
-      </section>
-
-      <section class="animate">
-        <Social
-          source={socialList}
-          className={{
-            list: "flex flex-wrap gap-2",
-            item: "flex",
-            link: "inline-block decoration-black/15 dark:decoration-white/30 hover:decoration-black/25 hover:dark:decoration-white/50 text-current hover:text-black hover:dark:text-white transition-colors duration-300 ease-in-out underline underline-offset-2",
-            icon: "size-6",
-          }}
-        />
       </section>
     </div>
   </Container>
