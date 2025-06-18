@@ -3,7 +3,7 @@ export default {
   twitter: "",
   instagram: "https://instagram.com/michael.tsai_94",
   youtube: "",
-  linkedin: "https://www.linkedin.com/in/ming-xuan-tsai-821157171",
+  linkedin: "https://www.linkedin.com/in/ming-hsuan-tsai94/",
   mastodon: "https://elk.zone/g0v.social/@mingx94",
   github: "https://github.com/Mingx94",
   codepen: "",
