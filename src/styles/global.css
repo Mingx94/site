@@ -4,6 +4,8 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@custom-variant data-underline (&:where([data-underline="true"]));
+
 @theme {
   --color-border: var(--color-gray-400);
   --color-primary: var(--color-neutral-300);
