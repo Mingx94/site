@@ -11,5 +11,5 @@ export default {
   rss: "/rss.xml",
   email: "",
   bluesky: "https://bsky.app/profile/vartifact.cc",
-  threads: "https://threads.net/@michael.tsai_94",
+  threads: "",
 };
