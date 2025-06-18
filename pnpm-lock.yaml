@@ -29,9 +29,6 @@ importers:
       '@fontsource-variable/jetbrains-mono':
         specifier: ^5.2.5
         version: 5.2.5
-      '@fontsource-variable/noto-sans-tc':
-        specifier: ^5.2.5
-        version: 5.2.5
       '@fontsource/iansui':
         specifier: ^5.2.3
         version: 5.2.3
@@ -545,9 +542,6 @@ packages:
 
   '@fontsource-variable/jetbrains-mono@5.2.5':
     resolution: {integrity: sha512-G3sN1xq1moZd0JL+hFaA4MEdsiQS+JXC/z7m+EqA5/Fzn5CQlXGUaaNKFGQdDsFuLTnCfW0KOOSWHjygNfjEPw==}
-
-  '@fontsource-variable/noto-sans-tc@5.2.5':
-    resolution: {integrity: sha512-oaAn5hkLxraNBOWuiqyJ6+t1SmQ9Sszmcs+wJpmAmUO/1dsaHjDU5HXEjutvPpucqVeqdvVNr/kHRx+ghdiPeA==}
 
   '@fontsource/iansui@5.2.3':
     resolution: {integrity: sha512-TrUdhZbNyIYFMzmKRIbnie4q8tBwkNJu55z8qzkQM5xvcFEwNNrQ3wZu1jFllRmw/QNtIjI6Z6+DtI2kcYBSWQ==}
@@ -3989,8 +3983,6 @@ snapshots:
   '@fontsource-variable/inter@5.2.5': {}
 
   '@fontsource-variable/jetbrains-mono@5.2.5': {}
-
-  '@fontsource-variable/noto-sans-tc@5.2.5': {}
 
   '@fontsource/iansui@5.2.3': {}
 
