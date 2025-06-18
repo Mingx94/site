@@ -78,8 +78,7 @@ html.scrolled #back-to-top {
   .content {
     @apply max-w-none;
     @apply prose dark:prose-invert prose-img:mx-auto prose-img:my-auto max-w-full;
-    @apply prose-headings:font-semibold prose-p:font-sans;
-    @apply prose-headings:text-black prose-headings:dark:text-white;
+    @apply prose-headings:font-semibold prose-headings:text-black prose-headings:dark:text-white;
     @apply prose-blockquote:px-5 prose-blockquote:text-lg;
     @apply prose-pre:px-6 prose-pre:py-5;
 
@@ -88,7 +87,7 @@ html.scrolled #back-to-top {
     }
 
     a:not(.btn) {
-      @apply font-sans text-current underline underline-offset-2;
+      @apply text-current underline underline-offset-2;
       @apply decoration-black/15 dark:decoration-white/30;
       @apply transition-colors duration-300 ease-in-out;
 
@@ -162,7 +161,7 @@ html.scrolled #back-to-top {
         @apply mr-3;
       }
       p {
-        @apply font-sans text-xl font-semibold text-black;
+        @apply text-xl font-semibold text-black;
       }
     }
     .notice-body {
