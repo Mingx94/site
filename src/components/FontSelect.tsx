@@ -63,7 +63,7 @@ const Select = () => {
         </button>
 
         <ul
-          class={`absolute -top-1 z-10 max-h-56 w-full -translate-y-full overflow-auto rounded-md py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-hidden sm:text-sm ${
+          class={`absolute -top-1 z-10 max-h-56 w-full -translate-y-full overflow-auto rounded-md bg-stone-50 py-1 text-base shadow-md ring-1 ring-black/5 focus:outline-hidden sm:text-sm dark:bg-stone-900 ${
             isOpen ? "block" : "hidden"
           }`}
           aria-expanded={isOpen}
