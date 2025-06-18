@@ -8,7 +8,10 @@
   --color-border: var(--color-gray-400);
   --color-primary: var(--color-neutral-300);
 
-  --font-sans: "Inter", "Iansui", sans-serif;
+  --font-iansui: "Iansui";
+  --font-huninn: "Huninn";
+  --font-sans-iansui: "Inter", "Iansui", sans-serif;
+  --font-sans-huninn: "Inter", "Huninn", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 }
 
@@ -22,13 +25,17 @@
     color-scheme: dark;
   }
 
+  html.huninn body {
+    @apply font-sans-huninn;
+  }
+
   html,
   body {
     @apply size-full;
   }
 
   body {
-    @apply font-sans antialiased;
+    @apply font-sans-iansui antialiased;
     @apply flex flex-col;
     @apply bg-stone-50 dark:bg-stone-900;
     @apply text-black/50 dark:text-white/75;

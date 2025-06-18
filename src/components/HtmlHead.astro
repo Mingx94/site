@@ -10,6 +10,8 @@ import "@fontsource-variable/jetbrains-mono";
 import jetbrainsMonoWoff2 from "@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url";
 import "@fontsource/iansui";
 import iansuiWoff2 from "@fontsource/iansui/files/iansui-latin-400-normal.woff2?url";
+import "@fontsource/huninn";
+import huninnWoff2 from "@fontsource/huninn/files/huninn-latin-400-normal.woff2?url";
 
 interface Props {
   title: string;
@@ -60,6 +62,13 @@ const plainifyDescription = plainify(description);
 <link
   rel="preload"
   href={iansuiWoff2}
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
+<link
+  rel="preload"
+  href={huninnWoff2}
   as="font"
   type="font/woff2"
   crossorigin
@@ -115,6 +124,7 @@ const plainifyDescription = plainify(description);
 <script is:inline>
   function init() {
     preloadTheme();
+    preloadFont();
     onScroll();
     animate();
 
@@ -208,7 +218,7 @@ const plainifyDescription = plainify(description);
   }
 
   function preloadTheme() {
-    const userTheme = localStorage.theme;
+    const userTheme = localStorage.getItem("theme");
 
     if (userTheme === "light" || userTheme === "dark") {
       toggleTheme(userTheme === "dark");
@@ -217,7 +227,23 @@ const plainifyDescription = plainify(description);
     }
   }
 
+  function toggleFont(font) {
+    if (font === "iansui") {
+      document.documentElement.classList.remove("huninn");
+    } else {
+      document.documentElement.classList.add("huninn");
+    }
+  }
+
+  function preloadFont() {
+    const userFont = localStorage.getItem("font");
+    if (userFont) {
+      toggleFont(userFont);
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", () => init());
   document.addEventListener("astro:after-swap", () => init());
   preloadTheme();
+  preloadFont();
 </script>

@@ -1,6 +1,7 @@
 ---
-import Container from "@/components/Container.astro";
 import BackToTop from "@/components/BackToTop.astro";
+import Container from "@/components/Container.astro";
+import FontSelect from "@/components/FontSelect";
 import config from "@/config";
 import { markdownify } from "@/lib/textConverter";
 ---
@@ -17,6 +18,7 @@ import { markdownify } from "@/lib/textConverter";
         {markdownify(config.params.copyright)}
       </div>
       <div class="flex flex-wrap gap-1 items-center">
+        <FontSelect client:load />
         <button
           id="light-theme-button"
           aria-label="Light theme"
