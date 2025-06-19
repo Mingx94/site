@@ -10,7 +10,9 @@ import { filterDrafts, sortByDate } from "@/lib/content";
 import socialList from "@/social";
 import { getCollection } from "astro:content";
 
-const blog = sortByDate(filterDrafts(await getCollection("blog"))).slice(
+const blogs = filterDrafts(await getCollection("blog"));
+
+const recentBlogs = sortByDate(blogs).slice(
   0,
   config.settings.num_posts_on_homepage
 );
@@ -22,18 +24,17 @@ const blog = sortByDate(filterDrafts(await getCollection("blog"))).slice(
       <section>
         <article>
           <h4 class="animate font-semibold text-black dark:text-white mb-1">
-            嗨，我是 Michael<span class="text-xl">👋</span>
+            嗨，我是 Michael <span class="text-xl">👋</span>
           </h4>
-          <p class="animate mb-3">
-            我是一名前端工程師。
-            這邊主要分享我在前端領域的學習心得，擅長使用React、Next.js
-            開發，Svelte 則是我主要使用在個人專案上的技術之一。
+          <p class="animate mb-2">
+            現職前端工程師，工作上使用 React、Next.js 開發。
+            喜歡拍照，部落格使用的圖片都是自己拍的。
           </p>
         </article>
         <Social
           source={socialList}
           className={{
-            list: "flex flex-wrap gap-2 animate",
+            list: "flex flex-wrap gap-2 animate mt-2",
             item: "flex",
             icon: "size-6",
           }}
@@ -42,12 +43,18 @@ const blog = sortByDate(filterDrafts(await getCollection("blog"))).slice(
 
       <section class="animate space-y-6">
         <div class="flex flex-wrap gap-y-2 items-center justify-between">
-          <h5 class="font-semibold text-black dark:text-white">Latest posts</h5>
-          <Link href="/blog"> See all posts </Link>
+          <h5 class="font-semibold text-black dark:text-white">
+            最近發表的文章
+          </h5>
+          {
+            blogs.length > recentBlogs.length && (
+              <Link href="/blog">更多文章</Link>
+            )
+          }
         </div>
         <ul class="flex flex-col gap-4">
           {
-            blog.map((post) => (
+            recentBlogs.map((post) => (
               <li>
                 <ArrowCard entry={post} />
               </li>
@@ -57,7 +64,7 @@ const blog = sortByDate(filterDrafts(await getCollection("blog"))).slice(
       </section>
     </div>
 
-    <div class="animate flex mt-16">
+    <div class="animate flex mt-24">
       <BackToTop client:load />
     </div>
   </Container>
