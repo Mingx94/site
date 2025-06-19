@@ -1,5 +1,3 @@
-import { Fragment, useEffect, useState } from "react";
-import RiFontFamily from "~icons/ri/font-family";
 import {
   Select,
   SelectContent,
@@ -7,6 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import React from "react";
 
 const fontList = [
   {
@@ -22,9 +21,9 @@ const fontList = [
 ];
 
 const FontSelect = () => {
-  const [selectedFont, setSelectedFont] = useState("iansui");
+  const [selectedFont, setSelectedFont] = React.useState("iansui");
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (typeof window === "undefined") return;
 
     const localFont = localStorage.getItem("font");
@@ -33,10 +32,24 @@ const FontSelect = () => {
     }
   }, []);
 
+  const handleChange = (value: string) => {
+    setSelectedFont(value);
+
+    if (value === "huninn") {
+      document.documentElement.classList.add("huninn");
+    } else {
+      document.documentElement.classList.remove("huninn");
+    }
+  };
+
+  const fontClassName = fontList.find(
+    (font) => font.value === selectedFont,
+  )?.className;
+
   return (
-    <Select value={selectedFont} onValueChange={setSelectedFont}>
-      <SelectTrigger>
-        <SelectValue placeholder="選擇字體" />
+    <Select value={selectedFont} onValueChange={handleChange}>
+      <SelectTrigger className={fontClassName}>
+        <SelectValue />
       </SelectTrigger>
       <SelectContent>
         {fontList.map((font) => (
