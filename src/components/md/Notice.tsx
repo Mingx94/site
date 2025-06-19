@@ -1,12 +1,12 @@
 import { humanize } from "@/lib/textConverter";
-import type { ComponentChildren } from "preact";
+import React from "react";
 
 function Notice({
   type,
   children,
 }: {
   type: string;
-  children: ComponentChildren;
+  children: React.ReactNode;
 }) {
   return (
     <div className={`notice ${type}`}>

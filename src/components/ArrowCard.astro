@@ -11,7 +11,7 @@ const { entry } = Astro.props;
 
 <a
   href={`/blog/${entry.id}`}
-  class="relative group flex items-center flex-nowrap py-3 px-4 pr-12 md:pr-15 rounded-lg border border-black/15 dark:border-white/20 hover:bg-black/5 dark:hover:bg-white/5 hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out"
+  class="relative group flex items-center flex-nowrap py-3 px-4 pr-12 md:pr-15 rounded-lg border border-border bg-card hover:bg-muted/80 hover:text-muted-foreground/80 text-card-foreground transition-colors duration-300 ease-in-out"
 >
   {
     entry.data.image && (

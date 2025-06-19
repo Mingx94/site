@@ -1,5 +1,4 @@
-import type { ComponentChildren } from "preact";
-import { useState } from "preact/hooks";
+import React from "react";
 
 const Accordion = ({
   title,
@@ -7,10 +6,10 @@ const Accordion = ({
   className,
 }: {
   title: string;
-  children: ComponentChildren;
+  children: React.ReactNode;
   className?: string;
 }) => {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = React.useState(false);
 
   return (
     <div className={`accordion ${show && "active"} ${className}`}>

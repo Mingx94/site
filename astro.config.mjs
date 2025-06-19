@@ -1,6 +1,6 @@
 // @ts-check
 import mdx from "@astrojs/mdx";
-import preact from "@astrojs/preact";
+import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import AutoImport from "astro-auto-import";
@@ -23,9 +23,11 @@ export default defineConfig({
         "@/components/md/Accordion",
         "@/components/md/Notice",
         "@/components/md/Video",
-        "@/components/md/YouTube",
         "@/components/md/Tabs",
         "@/components/md/Tab",
+        {
+          "astro-embed": ["YouTube"],
+        },
       ],
     }),
     mdx({
@@ -34,7 +36,11 @@ export default defineConfig({
         wrap: true,
       },
     }),
-    preact(),
+    react({
+      babel: {
+        plugins: [["babel-plugin-react-compiler", { target: "19" }]],
+      },
+    }),
     compressor({ brotli: true, gzip: false }),
   ],
 
@@ -50,7 +56,7 @@ export default defineConfig({
     plugins: [
       tailwindcss(),
       fileSystemPath(),
-      Icons({ compiler: "jsx", jsx: "preact" }),
+      Icons({ compiler: "jsx", jsx: "react" }),
     ],
   },
 });
@@ -65,9 +71,10 @@ function fileSystemPath() {
      * @returns
      */
     transform(_, id) {
-      if (id.endsWith("?filepath")) {
+      const identifier = "?filepath";
+      if (id.endsWith(identifier)) {
         return {
-          code: `export default ${JSON.stringify(id.slice(0, -9))}`,
+          code: `export default ${JSON.stringify(id.slice(0, -identifier.length))}`,
           map: null,
         };
       }

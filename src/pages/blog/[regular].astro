@@ -1,5 +1,5 @@
 ---
-import BackToPrev from "@/components/BackToPrev.astro";
+import BackToPrev from "@/components/BackToPrev";
 import Container from "@/components/Container.astro";
 import FormattedDate from "@/components/FormattedDate.astro";
 import Base from "@/layouts/Base.astro";
@@ -37,7 +37,7 @@ const { Content } = await render(post);
 >
   <Container>
     <div class="animate">
-      <BackToPrev href="/blog">Back to blog</BackToPrev>
+      <BackToPrev href="/blog" client:load>Back to blog</BackToPrev>
     </div>
     <article>
       <div class="space-y-1 my-10">

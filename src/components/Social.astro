@@ -13,13 +13,13 @@ import RiRssLine from "~icons/ri/rss-line";
 import RiTwitterXLine from "~icons/ri/twitter-x-line";
 import RiYoutubeLine from "~icons/ri/youtube-line";
 import RiThreadsLine from "~icons/ri/threads-line";
+import Link from "./Link.astro";
 
 interface Props {
   source: Record<string, string>;
   className?: {
     list?: string;
     item?: string;
-    link?: string;
     icon?: string;
   };
 }
@@ -92,16 +92,15 @@ const renderMap = {
       ([key, value]) =>
         source[key] && (
           <li class={className?.item}>
-            <a
-              class={className?.link}
+            <Link
               aria-label={value.ariaLabel}
               href={source[key]}
-              target="_blank"
-              rel="noopener noreferrer nofollow"
+              external={true}
+              underline={false}
             >
-              <value.Icon class={className?.icon} />
-            </a>
-          </li>
+              <value.Icon className={className?.icon} />
+            </Link>
+          </Link>
         )
     )
   }

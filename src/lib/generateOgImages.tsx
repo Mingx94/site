@@ -17,7 +17,10 @@ let fontCache: Buffer | undefined;
 const width = 1200;
 const height = 630;
 
-const gradients = ["#bfdbfe", "#a5f3fc"];
+const gradients = [
+  "hsl(37.5000 36.3636% 95.6863%)",
+  "hsl(33.7500 34.7826% 90.9804%)",
+];
 
 const fetchFonts = async () => {
   if (fontCache) {

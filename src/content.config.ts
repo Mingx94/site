@@ -3,9 +3,9 @@ import { defineCollection, z } from "astro:content";
 
 const blogCollection = defineCollection({
   loader: glob({
-    pattern: "**/*/article.md",
+    pattern: "**/*/article.{md,mdx}",
     base: "./src/content/posts",
-    generateId: (options) => options.entry.replace(/\/article\.md$/, ""),
+    generateId: (options) => options.entry.replace(/\/article\.(md|mdx)$/, ""),
   }),
   schema: ({ image }) =>
     z.object({
