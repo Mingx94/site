@@ -1,5 +1,6 @@
 ---
 import ArrowCard from "@/components/ArrowCard.astro";
+import BackToTop from "@/components/BackToTop";
 import Container from "@/components/Container.astro";
 import Base from "@/layouts/Base.astro";
 import { filterDrafts, sortByDate } from "@/lib/content";
@@ -45,6 +46,10 @@ const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
           ))
         }
       </div>
+    </div>
+
+    <div class="animate flex mt-16">
+      <BackToTop client:load />
     </div>
   </Container>
 </Base>

@@ -1,5 +1,6 @@
 ---
 import ArrowCard from "@/components/ArrowCard.astro";
+import BackToTop from "@/components/BackToTop";
 import Container from "@/components/Container.astro";
 import Link from "@/components/Link.astro";
 import Social from "@/components/Social.astro";
@@ -11,7 +12,7 @@ import { getCollection } from "astro:content";
 
 const blog = sortByDate(filterDrafts(await getCollection("blog"))).slice(
   0,
-  config.settings.num_posts_on_homepage,
+  config.settings.num_posts_on_homepage
 );
 ---
 
@@ -54,6 +55,10 @@ const blog = sortByDate(filterDrafts(await getCollection("blog"))).slice(
           }
         </ul>
       </section>
+    </div>
+
+    <div class="animate flex mt-16">
+      <BackToTop client:load />
     </div>
   </Container>
 </Base>

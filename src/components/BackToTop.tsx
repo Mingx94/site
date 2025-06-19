@@ -1,19 +1,19 @@
 import { Button } from "./ui/button";
 
-const BackToTop = () => {
-  const handleScrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
+const scrollTop = () => {
+  window.scroll({
+    top: 0,
+    behavior: "smooth",
+  });
+};
 
+const BackToTop = () => {
   return (
     <Button
       variant="outline"
       id="back-to-top"
-      className="group py-1.5 pr-3 pl-8"
-      onClick={handleScrollToTop}
+      className="group ml-auto py-1.5 pr-3 pl-8"
+      onClick={scrollTop}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +32,7 @@ const BackToTop = () => {
           className="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
         />
       </svg>
-      <div className="text-sm">Back to top</div>
+      <div className="text-sm">回到頂端</div>
     </Button>
   );
 };

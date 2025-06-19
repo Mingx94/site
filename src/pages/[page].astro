@@ -1,4 +1,5 @@
 ---
+import BackToTop from "@/components/BackToTop";
 import Container from "@/components/Container.astro";
 import Base from "@/layouts/Base.astro";
 import { markdownify } from "@/lib/textConverter";
@@ -30,5 +31,9 @@ const { Content } = await render(page);
     <article class="animate content mb-16">
       <Content />
     </article>
+
+    <div class="animate flex mt-16">
+      <BackToTop client:load />
+    </div>
   </Container>
 </Base>

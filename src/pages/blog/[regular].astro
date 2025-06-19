@@ -1,5 +1,6 @@
 ---
 import BackToPrev from "@/components/BackToPrev";
+import BackToTop from "@/components/BackToTop";
 import Container from "@/components/Container.astro";
 import FormattedDate from "@/components/FormattedDate.astro";
 import Base from "@/layouts/Base.astro";
@@ -36,9 +37,6 @@ const { Content } = await render(post);
   og={new URL(`/og/${post.id}.jpg`, Astro.site).toString()}
 >
   <Container>
-    <div class="animate">
-      <BackToPrev href="/blog" client:load>Back to blog</BackToPrev>
-    </div>
     <article>
       <div class="space-y-1 my-10">
         <div class="animate flex items-center gap-1.5">
@@ -72,9 +70,14 @@ const { Content } = await render(post);
           </div>
         )
       }
-      <div class="animate content mb-16">
+      <div class="animate content">
         <Content />
       </div>
     </article>
+
+    <div class="animate flex mt-16">
+      <BackToPrev client:load />
+      <BackToTop client:load />
+    </div>
   </Container>
 </Base>
