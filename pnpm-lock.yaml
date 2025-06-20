@@ -59,9 +59,9 @@ importers:
       astro-embed:
         specifier: ^0.9.0
         version: 0.9.0(astro@5.10.0(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.41.0)(terser@5.37.0)(typescript@5.8.3)(yaml@2.8.0))
-      astro-font:
-        specifier: ^1.1.0
-        version: 1.1.0
+      astro-google-fonts-optimizer:
+        specifier: ^0.2.2
+        version: 0.2.2
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -1646,8 +1646,8 @@ packages:
     peerDependencies:
       astro: ^2.0.0 || ^3.0.0-beta || ^4.0.0-beta || ^5.0.0-beta
 
-  astro-font@1.1.0:
-    resolution: {integrity: sha512-hj1A0MkaJTeaArBpf1m9s4Nxu1Bn9h0QiEPeR9Dfjle25pT4CH4higzuadWzCRSvhGO2SzbM11YwZEF+cmLDxg==}
+  astro-google-fonts-optimizer@0.2.2:
+    resolution: {integrity: sha512-YQxp/ExF3NzUomAGuu1VKecO7/ETRnhnE50gqwAqfpbGPZFj4MYa4XxK1ukBg3R63QmKuE5uurOiKmXiLzttuw==}
 
   astro@5.10.0:
     resolution: {integrity: sha512-g/t54kVzQnFVijs+GbbbX/NBAFTl/3yNAEA/AQYq4FumLLVv7n4BIF+jKhcPGn9iFGyT1Cjvr7KB/qYyNvHEIg==}
@@ -5419,7 +5419,7 @@ snapshots:
       '@astro-community/astro-embed-youtube': 0.5.6(astro@5.10.0(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.41.0)(terser@5.37.0)(typescript@5.8.3)(yaml@2.8.0))
       astro: 5.10.0(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.41.0)(terser@5.37.0)(typescript@5.8.3)(yaml@2.8.0)
 
-  astro-font@1.1.0: {}
+  astro-google-fonts-optimizer@0.2.2: {}
 
   astro@5.10.0(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.41.0)(terser@5.37.0)(typescript@5.8.3)(yaml@2.8.0):
     dependencies:

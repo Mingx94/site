@@ -1,9 +1,8 @@
 ---
 import config from "@/config";
 import { plainify } from "@/lib/textConverter";
-import { AstroFont } from "astro-font";
 import { ClientRouter } from "astro:transitions";
-
+import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
 import "@/styles/global.css";
 
 interface Props {
@@ -42,49 +41,9 @@ const plainifyDescription = plainify(description);
 
 <meta name="author" content={config.metadata.meta_author} />
 
-<!-- Font preloads -->
-<AstroFont
-  config={[
-    {
-      src: [],
-      name: "Huninn",
-      // Google Fonts URL
-      googleFontsURL:
-        "https://fonts.googleapis.com/css2?family=Huninn:wght@400&display=swap",
-      preload: true,
-      display: "swap",
-      fallback: "sans-serif",
-    },
-    {
-      src: [],
-      name: "Iansui",
-      googleFontsURL:
-        "https://fonts.googleapis.com/css2?family=Iansui&display=swap",
-      preload: true,
-      display: "swap",
-      fallback: "sans-serif",
-    },
-    {
-      src: [],
-      name: "Inter",
-      googleFontsURL:
-        "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
-      preload: true,
-      display: "swap",
-      fallback: "sans-serif",
-    },
-    {
-      src: [],
-      name: "JetBrains Mono",
-      googleFontsURL:
-        "https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap",
-      preload: true,
-      display: "swap",
-      fallback: "sans-serif",
-    },
-  ]}
+<GoogleFontsOptimizer
+  url="https://fonts.googleapis.com/css2?family=Huninn&family=Iansui&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
 />
-
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
 
