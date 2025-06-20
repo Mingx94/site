@@ -1,17 +1,10 @@
 ---
 import config from "@/config";
 import { plainify } from "@/lib/textConverter";
-import "@/styles/global.css";
+import { AstroFont } from "astro-font";
 import { ClientRouter } from "astro:transitions";
 
-import "@fontsource-variable/inter";
-import interWoff2 from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
-import "@fontsource-variable/jetbrains-mono";
-import jetbrainsMonoWoff2 from "@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url";
-import "@fontsource/iansui";
-import iansuiWoff2 from "@fontsource/iansui/files/iansui-latin-400-normal.woff2?url";
-import "@fontsource/huninn";
-import huninnWoff2 from "@fontsource/huninn/files/huninn-latin-400-normal.woff2?url";
+import "@/styles/global.css";
 
 interface Props {
   title: string;
@@ -50,28 +43,46 @@ const plainifyDescription = plainify(description);
 <meta name="author" content={config.metadata.meta_author} />
 
 <!-- Font preloads -->
-<!-- Font preloads -->
-<link rel="preload" href={interWoff2} as="font" type="font/woff2" crossorigin />
-<link
-  rel="preload"
-  href={jetbrainsMonoWoff2}
-  as="font"
-  type="font/woff2"
-  crossorigin
-/>
-<link
-  rel="preload"
-  href={iansuiWoff2}
-  as="font"
-  type="font/woff2"
-  crossorigin
-/>
-<link
-  rel="preload"
-  href={huninnWoff2}
-  as="font"
-  type="font/woff2"
-  crossorigin
+<AstroFont
+  config={[
+    {
+      src: [],
+      name: "Huninn",
+      // Google Fonts URL
+      googleFontsURL:
+        "https://fonts.googleapis.com/css2?family=Huninn:wght@400&display=swap",
+      preload: true,
+      display: "swap",
+      fallback: "sans-serif",
+    },
+    {
+      src: [],
+      name: "Iansui",
+      googleFontsURL:
+        "https://fonts.googleapis.com/css2?family=Iansui&display=swap",
+      preload: true,
+      display: "swap",
+      fallback: "sans-serif",
+    },
+    {
+      src: [],
+      name: "Inter",
+      googleFontsURL:
+        "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+      preload: true,
+      display: "swap",
+      fallback: "sans-serif",
+    },
+    {
+      src: [],
+      name: "JetBrains Mono",
+      googleFontsURL:
+        "https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap",
+      preload: true,
+      display: "swap",
+      fallback: "sans-serif",
+    },
+  ]}
 />
 
 <!-- Canonical URL -->
