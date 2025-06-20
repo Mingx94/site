@@ -35,6 +35,8 @@ const FontSelect = () => {
   const handleChange = (value: string) => {
     setSelectedFont(value);
 
+    localStorage.setItem("font", value);
+
     if (value === "huninn") {
       document.documentElement.classList.add("huninn");
     } else {
