@@ -2,15 +2,13 @@
 import Container from "@/components/Container.astro";
 import Link from "@/components/Link.astro";
 import Logo from "@/components/Logo.astro";
-import config from "@/config";
 ---
 
 <header class="pt-6">
   <Container>
     <div class="flex flex-wrap gap-y-2 justify-between items-center">
-      <Link href="/" underline={false}>
-        <Logo className="h-[48px] w-auto" />
-        <span class="sr-only">{config.site.title}</span>
+      <Link href="/" underline={false} title="首頁">
+        <Logo />
       </Link>
       <nav class="flex gap-1">
         <Link href="/blog">blog</Link>

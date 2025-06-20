@@ -1,22 +1,15 @@
 ---
-import config from "@/config";
-import { Image } from "astro:assets";
 import logo from "@/assets/logo.png";
-
-const { title } = config.site;
-
-interface Props {
-  className?: string;
-}
-
-const { className } = Astro.props;
+import { Image } from "astro:assets";
 ---
 
 <Image
-  height={80 / 2 * 1.2}
+  height="48"
+  width="206"
+  layout="constrained"
   src={logo}
-  densities={[1, 2]}
-  alt={title}
+  alt="Logo"
   loading="eager"
-  class:list={["dark:invert", className]}
+  fetchpriority="high"
+  class="dark:invert"
 />
