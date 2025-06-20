@@ -134,7 +134,7 @@ const ThemeSelect = () => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" aria-label="主題設定" title="主題設定">
           <RiPaletteLine className="size-4" />
         </Button>
       </PopoverTrigger>
