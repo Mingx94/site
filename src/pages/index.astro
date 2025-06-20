@@ -65,7 +65,7 @@ const recentBlogs = sortByDate(blogs).slice(
     </div>
 
     <div class="animate flex mt-24">
-      <BackToTop client:load />
+      <BackToTop client:only="react" />
     </div>
   </Container>
 </Base>

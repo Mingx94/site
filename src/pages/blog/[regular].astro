@@ -76,8 +76,8 @@ const { Content } = await render(post);
     </article>
 
     <div class="animate flex mt-16">
-      <BackToPrev client:load />
-      <BackToTop client:load />
+      <BackToPrev client:only="react" />
+      <BackToTop client:only="react" />
     </div>
   </Container>
 </Base>

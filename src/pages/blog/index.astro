@@ -49,7 +49,7 @@ const years = Object.keys(posts).sort((a, b) => parseInt(b) - parseInt(a));
     </div>
 
     <div class="animate flex mt-16">
-      <BackToTop client:load />
+      <BackToTop client:only="react" />
     </div>
   </Container>
 </Base>
