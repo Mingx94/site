@@ -15,6 +15,7 @@ export default defineConfig({
   site: config.site.base_url,
   integrations: [
     sitemap({
+      lastmod: new Date(),
       filter: (page) => !page.endsWith("/elements/"),
     }),
     AutoImport({
