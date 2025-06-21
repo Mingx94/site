@@ -2,6 +2,7 @@
 import config from "@/config";
 import { plainify } from "@/lib/textConverter";
 import { ClientRouter } from "astro:transitions";
+import { SEO } from "astro-seo";
 import "@/styles/global.css";
 
 interface Props {
@@ -19,68 +20,94 @@ const plainifyDescription = plainify(description);
 ---
 
 <head>
-  <!-- Global Metadata -->
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-
-  <link rel="icon" type="image/x-icon" href={config.site.favicon} />
-  <link
-    rel="icon"
-    type="image/svg+xml"
-    href={config.site.favicon_dark}
-    media="(prefers-color-scheme: dark)"
+  <SEO
+    charset="utf-8"
+    title={plainifyTitle}
+    description={plainifyDescription}
+    canonical={canonicalURL}
+    nofollow={noindex}
+    noindex={noindex}
+    openGraph={{
+      basic: {
+        type: "website",
+        title: plainifyTitle,
+        url: Astro.url,
+        image: image ?? "",
+      },
+      optional: {
+        description: plainifyDescription,
+        siteName: config.site.title,
+      },
+      article: {
+        authors: [config.metadata.meta_author],
+      },
+    }}
+    twitter={{
+      card: "summary_large_image",
+      creator: config.metadata.meta_author,
+      title: plainifyTitle,
+      description: plainifyDescription,
+      image: image ?? "",
+    }}
+    extend={{
+      link: [
+        {
+          rel: "icon",
+          type: "image/x-icon",
+          href: config.site.favicon,
+        },
+        {
+          rel: "icon",
+          type: "image/svg+xml",
+          href: config.site.favicon_dark,
+          media: "(prefers-color-scheme: dark)",
+        },
+        {
+          rel: "icon",
+          type: "image/svg+xml",
+          href: config.site.favicon,
+          media: "(prefers-color-scheme: light)",
+        },
+        {
+          rel: "preconnect",
+          href: "https://fonts.googleapis.com",
+        },
+        {
+          rel: "preconnect",
+          href: "https://fonts.gstatic.com",
+          crossorigin: "anonymous",
+        },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap",
+        },
+        {
+          rel: "alternate",
+          type: "application/rss+xml",
+          title: config.site.title,
+          href: new URL("rss.xml", Astro.site).toString(),
+        },
+        {
+          rel: "sitemap",
+          href: new URL("sitemap-index.xml", Astro.site).toString(),
+        },
+      ],
+      meta: [
+        {
+          name: "viewport",
+          content: "width=device-width,initial-scale=1",
+        },
+        {
+          name: "generator",
+          content: Astro.generator,
+        },
+        {
+          name: "author",
+          content: config.metadata.meta_author,
+        },
+      ],
+    }}
   />
-  <link
-    rel="icon"
-    type="image/svg+xml"
-    href={config.site.favicon}
-    media="(prefers-color-scheme: light)"
-  />
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
-    rel="stylesheet"
-  />
-
-  <meta name="generator" content={Astro.generator} />
-
-  <meta name="author" content={config.metadata.meta_author} />
-
-  <!-- Canonical URL -->
-  <link rel="canonical" href={canonicalURL} />
-
-  <!-- Primary Meta Tags -->
-  <title>{plainifyTitle}</title>
-  <meta name="title" content={plainifyTitle} />
-  <meta name="description" content={plainifyDescription} />
-
-  {noindex && <meta name="robots" content="noindex,nofollow" />}
-
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content={Astro.url} />
-  <meta property="og:title" content={plainifyTitle} />
-  <meta property="og:description" content={plainifyDescription} />
-  <meta property="og:image" content={image} />
-
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content={Astro.url} />
-  <meta property="twitter:title" content={plainifyTitle} />
-  <meta property="twitter:description" content={plainifyDescription} />
-  <meta property="twitter:image" content={image} />
-
-  <!-- rss -->
-  <link
-    rel="alternate"
-    type="application/rss+xml"
-    title={config.site.title}
-    href={new URL("rss.xml", Astro.site)}
-  />
-  <!-- sitemap -->
-  <link rel="sitemap" href={new URL("sitemap-index.xml", Astro.site)} />
 
   <ClientRouter />
 
@@ -174,7 +201,7 @@ const plainifyDescription = plainify(description);
     function addFont(font) {
       const url = `https://fonts.googleapis.com/css2?family=${font}&display=swap`;
       const link = document.createElement("link");
-      link.id = `cjk-font`
+      link.id = `cjk-font`;
       link.href = url;
       link.rel = "stylesheet";
       document.head.appendChild(link);

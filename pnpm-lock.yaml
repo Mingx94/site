@@ -59,6 +59,9 @@ importers:
       astro-embed:
         specifier: ^0.9.0
         version: 0.9.0(astro@5.10.0(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.41.0)(terser@5.37.0)(typescript@5.8.3)(yaml@2.8.0))
+      astro-seo:
+        specifier: ^0.8.4
+        version: 0.8.4(prettier-plugin-astro@0.14.1)(prettier@3.5.3)(typescript@5.8.3)
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -214,6 +217,12 @@ packages:
     resolution: {integrity: sha512-/mRfCl/eTBUz0kmjD1psOy0qoDDBorVp0QumUacjFcIkBullYtbeFQ2ZGZ+3N/tA6cR/OIyzr2QA4dQXlY6USg==}
     peerDependencies:
       astro: ^2.0.0 || ^3.0.0-beta || ^4.0.0-beta || ^5.0.0-beta
+
+  '@astrojs/check@0.5.10':
+    resolution: {integrity: sha512-vliHXM9cu/viGeKiksUM4mXfO816ohWtawTl2ADPgTsd4nUMjFiyAl7xFZhF34yy4hq4qf7jvK1F2PlR3b5I5w==}
+    hasBin: true
+    peerDependencies:
+      typescript: ^5.0.0
 
   '@astrojs/check@0.9.4':
     resolution: {integrity: sha512-IOheHwCtpUfvogHHsvu0AbeRZEnjJg3MopdLddkJE70mULItS/Vh37BHcI00mcOJcH1vhD3odbpvWokpxam7xA==}
@@ -1642,6 +1651,9 @@ packages:
     resolution: {integrity: sha512-koBCZH8n1q7tyXW+s11mdwb5dFsv9kG8uMuF17CUIVFJWqwRxx7YCpa9o2P9PuPeWffsrwmdVJTl65kLLP2Uug==}
     peerDependencies:
       astro: ^2.0.0 || ^3.0.0-beta || ^4.0.0-beta || ^5.0.0-beta
+
+  astro-seo@0.8.4:
+    resolution: {integrity: sha512-Ou1vzQSXAxa0K8rtNtXNvSpYqOGEgMhh0immMxJeXmbVZac3UKCNWAoXWyOQDFYsZvBugCRSg0N1phBqPMVgCw==}
 
   astro@5.10.0:
     resolution: {integrity: sha512-g/t54kVzQnFVijs+GbbbX/NBAFTl/3yNAEA/AQYq4FumLLVv7n4BIF+jKhcPGn9iFGyT1Cjvr7KB/qYyNvHEIg==}
@@ -3944,6 +3956,18 @@ snapshots:
       astro: 5.10.0(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.41.0)(terser@5.37.0)(typescript@5.8.3)(yaml@2.8.0)
       lite-youtube-embed: 0.3.3
 
+  '@astrojs/check@0.5.10(prettier-plugin-astro@0.14.1)(prettier@3.5.3)(typescript@5.8.3)':
+    dependencies:
+      '@astrojs/language-server': 2.15.4(prettier-plugin-astro@0.14.1)(prettier@3.5.3)(typescript@5.8.3)
+      chokidar: 3.6.0
+      fast-glob: 3.3.3
+      kleur: 4.1.5
+      typescript: 5.8.3
+      yargs: 17.7.2
+    transitivePeerDependencies:
+      - prettier
+      - prettier-plugin-astro
+
   '@astrojs/check@0.9.4(prettier-plugin-astro@0.14.1)(prettier@3.5.3)(typescript@5.8.3)':
     dependencies:
       '@astrojs/language-server': 2.15.4(prettier-plugin-astro@0.14.1)(prettier@3.5.3)(typescript@5.8.3)
@@ -5412,6 +5436,14 @@ snapshots:
       '@astro-community/astro-embed-vimeo': 0.3.10(astro@5.10.0(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.41.0)(terser@5.37.0)(typescript@5.8.3)(yaml@2.8.0))
       '@astro-community/astro-embed-youtube': 0.5.6(astro@5.10.0(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.41.0)(terser@5.37.0)(typescript@5.8.3)(yaml@2.8.0))
       astro: 5.10.0(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.41.0)(terser@5.37.0)(typescript@5.8.3)(yaml@2.8.0)
+
+  astro-seo@0.8.4(prettier-plugin-astro@0.14.1)(prettier@3.5.3)(typescript@5.8.3):
+    dependencies:
+      '@astrojs/check': 0.5.10(prettier-plugin-astro@0.14.1)(prettier@3.5.3)(typescript@5.8.3)
+    transitivePeerDependencies:
+      - prettier
+      - prettier-plugin-astro
+      - typescript
 
   astro@5.10.0(@types/node@22.15.19)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.41.0)(terser@5.37.0)(typescript@5.8.3)(yaml@2.8.0):
     dependencies:
