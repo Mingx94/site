@@ -16,9 +16,9 @@ const themeList = [
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         className="transition-colors duration-300 ease-in-out group-hover:stroke-black group-hover:dark:stroke-white"
       >
         <circle cx="12" cy="12" r="5"></circle>
@@ -44,9 +44,9 @@ const themeList = [
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         className="transition-colors duration-300 ease-in-out group-hover:stroke-black group-hover:dark:stroke-white"
       >
         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
@@ -64,9 +64,9 @@ const themeList = [
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         className="transition-colors duration-300 ease-in-out group-hover:stroke-black group-hover:dark:stroke-white"
       >
         <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>

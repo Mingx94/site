@@ -2,7 +2,6 @@
 import config from "@/config";
 import { plainify } from "@/lib/textConverter";
 import { ClientRouter } from "astro:transitions";
-import { GoogleFontsOptimizer } from "astro-google-fonts-optimizer";
 import "@/styles/global.css";
 
 interface Props {
@@ -19,112 +18,117 @@ const plainifyTitle = plainify(title);
 const plainifyDescription = plainify(description);
 ---
 
-<!-- Global Metadata -->
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<head>
+  <!-- Global Metadata -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-<link rel="icon" type="image/x-icon" href={config.site.favicon} />
-<link
-  rel="icon"
-  type="image/svg+xml"
-  href={config.site.favicon_dark}
-  media="(prefers-color-scheme: dark)"
-/>
-<link
-  rel="icon"
-  type="image/svg+xml"
-  href={config.site.favicon}
-  media="(prefers-color-scheme: light)"
-/>
+  <link rel="icon" type="image/x-icon" href={config.site.favicon} />
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href={config.site.favicon_dark}
+    media="(prefers-color-scheme: dark)"
+  />
+  <link
+    rel="icon"
+    type="image/svg+xml"
+    href={config.site.favicon}
+    media="(prefers-color-scheme: light)"
+  />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+    rel="stylesheet"
+  />
 
-<meta name="generator" content={Astro.generator} />
+  <meta name="generator" content={Astro.generator} />
 
-<meta name="author" content={config.metadata.meta_author} />
+  <meta name="author" content={config.metadata.meta_author} />
 
-<GoogleFontsOptimizer
-  url="https://fonts.googleapis.com/css2?family=Huninn&family=Iansui&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
-/>
-<!-- Canonical URL -->
-<link rel="canonical" href={canonicalURL} />
+  <!-- Canonical URL -->
+  <link rel="canonical" href={canonicalURL} />
 
-<!-- Primary Meta Tags -->
-<title>{plainifyTitle}</title>
-<meta name="title" content={plainifyTitle} />
-<meta name="description" content={plainifyDescription} />
+  <!-- Primary Meta Tags -->
+  <title>{plainifyTitle}</title>
+  <meta name="title" content={plainifyTitle} />
+  <meta name="description" content={plainifyDescription} />
 
-{noindex && <meta name="robots" content="noindex,nofollow" />}
+  {noindex && <meta name="robots" content="noindex,nofollow" />}
 
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url} />
-<meta property="og:title" content={plainifyTitle} />
-<meta property="og:description" content={plainifyDescription} />
-<meta property="og:image" content={image} />
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={Astro.url} />
+  <meta property="og:title" content={plainifyTitle} />
+  <meta property="og:description" content={plainifyDescription} />
+  <meta property="og:image" content={image} />
 
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image" />
-<meta property="twitter:url" content={Astro.url} />
-<meta property="twitter:title" content={plainifyTitle} />
-<meta property="twitter:description" content={plainifyDescription} />
-<meta property="twitter:image" content={image} />
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content={Astro.url} />
+  <meta property="twitter:title" content={plainifyTitle} />
+  <meta property="twitter:description" content={plainifyDescription} />
+  <meta property="twitter:image" content={image} />
 
-<!-- rss -->
-<link
-  rel="alternate"
-  type="application/rss+xml"
-  title={config.site.title}
-  href={new URL("rss.xml", Astro.site)}
-/>
-<!-- sitemap -->
-<link rel="sitemap" href={new URL("sitemap-index.xml", Astro.site)} />
+  <!-- rss -->
+  <link
+    rel="alternate"
+    type="application/rss+xml"
+    title={config.site.title}
+    href={new URL("rss.xml", Astro.site)}
+  />
+  <!-- sitemap -->
+  <link rel="sitemap" href={new URL("sitemap-index.xml", Astro.site)} />
 
-<ClientRouter />
+  <ClientRouter />
 
-<script>
-  import type { TransitionBeforeSwapEvent } from "astro:transitions/client";
-  document.addEventListener("astro:before-swap", (e) =>
-    [
-      ...(e as TransitionBeforeSwapEvent).newDocument.head.querySelectorAll(
-        'link[as="font"]'
-      ),
-    ].forEach((link) => link.remove())
-  );
-</script>
+  <script>
+    import type { TransitionBeforeSwapEvent } from "astro:transitions/client";
+    document.addEventListener("astro:before-swap", (e) =>
+      [
+        ...(e as TransitionBeforeSwapEvent).newDocument.head.querySelectorAll(
+          'link[as="font"]'
+        ),
+      ].forEach((link) => link.remove())
+    );
+  </script>
 
-<script is:inline>
-  function init() {
-    preloadTheme();
-    preloadFont();
-    onScroll();
-    animate();
+  <script is:inline>
+    function init() {
+      preloadTheme();
+      preloadFont();
+      onScroll();
+      animate();
 
-    document.addEventListener("scroll", onScroll);
-  }
-
-  function animate() {
-    const animateElements = document.querySelectorAll(".animate");
-
-    animateElements.forEach((element, index) => {
-      setTimeout(() => {
-        element.classList.add("show");
-      }, index * 150);
-    });
-  }
-
-  function onScroll() {
-    if (window.scrollY > 0) {
-      document.documentElement.classList.add("scrolled");
-    } else {
-      document.documentElement.classList.remove("scrolled");
+      document.addEventListener("scroll", onScroll);
     }
-  }
 
-  function toggleTheme(dark) {
-    const css = document.createElement("style");
+    function animate() {
+      const animateElements = document.querySelectorAll(".animate");
 
-    css.appendChild(
-      document.createTextNode(
-        `* {
+      animateElements.forEach((element, index) => {
+        setTimeout(() => {
+          element.classList.add("show");
+        }, index * 150);
+      });
+    }
+
+    function onScroll() {
+      if (window.scrollY > 0) {
+        document.documentElement.classList.add("scrolled");
+      } else {
+        document.documentElement.classList.remove("scrolled");
+      }
+    }
+
+    function toggleTheme(dark) {
+      const css = document.createElement("style");
+
+      css.appendChild(
+        document.createTextNode(
+          `* {
              -webkit-transition: none !important;
              -moz-transition: none !important;
              -o-transition: none !important;
@@ -132,48 +136,75 @@ const plainifyDescription = plainify(description);
              transition: none !important;
           }
         `
-      )
-    );
+        )
+      );
 
-    document.head.appendChild(css);
+      document.head.appendChild(css);
 
-    if (dark) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
+      if (dark) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+
+      window.getComputedStyle(css).opacity;
+      document.head.removeChild(css);
     }
 
-    window.getComputedStyle(css).opacity;
-    document.head.removeChild(css);
-  }
+    function preloadTheme() {
+      const userTheme = localStorage.getItem("theme");
 
-  function preloadTheme() {
-    const userTheme = localStorage.getItem("theme");
-
-    if (userTheme === "light" || userTheme === "dark") {
-      toggleTheme(userTheme === "dark");
-    } else {
-      toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+      if (userTheme === "light" || userTheme === "dark") {
+        toggleTheme(userTheme === "dark");
+      } else {
+        toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
+      }
     }
-  }
 
-  function toggleFont(font) {
-    if (font === "iansui") {
-      document.documentElement.classList.remove("huninn");
-    } else {
-      document.documentElement.classList.add("huninn");
+    function removeFont() {
+      const link = document.getElementById("cjk-font");
+      if (link) {
+        link.remove();
+      }
     }
-  }
 
-  function preloadFont() {
-    const userFont = localStorage.getItem("font");
-    if (userFont) {
-      toggleFont(userFont);
+    /**
+     * @param {'Huninn' | 'Iansui'} font
+     */
+    function addFont(font) {
+      const url = `https://fonts.googleapis.com/css2?family=${font}&display=swap`;
+      const link = document.createElement("link");
+      link.id = `cjk-font`
+      link.href = url;
+      link.rel = "stylesheet";
+      document.head.appendChild(link);
     }
-  }
 
-  document.addEventListener("DOMContentLoaded", () => init());
-  document.addEventListener("astro:after-swap", () => init());
-  preloadTheme();
-  preloadFont();
-</script>
+    /**
+     * @param {'iansui' | 'huninn'} font
+     */
+    function toggleFont(font) {
+      if (font === "iansui") {
+        removeFont();
+        addFont("Iansui");
+        document.documentElement.classList.remove("huninn");
+      } else {
+        removeFont();
+        addFont("Huninn");
+        document.documentElement.classList.add("huninn");
+      }
+    }
+
+    function preloadFont() {
+      const userFont = localStorage.getItem("font");
+      if (userFont) {
+        toggleFont(userFont);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => init());
+    document.addEventListener("astro:after-swap", () => init());
+    preloadTheme();
+    preloadFont();
+  </script>
+</head>

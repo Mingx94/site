@@ -37,11 +37,7 @@ const FontSelect = () => {
 
     localStorage.setItem("font", value);
 
-    if (value === "huninn") {
-      document.documentElement.classList.add("huninn");
-    } else {
-      document.documentElement.classList.remove("huninn");
-    }
+    window.toggleFont(value);
   };
 
   const fontClassName = fontList.find(
