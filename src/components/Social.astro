@@ -10,9 +10,9 @@ import RiMailLine from "~icons/ri/mail-line";
 import RiMastodonLine from "~icons/ri/mastodon-line";
 import RiRedditLine from "~icons/ri/reddit-line";
 import RiRssLine from "~icons/ri/rss-line";
+import RiThreadsLine from "~icons/ri/threads-line";
 import RiTwitterXLine from "~icons/ri/twitter-x-line";
 import RiYoutubeLine from "~icons/ri/youtube-line";
-import RiThreadsLine from "~icons/ri/threads-line";
 import Link from "./Link.astro";
 
 interface Props {
@@ -84,11 +84,30 @@ const renderMap = {
     ariaLabel: "rss feed",
   },
 };
+
+type KeyOfRenderMap = keyof typeof renderMap;
+const order: KeyOfRenderMap[] = [
+  "github",
+  "linkedin",
+  "instagram",
+  "mastodon",
+  "bluesky",
+  "rss",
+];
+const orderMap = new Map<KeyOfRenderMap, number>(
+  order.map((key, index) => [key, index])
+);
+// 未在列表上的，排在最後
+const sorted = Object.entries(renderMap).sort((a, b) => {
+  const aIndex = orderMap.get(a[0] as KeyOfRenderMap) ?? Infinity;
+  const bIndex = orderMap.get(b[0] as KeyOfRenderMap) ?? Infinity;
+  return aIndex - bIndex;
+});
 ---
 
 <ul class={className?.list}>
   {
-    Object.entries(renderMap).map(
+    sorted.map(
       ([key, value]) =>
         source[key] && (
           <li class={className?.item}>
@@ -100,7 +119,7 @@ const renderMap = {
             >
               <value.Icon className={className?.icon} />
             </Link>
-          </Link>
+          </li>
         )
     )
   }
