@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { buttonVariants } from "@/components/ui/button";
   import { Button as ButtonUI } from "@/components/ui/button";
-  import type { VariantProps } from "class-variance-authority";
+  import type { VariantProps } from "tailwind-variants";
   import type { Snippet } from "svelte";
 
   interface Props {
