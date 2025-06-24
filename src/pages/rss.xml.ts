@@ -1,7 +1,7 @@
 import config from "@/config";
 import { filterDrafts } from "@/lib/content";
 import rss from "@astrojs/rss";
-import { type APIRoute } from "astro";
+import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 import MarkdownIt from "markdown-it";
 import sanitizeHtml from "sanitize-html";

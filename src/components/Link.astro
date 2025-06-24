@@ -4,7 +4,7 @@ interface Props extends HTMLAttributes<"a"> {
   href: string;
   external?: boolean;
   underline?: boolean;
-};
+}
 
 const { href, external, underline = true, ...rest } = Astro.props;
 ---

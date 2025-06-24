@@ -1,5 +1,3 @@
 {
-  "cssVariables.lookupFiles": [
-    "node_modules/tailwindcss/**",
-  ]
+  "cssVariables.lookupFiles": ["node_modules/tailwindcss/**"]
 }

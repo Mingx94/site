@@ -1,6 +1,6 @@
 ---
 import ArrowCard from "@/components/ArrowCard.astro";
-import BackToTop from "@/components/BackToTop";
+import BackToTop from "@/components/BackToTop.svelte";
 import Container from "@/components/Container.astro";
 import Base from "@/layouts/Base.astro";
 import { filterDrafts, sortByDate } from "@/lib/content";
@@ -13,7 +13,7 @@ type Acc = {
 };
 
 const posts = data.reduce((acc: Acc, post) => {
-  const year = post.data.date.getFullYear().toString();
+  const year: string = post.data.date.getFullYear().toString();
   if (!acc[year]) {
     acc[year] = [];
   }

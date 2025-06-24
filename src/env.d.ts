@@ -9,13 +9,8 @@ declare global {
   }
 
   interface Array<T> {
-    filter<S extends T>(predicate: (value: T, index: number, array: T[]) => value is S): S[];
-  }
-
-  interface ObjectConstructor {
-    keys<T>(o: T): (keyof T)[];
+    filter<S extends T>(
+      predicate: (value: T, index: number, array: T[]) => value is S,
+    ): S[];
   }
 }
-
-
-export {};

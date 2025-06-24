@@ -266,6 +266,7 @@ html.scrolled #back-to-top {
     @apply prose-headings:font-semibold;
     @apply prose-blockquote:px-5 prose-blockquote:text-lg;
     @apply prose-pre:px-6 prose-pre:py-5;
+    @apply prose-img:rounded-md;
 
     lite-youtube {
       @apply max-w-full rounded-lg;
@@ -282,43 +283,11 @@ html.scrolled #back-to-top {
     }
   }
 
-  /* tab */
-  .tab {
-    @apply border-border overflow-hidden rounded-lg border;
-
-    .tab-nav {
-      @apply border-border bg-muted flex border-b;
-      @apply !m-0;
-      @apply !list-none;
-
-      .tab-nav-item {
-        @apply border-border cursor-pointer border-b-3 py-2 text-lg text-black opacity-80;
-        @apply !my-0;
-        @apply !px-8;
-
-        &.active {
-          @apply border-b-3 border-black opacity-100;
-        }
-      }
-    }
-    .tab-content {
-      .tab-content-panel {
-        @apply p-8;
-        p {
-          @apply mb-0;
-        }
-        &.active {
-          @apply block;
-        }
-      }
-    }
-  }
-
   /* accordion */
   .accordion {
-    @apply border-border bg-primary mb-6 overflow-hidden rounded-lg border;
+    @apply border-border mb-6 overflow-hidden rounded-lg border;
     .accordion-header {
-      @apply flex w-full cursor-pointer items-center justify-between px-8 py-4 text-lg text-black;
+      @apply flex w-full cursor-pointer items-center justify-between px-8 py-4 text-lg;
     }
     .accordion-icon {
       @apply ml-auto h-[.8em] w-[.8em] rotate-[-90deg] transition-transform duration-200;

@@ -1,7 +1,7 @@
 // @ts-check
 import mdx from "@astrojs/mdx";
-import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
+import svelte from "@astrojs/svelte";
 import tailwindcss from "@tailwindcss/vite";
 import AutoImport from "astro-auto-import";
 import compressor from "astro-compressor";
@@ -20,12 +20,12 @@ export default defineConfig({
     }),
     AutoImport({
       imports: [
-        "@/components/md/Button",
-        "@/components/md/Accordion",
-        "@/components/md/Notice",
-        "@/components/md/Video",
-        "@/components/md/Tabs",
-        "@/components/md/Tab",
+        "@/components/md/Button.svelte",
+        "@/components/md/Accordion.svelte",
+        "@/components/md/Notice.svelte",
+        "@/components/md/Video.svelte",
+        "@/components/md/Tabs.svelte",
+        "@/components/md/Tab.svelte",
         {
           "astro-embed": ["YouTube"],
         },
@@ -37,12 +37,8 @@ export default defineConfig({
         wrap: true,
       },
     }),
-    react({
-      babel: {
-        plugins: [["babel-plugin-react-compiler", { target: "19" }]],
-      },
-    }),
     compressor({ brotli: true, gzip: false }),
+    svelte({ extensions: [".svelte"] }),
   ],
 
   markdown: {
@@ -54,11 +50,7 @@ export default defineConfig({
   },
 
   vite: {
-    plugins: [
-      tailwindcss(),
-      fileSystemPath(),
-      Icons({ compiler: "jsx", jsx: "react" }),
-    ],
+    plugins: [tailwindcss(), fileSystemPath(), Icons({ compiler: "svelte" })],
   },
 });
 

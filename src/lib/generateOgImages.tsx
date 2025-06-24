@@ -32,7 +32,7 @@ const fetchFonts = async () => {
 };
 
 function rehypeTwToCss() {
-  return function (tree: Root) {
+  return (tree: Root) => {
     visit(tree, "element", (node) => {
       if (node.properties.tw) {
         node.properties.style =

@@ -1,8 +1,10 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "new-york",
+  "registry": "https://shadcn-svelte.com/registry",
+  "style": "default",
   "rsc": false,
-  "tsx": true,
+  "tsx": false,
+  "typescript": true,
   "tailwind": {
     "config": "",
     "css": "src/styles/global.css",
