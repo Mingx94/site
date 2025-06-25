@@ -1,104 +1,141 @@
-import type { CollectionEntry } from "astro:content";
+import { ImageResponse } from "@vercel/og";
 import { readFile } from "fs/promises";
-import type { Root } from "hast";
-import { toJsxRuntime } from "hast-util-to-jsx-runtime";
-import { Fragment, jsx, jsxs } from "react/jsx-runtime";
-import rehypeParse from "rehype-parse";
-import satori, { type SatoriOptions } from "satori";
-import sharp from "sharp";
-import { unified } from "unified";
-import { visit } from "unist-util-visit";
-import fontPath from "../assets/jf-openhuninn-2.1.ttf?filepath";
-import { twi } from "tw-to-css";
-import type React from "react";
+import React from "react";
+import logo from "../assets/logo.png?filepath";
 
-let fontCache: Buffer | undefined;
+// prevent editor from remove import
+React.version;
 
-const width = 1200;
-const height = 630;
+async function loadGoogleFont(font: string, text: string) {
+  const url = `https://fonts.googleapis.com/css2?family=${font}&text=${encodeURIComponent(text)}`;
+  const css = await (await fetch(url)).text();
+  const resource = css.match(
+    /src: url\((.+)\) format\('(opentype|truetype)'\)/,
+  );
 
-const gradients = [
-  "hsl(37.5000 36.3636% 95.6863%)",
-  "hsl(33.7500 34.7826% 90.9804%)",
-];
-
-const fetchFonts = async () => {
-  if (fontCache) {
-    return { fontBuffer: fontCache };
+  if (resource) {
+    const response = await fetch(resource[1]);
+    if (response.status == 200) {
+      return await response.arrayBuffer();
+    }
   }
-  const fontBuffer = await readFile(fontPath);
-  fontCache = fontBuffer;
-  return { fontBuffer };
-};
 
-function rehypeTwToCss() {
-  return (tree: Root) => {
-    visit(tree, "element", (node) => {
-      if (node.properties.tw) {
-        node.properties.style =
-          (node.properties.style ?? "") + twi(node.properties.tw as string);
-        delete node.properties.tw;
-      }
-    });
-  };
+  throw new Error("failed to load font data");
 }
 
-function toJsx(this: any) {
-  this.compiler = compiler;
-
-  function compiler(tree: Root) {
-    return toJsxRuntime(tree, { Fragment, jsx, jsxs });
-  }
+async function loadImage(url: string) {
+  const readImage = await readFile(url);
+  // to base64
+  return readImage.toString("base64");
 }
 
-const processor = unified()
-  .use(rehypeParse, { fragment: true })
-  .use(rehypeTwToCss)
-  .use(toJsx);
-
-export async function generateOgImageForPost(post: CollectionEntry<"blog">) {
-  const { fontBuffer } = await fetchFonts();
-  const options: SatoriOptions = {
-    width,
-    height,
-    embedFont: true,
-    fonts: [
-      {
-        name: "Huninn",
-        data: fontBuffer,
-        style: "normal",
-      },
-    ],
-  };
-
-  const template = /* html */ `
-		<div tw="flex w-[${width}px] h-[${height}px]" style="background: linear-gradient(top to left, ${gradients[0]}, ${gradients[1]}); font-family:'Huninn';">
-			<div tw="shadow-[0,0,20px,rgba(0,0,0,0.1)] rounded-2xl my-5 mx-8 flex justify-center bg-white">
-        <div tw="flex flex-col justify-between m-8 w-full h-full">
-          <div tw="flex flex-col gap-4">
-            <p tw="font-bold text-[64px] leading-[96px] max-h-[64%] overflow-hidden">
-              ${post.data.title}
-            </p>
-            <p tw="font-bold text-[32px] leading-[48px] max-h-[24%] overflow-hidden text-stone-600/70">
-              ${post.data.description}
-            </p>
+export async function generateOgImageForPost(post: {
+  title: string;
+  description: string | undefined;
+}) {
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          padding: "2.5rem",
+          backgroundImage:
+            "linear-gradient(109.6deg, rgb(204, 228, 247) 11.2%, rgb(237, 246, 250) 100.2%)",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flex: 1,
+            padding: "3rem",
+            backgroundColor: "rgba(130, 130, 130, 0.1)",
+            borderRadius: "2rem",
+            border: "2px solid rgba(130, 130, 130, 0.2)",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              position: "absolute",
+              top: "0rem",
+              left: "3rem",
+              width: "22rem",
+              height: "10rem",
+            }}
+          >
+            <img
+              src={`data:image/png;base64,${await loadImage(logo)}`}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+              }}
+            />
           </div>
-          <div tw="flex justify-end items-center w-full text-[32px]">
-            <span tw="overflow-hidden font-bold">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
+              color: "black",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                marginTop: "6rem",
+                fontSize: "3.75rem",
+                lineHeight: 1.1,
+              }}
+            >
+              {post.title}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                marginTop: "2.5rem",
+                fontSize: "1.75rem",
+                lineHeight: 1.25,
+              }}
+            >
+              {post.description}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                marginLeft: "auto",
+                marginTop: "auto",
+                fontSize: "1.5rem",
+                lineHeight: 1.25,
+              }}
+            >
               by Michael Tsai
-            </span>
+            </div>
           </div>
         </div>
       </div>
-		</div>
-  `;
-
-  const code = await processor.process(template);
-
-  const svg = await satori(code.result as React.ReactNode, options);
-  return svgBufferToJpegBuffer(svg);
-}
-
-function svgBufferToJpegBuffer(svg: string) {
-  return sharp(Buffer.from(svg, "utf-8")).jpeg().toBuffer();
+    ),
+    {
+      width: 1200,
+      height: 630,
+      fonts: [
+        {
+          name: "Huninn",
+          data: await loadGoogleFont(
+            "Huninn",
+            `
+              ${post.title}
+              ${post.description}
+              by Michael Tsai
+            `,
+          ),
+          style: "normal",
+        },
+      ],
+    },
+  );
 }
