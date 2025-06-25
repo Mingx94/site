@@ -33,7 +33,7 @@ const { Content } = await render(post);
 <Base
   title={title}
   description={description}
-  og={new URL(`/og/${post.id}.jpg`, Astro.site).toString()}
+  og={`/og/${post.id}.jpg`}
 >
   <Container>
     <article>

@@ -1,9 +1,10 @@
 ---
+import defaultOgImage from "@/assets/og.jpg";
 import Footer from "@/components/Footer.astro";
-import HtmlHead from "@/components/HtmlHead.astro";
 import Header from "@/components/Header.astro";
-import config from "@/config";
+import HtmlHead from "@/components/HtmlHead.astro";
 import TwSizeIndicator from "@/components/TwSizeIndicator.astro";
+import config from "@/config";
 
 interface Props {
   title?: string;
@@ -16,7 +17,7 @@ interface Props {
 const {
   title = config.site.title,
   description = config.metadata.meta_description,
-  og = config.metadata.meta_image,
+  og = defaultOgImage.src,
   noindex = false,
 } = Astro.props;
 ---

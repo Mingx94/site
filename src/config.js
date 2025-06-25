@@ -4,8 +4,8 @@ export default {
     base_url: import.meta.env.DEV
       ? "http://localhost:4321"
       : "https://vartifact.cc",
-    favicon: "/images/favicon.svg",
-    favicon_dark: "/images/favicon-dark.svg",
+    favicon: "/favicon.svg",
+    favicon_dark: "/favicon-dark.svg",
   },
 
   settings: {
@@ -16,7 +16,6 @@ export default {
 
   metadata: {
     meta_author: "Michael Tsai",
-    meta_image: "/images/og.jpg",
     meta_description: "分享技術及生活",
   },
 

@@ -14,7 +14,7 @@ const blogs = filterDrafts(await getCollection("blog"));
 
 const recentBlogs = sortByDate(blogs).slice(
   0,
-  config.settings.num_posts_on_homepage,
+  config.settings.num_posts_on_homepage
 );
 ---
 

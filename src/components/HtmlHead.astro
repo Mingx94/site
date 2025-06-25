@@ -11,8 +11,6 @@ interface Props {
   noindex?: boolean;
 }
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
-
 const { title, description, image, noindex } = Astro.props;
 ---
 
@@ -21,7 +19,6 @@ const { title, description, image, noindex } = Astro.props;
     charset="utf-8"
     title={title}
     description={description}
-    canonical={canonicalURL}
     nofollow={noindex}
     noindex={noindex}
     openGraph={{
@@ -82,11 +79,11 @@ const { title, description, image, noindex } = Astro.props;
           rel: "alternate",
           type: "application/rss+xml",
           title: config.site.title,
-          href: new URL("rss.xml", Astro.site).toString(),
+          href: "/rss.xml",
         },
         {
           rel: "sitemap",
-          href: new URL("sitemap.xml", Astro.site).toString(),
+          href: "/sitemap.xml",
         },
       ],
       meta: [
@@ -148,8 +145,8 @@ const { title, description, image, noindex } = Astro.props;
              -ms-transition: none !important;
              transition: none !important;
           }
-        `,
-        ),
+        `
+        )
       );
 
       document.head.appendChild(css);
