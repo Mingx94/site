@@ -1,6 +1,5 @@
 // @ts-check
 import mdx from "@astrojs/mdx";
-import sitemap from "@astrojs/sitemap";
 import svelte from "@astrojs/svelte";
 import tailwindcss from "@tailwindcss/vite";
 import AutoImport from "astro-auto-import";
@@ -14,10 +13,6 @@ import config from "./src/config";
 export default defineConfig({
   site: config.site.base_url,
   integrations: [
-    sitemap({
-      lastmod: new Date(),
-      filter: (page) => !page.endsWith("/elements/"),
-    }),
     AutoImport({
       imports: [
         "@/components/md/Button.svelte",
