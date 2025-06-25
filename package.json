@@ -14,12 +14,10 @@
     "@astrojs/mdx": "^4.3.0",
     "@astrojs/rss": "^4.0.12",
     "@astrojs/svelte": "^7.1.0",
-    "@cloudflare/pages-plugin-vercel-og": "^0.1.2",
     "@iconify/json": "^2.2.339",
-    "@svgr/core": "^8.1.0",
-    "@svgr/plugin-jsx": "^8.1.0",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.10",
+    "@types/sanitize-html": "^2.16.0",
     "@vercel/og": "^0.6.8",
     "astro": "^5.10.0",
     "astro-auto-import": "^0.4.4",
@@ -28,32 +26,18 @@
     "astro-seo": "^0.8.4",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
-    "github-slugger": "^2.0.0",
-    "hast-util-to-jsx-runtime": "^2.3.6",
-    "markdown-it": "^14.1.0",
-    "marked": "^15.0.11",
     "react": "^19.1.0",
-    "rehype-parse": "^9.0.1",
     "remark-toc": "^9.0.0",
     "sanitize-html": "^2.17.0",
-    "satori": "^0.13.1",
-    "sharp": "^0.34.1",
     "svelte": "^5.34.7",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.10",
-    "tw-to-css": "^0.0.12",
-    "typescript": "^5.8.3",
-    "unified": "^11.0.5",
-    "unist-util-visit": "^5.0.0"
+    "typescript": "^5.8.3"
   },
   "devDependencies": {
     "@internationalized/date": "^3.8.2",
     "@tsconfig/svelte": "^5.0.4",
-    "@types/hast": "^3.0.4",
-    "@types/markdown-it": "^14.1.2",
     "@types/react": "^19.1.8",
-    "@types/sanitize-html": "^2.16.0",
-    "babel-plugin-react-compiler": "19.1.0-rc.2",
     "bits-ui": "^2.8.8",
     "prettier": "^3.5.3",
     "prettier-plugin-astro": "^0.14.1",
@@ -65,8 +49,7 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "esbuild",
-      "sharp"
+      "esbuild"
     ]
   }
 }

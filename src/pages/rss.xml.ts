@@ -3,9 +3,7 @@ import { filterDrafts } from "@/lib/content";
 import rss from "@astrojs/rss";
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
-import MarkdownIt from "markdown-it";
 import sanitizeHtml from "sanitize-html";
-const parser = new MarkdownIt();
 
 export const GET: APIRoute = async (context) => {
   const blog = filterDrafts(await getCollection("blog"));
@@ -25,7 +23,7 @@ export const GET: APIRoute = async (context) => {
       pubDate: post.data.date,
       description: post.data.description,
       link: `/blog/${post.id}/`,
-      content: sanitizeHtml(parser.render(post.body!), {
+      content: sanitizeHtml(post.rendered?.html ?? "", {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
       }),
     })),

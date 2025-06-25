@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { humanize } from "@/lib/textConverter";
   import type { Snippet } from "svelte";
 
   interface Props {
@@ -8,6 +7,14 @@
   }
 
   let { type, children }: Props = $props();
+
+  const humanize = (content: string) => {
+    return content
+      .replace(/^[\s_]+|[\s_]+$/g, "")
+      .replace(/[_\s]+/g, " ")
+      .replace(/[-\s]+/g, " ")
+      .replace(/^[a-z]/, (m) => m.toUpperCase());
+  };
 </script>
 
 <div class="notice {type}">

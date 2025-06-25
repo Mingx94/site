@@ -5,7 +5,6 @@ import Container from "@/components/Container.astro";
 import FormattedDate from "@/components/FormattedDate.astro";
 import Base from "@/layouts/Base.astro";
 import { filterDrafts } from "@/lib/content";
-import { markdownify } from "@/lib/textConverter";
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
 import { getCollection, render } from "astro:content";
@@ -52,7 +51,7 @@ const { Content } = await render(post);
           }
         </div>
         <h1
-          set:html={markdownify(title)}
+          set:html={title}
           class="animate text-2xl font-semibold text-black dark:text-white"
         />
       </div>

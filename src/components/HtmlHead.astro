@@ -1,9 +1,8 @@
 ---
 import config from "@/config";
-import { plainify } from "@/lib/textConverter";
-import { ClientRouter } from "astro:transitions";
-import { SEO } from "astro-seo";
 import "@/styles/global.css";
+import { SEO } from "astro-seo";
+import { ClientRouter } from "astro:transitions";
 
 interface Props {
   title: string;
@@ -15,27 +14,25 @@ interface Props {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
 const { title, description, image, noindex } = Astro.props;
-const plainifyTitle = plainify(title);
-const plainifyDescription = plainify(description);
 ---
 
 <head>
   <SEO
     charset="utf-8"
-    title={plainifyTitle}
-    description={plainifyDescription}
+    title={title}
+    description={description}
     canonical={canonicalURL}
     nofollow={noindex}
     noindex={noindex}
     openGraph={{
       basic: {
         type: "website",
-        title: plainifyTitle,
+        title: title,
         url: Astro.url,
         image: image ?? "",
       },
       optional: {
-        description: plainifyDescription,
+        description: description,
         siteName: config.site.title,
       },
       article: {
@@ -45,8 +42,8 @@ const plainifyDescription = plainify(description);
     twitter={{
       card: "summary_large_image",
       creator: config.metadata.meta_author,
-      title: plainifyTitle,
-      description: plainifyDescription,
+      title: title,
+      description: description,
       image: image ?? "",
     }}
     extend={{

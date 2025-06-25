@@ -2,7 +2,6 @@
 import BackToTop from "@/components/BackToTop.svelte";
 import Container from "@/components/Container.astro";
 import Base from "@/layouts/Base.astro";
-import { markdownify } from "@/lib/textConverter";
 import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
@@ -26,7 +25,7 @@ const { Content } = await render(page);
   <Container>
     <h1
       class="animate my-10 text-2xl font-semibold text-black dark:text-white"
-      set:html={markdownify(title)}
+      set:html={title}
     />
     <article class="animate content mb-16">
       <Content />

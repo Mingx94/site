@@ -2,14 +2,13 @@
 import Container from "@/components/Container.astro";
 import ThemeSettings from "@/components/ThemeSettings.svelte";
 import config from "@/config";
-import { markdownify } from "@/lib/textConverter";
 ---
 
 <footer class="animate">
   <Container>
     <div class="flex justify-between items-center">
       <div>
-        {markdownify(config.params.copyright)}
+        {config.params.copyright}
       </div>
       <div class="flex flex-wrap gap-1 items-center">
         <ThemeSettings client:only="react" />
