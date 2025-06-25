@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { toggleTheme } from "@/lib/theme";
   import { onMount } from "svelte";
   import LucideMoon from "~icons/lucide/moon";
   import LucideSun from "~icons/lucide/sun";
@@ -21,34 +22,6 @@
       value: "system",
     },
   ] as const;
-
-  function toggleTheme(dark: boolean) {
-    const css = document.createElement("style");
-
-    css.appendChild(
-      document.createTextNode(
-        `* {
-           -webkit-transition: none !important;
-           -moz-transition: none !important;
-           -o-transition: none !important;
-           -ms-transition: none !important;
-           transition: none !important;
-        }
-      `,
-      ),
-    );
-
-    document.head.appendChild(css);
-
-    if (dark) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-
-    window.getComputedStyle(css).opacity;
-    document.head.removeChild(css);
-  }
 
   function onSelectTheme(theme: "light" | "dark" | "system") {
     if (theme === "system") {

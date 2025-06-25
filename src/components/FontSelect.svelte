@@ -5,6 +5,7 @@
     SelectItem,
     SelectTrigger,
   } from "@/components/ui/select";
+  import { toggleFont } from "@/lib/font";
   import { onMount } from "svelte";
 
   const fontList = [
@@ -35,9 +36,7 @@
     selectedFont = value;
     localStorage.setItem("font", value);
 
-    if (typeof window !== "undefined") {
-      window.toggleFont(value);
-    }
+    toggleFont(value);
   }
 
   const font = $derived(fontList.find((font) => font.value === selectedFont));

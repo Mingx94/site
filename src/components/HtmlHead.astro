@@ -104,117 +104,26 @@ const { title, description, image, noindex } = Astro.props;
   />
 
   <ClientRouter />
-
-  <script is:inline>
-    function init() {
-      preloadTheme();
-      preloadFont();
-      onScroll();
-      animate();
-
-      document.addEventListener("scroll", onScroll);
-    }
-
-    function animate() {
-      const animateElements = document.querySelectorAll(".animate");
-
-      animateElements.forEach((element, index) => {
-        setTimeout(() => {
-          element.classList.add("show");
-        }, index * 150);
-      });
-    }
-
-    function onScroll() {
-      if (window.scrollY > 0) {
-        document.documentElement.classList.add("scrolled");
-      } else {
-        document.documentElement.classList.remove("scrolled");
-      }
-    }
-
-    function toggleTheme(dark) {
-      const css = document.createElement("style");
-
-      css.appendChild(
-        document.createTextNode(
-          `* {
-             -webkit-transition: none !important;
-             -moz-transition: none !important;
-             -o-transition: none !important;
-             -ms-transition: none !important;
-             transition: none !important;
-          }
-        `
-        )
-      );
-
-      document.head.appendChild(css);
-
-      if (dark) {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
-
-      window.getComputedStyle(css).opacity;
-      document.head.removeChild(css);
-    }
-
-    function preloadTheme() {
-      const userTheme = localStorage.getItem("theme");
-
-      if (userTheme === "light" || userTheme === "dark") {
-        toggleTheme(userTheme === "dark");
-      } else {
-        toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
-      }
-    }
-
-    function removeFont() {
-      const link = document.getElementById("cjk-font");
-      if (link) {
-        link.remove();
-      }
-    }
-
-    /**
-     * @param {'Huninn' | 'Iansui'} font
-     */
-    function addFont(font) {
-      const url = `https://fonts.googleapis.com/css2?family=${font}&display=swap`;
-      const link = document.createElement("link");
-      link.id = `cjk-font`;
-      link.href = url;
-      link.rel = "stylesheet";
-      document.head.appendChild(link);
-    }
-
-    /**
-     * @param {'iansui' | 'huninn'} font
-     */
-    function toggleFont(font) {
-      if (font === "iansui") {
-        removeFont();
-        addFont("Iansui");
-        document.documentElement.classList.remove("huninn");
-      } else {
-        removeFont();
-        addFont("Huninn");
-        document.documentElement.classList.add("huninn");
-      }
-    }
-
-    function preloadFont() {
-      const userFont = localStorage.getItem("font");
-      if (userFont) {
-        toggleFont(userFont);
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => init());
-    document.addEventListener("astro:after-swap", () => init());
-    preloadTheme();
-    preloadFont();
-  </script>
 </head>
+
+<script>
+  import { animate, onScroll } from "@/lib/DomEvent";
+  import { initFont } from "@/lib/font";
+  import { initTheme } from "@/lib/theme";
+
+  function init() {
+    onScroll();
+    animate();
+
+    document.addEventListener("scroll", onScroll);
+  }
+
+  initTheme();
+  initFont();
+
+  document.addEventListener("astro:page-load", () => init());
+  document.addEventListener("astro:after-swap", () => {
+    initTheme();
+    initFont();
+  });
+</script>
