@@ -20,7 +20,7 @@ export function toggleFont(font: string) {
 }
 
 export function initFont() {
-  const userFont = localStorage.getItem("font");
+  const userFont = localStorage.getItem("font") || "huninn";
   if (userFont) {
     toggleFont(userFont);
   }

@@ -21,7 +21,7 @@
     },
   ];
 
-  let selectedFont = $state("iansui");
+  let selectedFont = $state("huninn");
 
   onMount(() => {
     if (typeof window === "undefined") return;
