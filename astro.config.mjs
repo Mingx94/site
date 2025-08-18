@@ -8,6 +8,7 @@ import { defineConfig } from "astro/config";
 import remarkToc from "remark-toc";
 import Icons from "unplugin-icons/vite";
 import config from "./src/config";
+import react from "@vitejs/plugin-react";
 
 // https://astro.build/config
 export default defineConfig({
@@ -45,7 +46,12 @@ export default defineConfig({
   },
 
   vite: {
-    plugins: [tailwindcss(), fileSystemPath(), Icons({ compiler: "svelte" })],
+    plugins: [
+      tailwindcss(),
+      fileSystemPath(),
+      react(),
+      Icons({ compiler: "svelte" }),
+    ],
   },
 });
 
