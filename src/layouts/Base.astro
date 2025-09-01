@@ -20,6 +20,8 @@ const {
   og = defaultOgImage.src,
   noindex = false,
 } = Astro.props;
+
+const fullOgUrl = new URL(og, Astro.url).href;
 ---
 
 <!doctype html>
@@ -27,7 +29,7 @@ const {
   <HtmlHead
     title={title}
     description={description}
-    image={og}
+    image={fullOgUrl}
     noindex={noindex}
   />
 
