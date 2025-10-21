@@ -6,7 +6,6 @@
     SelectTrigger,
   } from "@/components/ui/select";
   import { toggleFont } from "@/lib/font";
-  import { onMount } from "svelte";
 
   const fontList = [
     {
@@ -23,9 +22,7 @@
 
   let selectedFont = $state("huninn");
 
-  onMount(() => {
-    if (typeof window === "undefined") return;
-
+  $effect(() => {
     const localFont = localStorage.getItem("font");
     if (localFont) {
       selectedFont = localFont;
