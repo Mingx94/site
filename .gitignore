@@ -1,7 +1,12 @@
 # build output
 dist/
-# generated types
-.astro/
+build/
+.cloudflare/
+
+# generated
+.content-collections/
+.svelte-kit/
+.wrangler/
 
 # dependencies
 node_modules/
