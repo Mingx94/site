@@ -1,8 +1,4 @@
 import "unplugin-icons/types/svelte";
-declare module "*?filepath" {
-  const value: string;
-  export default value;
-}
 
 declare global {
   interface Array<T> {

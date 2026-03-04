@@ -1,5 +1,5 @@
 import { ImageResponse } from "@vercel/og";
-import { readFile } from "fs/promises";
+import { readFile } from "node:fs/promises";
 import React from "react";
 import logo from "../assets/logo.png?filepath";
 
