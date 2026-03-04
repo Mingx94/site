@@ -1,10 +1,10 @@
 export default {
   facebook: "",
-  twitter: "",
-  instagram: "https://instagram.com/michael.tsai_94",
+  twitter: "https://x.com/mingx94",
+  instagram: "",
   youtube: "",
   linkedin: "https://www.linkedin.com/in/ming-hsuan-tsai94/",
-  mastodon: "https://elk.zone/g0v.social/@mingx94",
+  mastodon: "",
   github: "https://github.com/Mingx94",
   codepen: "",
   reddit: "",
