@@ -3,7 +3,7 @@ title: "初次使用 Astro.js"
 description: "為什麼使用 Astro.js 來打造部落格"
 date: 2025-02-02
 updated: 2025-06-25
-image: "./IMG_1896.JPG"
+image: "IMG_1896.JPG"
 draft: false
 ---
 
