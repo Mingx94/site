@@ -290,7 +290,7 @@ html.scrolled #back-to-top {
       @apply flex w-full cursor-pointer items-center justify-between px-8 py-4 text-lg;
     }
     .accordion-icon {
-      @apply ml-auto h-[.8em] w-[.8em] rotate-[-90deg] transition-transform duration-200;
+      @apply ml-auto h-[.8em] w-[.8em] -rotate-90 transition-transform duration-200;
     }
     .accordion-content {
       @apply max-h-0 overflow-hidden px-8 py-0;

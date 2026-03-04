@@ -1,19 +1,17 @@
 {
-  "extends": ["astro/tsconfigs/strict", "@tsconfig/svelte/tsconfig.json"],
+  "extends": "./.svelte-kit/tsconfig.json",
   "include": [
-    ".astro/types.d.ts",
-    "src/**/*.astro",
     "src/**/*.ts",
     "src/**/*.js",
-    "src/**/*.svelte"
+    "src/**/*.svelte",
+    "content-collections.ts",
+    "vite.config.ts"
   ],
   "exclude": ["dist"],
   "compilerOptions": {
     "strictNullChecks": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "types": ["unplugin-icons/types/svelte"]
   }
 }

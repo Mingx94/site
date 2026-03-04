@@ -1,0 +1,36 @@
+<script lang="ts">
+  import type { allBlogs } from "content-collections";
+
+  interface Props {
+    entry: (typeof allBlogs)[number];
+  }
+
+  let { entry }: Props = $props();
+</script>
+
+<a
+  href={`/blog/${entry.id}`}
+  class="relative group flex items-center flex-nowrap py-3 px-4 pr-12 md:pr-15 rounded-lg border border-border bg-card hover:bg-muted/80 hover:text-muted-foreground/80 text-card-foreground transition-colors duration-300 ease-in-out"
+>
+  <div class="flex flex-col flex-1 min-w-0 gap-1">
+    <div class="font-semibold truncate">{entry.title}</div>
+    <div class="text-sm line-clamp-2">{entry.description}</div>
+  </div>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    class="absolute top-1/2 right-4 -translate-y-1/2 size-6 md:size-8 stroke-1 fill-none stroke-current"
+  >
+    <line
+      x1="5"
+      y1="12"
+      x2="19"
+      y2="12"
+      class="translate-x-3 group-hover:translate-x-0 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out"
+    ></line>
+    <polyline
+      points="12 5 19 12 12 19"
+      class="-translate-x-1 group-hover:translate-x-0 transition-transform duration-300 ease-in-out"
+    ></polyline>
+  </svg>
+</a>
