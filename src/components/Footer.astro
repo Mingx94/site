@@ -2,6 +2,8 @@
 import Container from "@/components/Container.astro";
 import ThemeSettings from "@/components/ThemeSettings.svelte";
 import config from "@/config";
+import RiRssLine from "~icons/ri/rss-line";
+import Link from "./Link.astro";
 ---
 
 <footer class="animate">
@@ -10,8 +12,17 @@ import config from "@/config";
       <div>
         {config.params.copyright}
       </div>
-      <div class="flex flex-wrap gap-1 items-center">
-        <ThemeSettings client:only="react" />
+      <div class="flex flex-wrap gap-3 items-center">
+        <Link
+          aria-label="rss feed"
+          href="/rss.xml"
+          external={true}
+          underline={false}
+          class="flex size-8 items-center justify-center"
+        >
+          <RiRssLine class="size-5" />
+        </Link>
+        <ThemeSettings client:only="svelte" />
       </div>
     </div>
   </Container>

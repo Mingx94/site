@@ -14,7 +14,7 @@ const blogs = filterDrafts(await getCollection("blog"));
 
 const recentBlogs = sortByDate(blogs).slice(
   0,
-  config.settings.num_posts_on_homepage
+  config.settings.num_posts_on_homepage,
 );
 ---
 
@@ -36,7 +36,7 @@ const recentBlogs = sortByDate(blogs).slice(
           className={{
             list: "flex flex-wrap gap-2 animate mt-2",
             item: "flex",
-            icon: "size-6",
+            icon: "size-5",
           }}
         />
       </section>
@@ -65,7 +65,7 @@ const recentBlogs = sortByDate(blogs).slice(
     </div>
 
     <div class="animate flex mt-24">
-      <BackToTop client:only="react" />
+      <BackToTop client:only="svelte" />
     </div>
   </Container>
 </Base>

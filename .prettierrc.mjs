@@ -1,12 +1,12 @@
 /** @type {import("prettier").Config} */
 export default {
-  tailwindConfig: "./tailwind.config.js",
   endOfLine: "lf",
   plugins: [
     "prettier-plugin-tailwindcss",
     "prettier-plugin-astro",
     "prettier-plugin-svelte",
   ],
+  tailwindStylesheet: "./src/styles/global.css",
   overrides: [
     {
       files: ["**/*.astro"],

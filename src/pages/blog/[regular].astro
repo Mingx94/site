@@ -30,11 +30,7 @@ const { title, description, image, date, draft } = post.data;
 const { Content } = await render(post);
 ---
 
-<Base
-  title={title}
-  description={description}
-  og={`/og/${post.id}.jpg`}
->
+<Base title={title} description={description} og={`/og/${post.id}.jpg`}>
   <Container>
     <article>
       <div class="space-y-1 my-10">
@@ -75,8 +71,8 @@ const { Content } = await render(post);
     </article>
 
     <div class="animate flex mt-16">
-      <BackToPrev client:only="react" />
-      <BackToTop client:only="react" />
+      <BackToPrev client:only="svelte" />
+      <BackToTop client:only="svelte" />
     </div>
   </Container>
 </Base>
