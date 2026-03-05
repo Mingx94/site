@@ -3,9 +3,15 @@ title: "初次使用 Astro.js"
 description: "為什麼使用 Astro.js 來打造部落格"
 date: 2025-02-02
 updated: 2025-06-25
-image: "IMG_1896.JPG"
 draft: false
 ---
+
+<script>
+  import image from "./IMG_1896.JPG"
+  import Cover from "@/content/components/Cover.svelte"
+</script>
+
+<Cover image={image} title={title} />
 
 2025 年已經有許多成熟的 [JAMStack](https://jamstack.org/generators/)，原本是使用 [SvelteKit](https://svelte.dev/docs/kit/introduction) 來開發網站。但是在實際開發中，SvelteKit 並不是專門為了生成靜態網頁而設計的，如果需要生成靜態網頁，則需要再手動加入一些工具，例如 [MDsveX](https://github.com/pngwn/MDsveX) 等來轉換 Markdown 文件渲染為 HTML。
 

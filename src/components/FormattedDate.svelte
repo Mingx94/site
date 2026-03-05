@@ -8,6 +8,6 @@
   let { date }: Props = $props();
 </script>
 
-<time datetime={date.toISOString()}>
-  {format(date, "dd MMM, yyyy")}
+<time datetime={new Date(date).toISOString()}>
+  {format(new Date(date), "dd MMM, yyyy")}
 </time>

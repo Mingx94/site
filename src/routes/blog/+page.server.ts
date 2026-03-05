@@ -1,12 +1,11 @@
-import { allBlogs } from "content-collections";
-import { filterDrafts, sortByDate } from "@/lib/content";
+import { allPosts, filterDrafts, sortByDate } from "@/lib/posts";
 
 export function load() {
-  const data = sortByDate(filterDrafts(allBlogs));
+  const data = sortByDate(filterDrafts(allPosts));
 
   type Acc = { [year: string]: typeof data };
   const posts = data.reduce((acc: Acc, post) => {
-    const year = post.date.getFullYear().toString();
+    const year = new Date(post.date).getFullYear().toString();
     if (!acc[year]) {
       acc[year] = [];
     }

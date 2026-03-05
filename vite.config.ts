@@ -1,9 +1,9 @@
-import contentCollections from "@content-collections/vite";
 import tailwindcss from "@tailwindcss/vite";
 import { sveltekit } from "@sveltejs/kit/vite";
 import react from "@vitejs/plugin-react";
 import Icons from "unplugin-icons/vite";
 import type { Plugin } from "vite";
+import { enhancedImages } from "@sveltejs/enhanced-img";
 
 function fileSystemPath(): Plugin {
   return {
@@ -23,8 +23,8 @@ function fileSystemPath(): Plugin {
 export default {
   plugins: [
     tailwindcss(),
+    enhancedImages(), // must come before the SvelteKit plugin
     sveltekit(),
-    contentCollections(),
     react(),
     Icons({ compiler: "svelte" }),
     fileSystemPath(),
