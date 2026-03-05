@@ -1,9 +1,8 @@
-import { allBlogs } from "content-collections";
-import { filterDrafts, sortByDate } from "@/lib/content";
+import { allPosts, filterDrafts, sortByDate } from "@/lib/posts";
 import config from "@/config";
 
 export function load() {
-  const blogs = filterDrafts(allBlogs);
+  const blogs = filterDrafts(allPosts);
   const recentBlogs = sortByDate(blogs).slice(
     0,
     config.settings.num_posts_on_homepage,

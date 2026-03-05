@@ -1,5 +1,4 @@
-import { allBlogs } from "content-collections";
-import { filterDrafts } from "@/lib/content";
+import { allPosts, filterDrafts } from "@/lib/posts";
 import config from "@/config";
 import { format } from "date-fns";
 import type { RequestHandler } from "./$types";
@@ -7,7 +6,7 @@ import type { RequestHandler } from "./$types";
 export const prerender = true;
 
 export const GET: RequestHandler = () => {
-  const blog = filterDrafts(allBlogs);
+  const blog = filterDrafts(allPosts);
   const baseUrl = config.site.base_url;
 
   const urls = blog

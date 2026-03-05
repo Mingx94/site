@@ -4,12 +4,13 @@
     "src/**/*.ts",
     "src/**/*.js",
     "src/**/*.svelte",
-    "content-collections.ts",
+
     "vite.config.ts"
   ],
   "exclude": ["dist"],
   "compilerOptions": {
     "strictNullChecks": true,
+    "skipLibCheck": true,
     "jsx": "react-jsx",
     "jsxImportSource": "react",
     "types": ["unplugin-icons/types/svelte"]

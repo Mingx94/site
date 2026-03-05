@@ -3,13 +3,11 @@
   import BackToTop from "@/components/BackToTop.svelte";
   import Container from "@/components/Container.svelte";
   import FormattedDate from "@/components/FormattedDate.svelte";
+  import type { Component } from "svelte";
 
-  interface Props {
-    data: import("./$types").PageServerData;
-  }
-
-  let { data }: Props = $props();
-  let { post } = $derived(data);
+  let { data } = $props();
+  let post = $derived(data.metadata);
+  let Content = $derived(data.content as Component);
 </script>
 
 <Container>
@@ -33,20 +31,8 @@
       </h1>
     </div>
 
-    {#if post.image}
-      <div class="animate mt-8 mb-2">
-        <img
-          src={post.image}
-          alt={post.title}
-          class="rounded-lg mx-auto"
-          loading="eager"
-        />
-      </div>
-    {/if}
-
     <div class="animate content">
-      <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-      {@html post.html}
+      <Content />
     </div>
   </article>
 

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { allBlogs } from "content-collections";
+  import type { Post } from "@/lib/posts";
 
   interface Props {
-    entry: (typeof allBlogs)[number];
+    entry: Post;
   }
 
   let { entry }: Props = $props();

@@ -1,4 +1,4 @@
-import { allBlogs } from "content-collections";
+import { allPosts } from "@/lib/posts";
 import { generateOgImageForPost } from "@/lib/generateOgImages";
 import { error } from "@sveltejs/kit";
 import type { EntryGenerator, RequestHandler } from "./$types";
@@ -6,12 +6,12 @@ import type { EntryGenerator, RequestHandler } from "./$types";
 export const prerender = true;
 
 export const entries: EntryGenerator = () => {
-  return allBlogs.map((post) => ({ slug: encodeURIComponent(post.id) }));
+  return allPosts.map((post) => ({ slug: encodeURIComponent(post.id) }));
 };
 
 export const GET: RequestHandler = async ({ params }) => {
   const slug = decodeURIComponent(params.slug);
-  const post = allBlogs.find((p) => p.id === slug);
+  const post = allPosts.find((p) => p.id === slug);
 
   if (!post) {
     error(404, "Not found");
