@@ -54,8 +54,11 @@
     "unified": "^11.0.5",
     "unplugin-icons": "^23.0.1",
     "vite": "^8.0.0",
-    "wrangler": "^4.72.0",
+    "wrangler": "^4.76.0",
     "zod": "^4.3.6"
+  },
+  "overrides": {
+    "cookie": "0.7.2"
   },
   "private": true
 }
