@@ -28,10 +28,18 @@ export default {
       },
     }),
   ],
+  compilerOptions: {
+    experimental: {
+      async: true,
+    },
+  },
   kit: {
     adapter: adapter(),
     alias: {
       "@": "./src",
+    },
+    experimental: {
+      remoteFunctions: true,
     },
   },
 };

@@ -52,7 +52,7 @@
   });
 </script>
 
-<ul use:staggerIn class={className?.list}>
+<ul {@attach staggerIn} class={className?.list}>
   {#each sorted as [key, value]}
     {#if source[key]}
       <li class={className?.item}>

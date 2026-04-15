@@ -1,3 +1,6 @@
+<script lang="ts">
+</script>
+
 {#if import.meta.env.DEV}
   <div
     class="fixed top-0 left-0 z-99 flex w-[30px] items-center justify-center bg-gray-200 py-[2.5px] text-[12px] uppercase text-black sm:bg-red-200 md:bg-yellow-200 lg:bg-green-200 xl:bg-blue-200 2xl:bg-pink-200"
