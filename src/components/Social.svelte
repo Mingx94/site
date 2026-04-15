@@ -11,6 +11,7 @@
   import RiThreadsLine from "~icons/ri/threads-line";
   import RiTwitterLine from "~icons/ri/twitter-line";
   import RiYoutubeLine from "~icons/ri/youtube-line";
+  import { staggerIn } from "@/lib/domEvent";
   import Link from "./Link.svelte";
 
   interface Props {
@@ -51,7 +52,7 @@
   });
 </script>
 
-<ul class={className?.list}>
+<ul use:staggerIn class={className?.list}>
   {#each sorted as [key, value]}
     {#if source[key]}
       <li class={className?.item}>

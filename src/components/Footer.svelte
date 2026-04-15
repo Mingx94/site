@@ -2,11 +2,12 @@
   import Container from "@/components/Container.svelte";
   import ThemeSettings from "@/components/ThemeSettings.svelte";
   import config from "@/config";
+  import { staggerIn } from "@/lib/domEvent";
   import Link from "./Link.svelte";
   import RiRssLine from "~icons/ri/rss-line";
 </script>
 
-<footer class="animate">
+<footer use:staggerIn class="animate">
   <Container>
     <div class="flex justify-between items-center">
       <div>

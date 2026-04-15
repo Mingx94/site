@@ -1,5 +1,7 @@
 import { allPosts, filterDrafts, sortByDate } from "@/lib/posts";
 
+export const prerender = true;
+
 export function load() {
   const data = sortByDate(filterDrafts(allPosts));
 

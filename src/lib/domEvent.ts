@@ -1,11 +1,19 @@
-export function animate() {
-  const animateElements = document.querySelectorAll(".animate");
+let queue: HTMLElement[] = [];
+let scheduled = false;
 
-  animateElements.forEach((element, index) => {
-    setTimeout(() => {
-      element.classList.add("show");
-    }, index * 150);
-  });
+export function staggerIn(node: HTMLElement) {
+  queue.push(node);
+
+  if (!scheduled) {
+    scheduled = true;
+    requestAnimationFrame(() => {
+      queue.forEach((el, i) => {
+        setTimeout(() => el.classList.add("show"), i * 150);
+      });
+      queue = [];
+      scheduled = false;
+    });
+  }
 }
 
 export function onScroll() {
