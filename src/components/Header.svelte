@@ -11,8 +11,8 @@
         <Logo />
       </Link>
       <nav class="flex gap-1">
-        <Link href="/blog">blog</Link>
-        <Link href="/contact">contact</Link>
+        <Link href="/blog">文章</Link>
+        <Link href="/contact">聯絡</Link>
       </nav>
     </div>
   </Container>

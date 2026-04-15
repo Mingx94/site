@@ -66,24 +66,24 @@
         {#if data.readingTime}
           <span class="text-sm text-muted-foreground">&middot;</span>
           <div class="text-sm text-muted-foreground">
-            {data.readingTime} min read
+            {data.readingTime} 分鐘閱讀
           </div>
         {/if}
         {#if !viewsQuery.loading && viewsQuery.current != null}
           <span class="text-sm text-muted-foreground">&middot;</span>
           <div class="text-sm text-muted-foreground">
-            {viewsQuery.current} views
+            {viewsQuery.current} 次瀏覽
           </div>
         {/if}
         {#if post.draft}
           <div
             class="text-sm text-red-500 border border-red-500 rounded-lg px-2 py-0.5"
           >
-            Draft
+            草稿
           </div>
         {/if}
       </div>
-      <h1 {@attach staggerIn} class="animate text-2xl font-semibold text-black dark:text-white">
+      <h1 {@attach staggerIn} class="animate text-3xl font-semibold text-foreground">
         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
         {@html post.title}
       </h1>

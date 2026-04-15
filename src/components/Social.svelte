@@ -58,6 +58,7 @@
       <li class={className?.item}>
         <Link
           aria-label={value.ariaLabel}
+          title={value.ariaLabel}
           href={source[key]}
           external={true}
           underline={false}

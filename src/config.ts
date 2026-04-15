@@ -20,7 +20,7 @@ export default {
   },
 
   params: {
-    copyright: "© 2025 Michael Tsai",
+    copyright: "© 2025–2026 Michael Tsai",
   },
 
   social: {
