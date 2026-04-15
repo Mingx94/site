@@ -24,7 +24,7 @@ export const submitContact = form(
     name: v.pipe(v.string(), v.nonEmpty(), v.maxLength(100)),
     email: v.pipe(v.string(), v.email(), v.maxLength(200)),
     message: v.pipe(v.string(), v.nonEmpty(), v.maxLength(2000)),
-    "cf-turnstile-response": v.pipe(v.string(), v.nonEmpty()),
+    turnstileToken: v.pipe(v.string(), v.nonEmpty()),
   }),
   async (data) => {
     const kv = getKV();
@@ -35,7 +35,7 @@ export const submitContact = form(
     }
 
     const valid = await verifyTurnstile(
-      data["cf-turnstile-response"],
+      data.turnstileToken,
       secret,
     );
     if (!valid) {
