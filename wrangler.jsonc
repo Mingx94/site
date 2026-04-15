@@ -6,7 +6,7 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "blog",
 	"main": ".svelte-kit/cloudflare/_worker.js",
-	"compatibility_date": "2026-03-01",
+	"compatibility_date": "2026-04-07",
 	"compatibility_flags": [
 		"nodejs_compat",
 		"nodejs_als"
