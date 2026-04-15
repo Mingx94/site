@@ -31,7 +31,15 @@
   });
 
   async function react(emoji: string) {
-    if (reacted.has(emoji)) return;
+    if (reacted.has(emoji)) {
+      reacted.delete(emoji);
+      try {
+        localStorage.setItem(`reactions:${slug}`, JSON.stringify([...reacted]));
+      } catch {
+        // ignore
+      }
+      return;
+    }
 
     reacted.add(emoji);
 
@@ -54,10 +62,9 @@
     {#each Object.entries(EMOJI_MAP) as [key, emoji]}
       <button
         onclick={() => react(key)}
-        disabled={reacted.has(key)}
         class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-colors duration-200
           {reacted.has(key)
-          ? 'border-primary/30 bg-primary/10 cursor-default'
+          ? 'border-primary/30 bg-primary/10 cursor-pointer'
           : 'border-border hover:border-primary/30 hover:bg-muted cursor-pointer'}"
       >
         <span class="text-lg">{emoji}</span>

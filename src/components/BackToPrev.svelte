@@ -1,21 +1,23 @@
 <script lang="ts">
-  import type { Attachment } from "svelte/attachments";
+  import { onMount } from "svelte";
   import { Button } from "@/components/ui/button";
 
-  const button: Attachment = (node) => {
-    // if the referrer is the same origin, go back
-    if (!document.referrer.includes(window.location.origin)) {
-      node.classList.add("hidden");
-    }
-  };
+  let hasSameOriginReferrer = $state(false);
+
+  onMount(() => {
+    hasSameOriginReferrer = document.referrer.includes(window.location.origin);
+  });
 
   function onClick() {
-    window.history.back();
+    if (hasSameOriginReferrer) {
+      window.history.back();
+    } else {
+      window.location.href = "/blog";
+    }
   }
 </script>
 
 <Button
-  {@attach button}
   variant="outline"
   class="group py-1.5 pr-3 pl-8"
   onclick={onClick}
@@ -37,5 +39,5 @@
       class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
     ></polyline>
   </svg>
-  <span class="text-sm">回上一頁</span>
+  <span class="text-sm">{hasSameOriginReferrer ? "回上一頁" : "前往文章列表"}</span>
 </Button>

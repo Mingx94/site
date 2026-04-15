@@ -1,6 +1,7 @@
 <script lang="ts">
   import Container from "@/components/Container.svelte";
   import BackToPrev from "@/components/BackToPrev.svelte";
+  import { Button } from "@/components/ui/button";
   import { staggerIn } from "@/lib/domEvent";
   import { submitContact } from "./contact.remote";
   import type { Attachment } from "svelte/attachments";
@@ -38,7 +39,7 @@
       <BackToPrev />
     </div>
 
-    <h1 {@attach staggerIn} class="animate text-2xl font-semibold text-black dark:text-white">
+    <h1 {@attach staggerIn} class="animate text-2xl font-semibold text-foreground">
       聯絡我
     </h1>
 
@@ -106,13 +107,9 @@
           <div class="text-sm text-red-500">{errorMsg}</div>
         {/if}
 
-        <button
-          type="submit"
-          disabled={!!submitContact.pending}
-          class="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
+        <Button type="submit" disabled={!!submitContact.pending}>
           {submitContact.pending ? "送出中..." : "送出"}
-        </button>
+        </Button>
       </form>
     {/if}
   </div>

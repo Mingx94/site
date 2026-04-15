@@ -259,9 +259,16 @@ html.scrolled #back-to-top {
     @apply translate-y-0 opacity-100;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .animate {
+      transition: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   /* content style */
   .content {
-    @apply max-w-none;
     @apply prose max-w-full dark:prose-invert prose-img:mx-auto prose-img:my-auto;
     @apply prose-headings:font-semibold;
     @apply prose-blockquote:px-5 prose-blockquote:text-lg;
@@ -314,7 +321,7 @@ html.scrolled #back-to-top {
         @apply mr-3;
       }
       p {
-        @apply text-xl font-semibold text-black;
+        @apply text-xl font-semibold text-foreground;
       }
     }
     .notice-body {
