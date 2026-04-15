@@ -6,8 +6,8 @@
     "dev": "vite dev",
     "build": "vite build",
     "prepare": "svelte-kit sync || echo ''",
-    "check": "svelte-kit sync && svelte-check-rs",
-    "check:watch": "svelte-kit sync && svelte-check-rs --watch",
+    "check": "svelte-kit sync && svelte-check",
+    "check:watch": "svelte-kit sync && svelte-check --watch",
     "format": "prettier -w .",
     "cf-typegen": "wrangler types ./src/worker-configuration.d.ts"
   },
@@ -46,7 +46,7 @@
     "sanitize-html": "^2.17.2",
     "sharp": "^0.34.5",
     "svelte": "^5.55.4",
-    "svelte-check-rs": "^0.9.7",
+    "svelte-check": "^4.4.6",
     "tailwind-merge": "^3.5.0",
     "tailwind-variants": "^3.2.2",
     "tailwindcss": "^4.2.2",
@@ -61,5 +61,8 @@
   "overrides": {
     "cookie": "0.7.2"
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+    "valibot": "^1.3.1"
+  }
 }

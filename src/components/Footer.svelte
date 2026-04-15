@@ -7,7 +7,7 @@
   import RiRssLine from "~icons/ri/rss-line";
 </script>
 
-<footer use:staggerIn class="animate">
+<footer {@attach staggerIn} class="animate">
   <Container>
     <div class="flex justify-between items-center">
       <div>

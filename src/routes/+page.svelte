@@ -19,10 +19,10 @@
   <div class="space-y-16">
     <section>
       <article>
-        <h4 use:staggerIn class="animate font-semibold text-black dark:text-white mb-1">
+        <h4 {@attach staggerIn} class="animate font-semibold text-black dark:text-white mb-1">
           嗨，我是 Michael <span class="text-xl">👋</span>
         </h4>
-        <p use:staggerIn class="animate mb-2">
+        <p {@attach staggerIn} class="animate mb-2">
           現職前端工程師，工作上使用 React、Next.js 開發。
           喜歡拍照，部落格使用的圖片都是自己拍的。
         </p>
@@ -37,7 +37,7 @@
       />
     </section>
 
-    <section use:staggerIn class="animate space-y-6">
+    <section {@attach staggerIn} class="animate space-y-6">
       <div class="flex flex-wrap gap-y-2 items-center justify-between">
         <h5 class="font-semibold text-black dark:text-white">最近發表的文章</h5>
         {#if data.showMoreLink}
@@ -54,7 +54,7 @@
     </section>
   </div>
 
-  <div use:staggerIn class="animate flex mt-24">
+  <div {@attach staggerIn} class="animate flex mt-24">
     <BackToTop />
   </div>
 </Container>

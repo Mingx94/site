@@ -1,7 +1,9 @@
-let queue: HTMLElement[] = [];
+import type { Attachment } from "svelte/attachments";
+
+let queue: Element[] = [];
 let scheduled = false;
 
-export function staggerIn(node: HTMLElement) {
+export const staggerIn: Attachment = (node) => {
   queue.push(node);
 
   if (!scheduled) {
@@ -14,7 +16,7 @@ export function staggerIn(node: HTMLElement) {
       scheduled = false;
     });
   }
-}
+};
 
 export function onScroll() {
   if (window.scrollY > 0) {

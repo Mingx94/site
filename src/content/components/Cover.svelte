@@ -5,7 +5,7 @@
 </script>
 
 <enhanced:img
-  use:staggerIn
+  {@attach staggerIn}
   src={`${image}?w=1280;640;400&blur=15`}
   sizes="(min-width:1920px) 1280px, (min-width:1080px) 640px, (min-width:768px) 400px"
   alt={title}

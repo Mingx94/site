@@ -38,8 +38,6 @@
     initFont();
     onScroll();
 
-    document.addEventListener("scroll", onScroll);
-
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const handleThemeChange = () => {
       if (!localStorage.getItem("theme")) {
@@ -50,10 +48,11 @@
 
     return () => {
       media.removeEventListener("change", handleThemeChange);
-      document.removeEventListener("scroll", onScroll);
     };
   });
 </script>
+
+<svelte:window onscroll={onScroll} />
 
 <svelte:head>
   <meta charset="utf-8" />

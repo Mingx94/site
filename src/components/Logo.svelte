@@ -1,3 +1,6 @@
+<script lang="ts">
+</script>
+
 <img
   src="/logo.png"
   width="206"

@@ -5,9 +5,15 @@ declare global {
     turnstile?: {
       render: (
         element: HTMLElement,
-        options: { sitekey: string; callback: (token: string) => void },
+        options: { sitekey: string },
       ) => void;
     };
+  }
+
+  namespace Cloudflare {
+    interface Env {
+      TURNSTILE_SECRET_KEY: string;
+    }
   }
 
   interface Array<T> {
