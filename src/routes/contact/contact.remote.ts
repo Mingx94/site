@@ -1,7 +1,7 @@
 import { form } from "$app/server";
 import { error } from "@sveltejs/kit";
 import * as v from "valibot";
-import { getKV, getTurnstileSecret } from "$lib/server/platform";
+import { getKV, getSendEmail, getTurnstileSecret } from "$lib/server/platform";
 
 async function verifyTurnstile(
   token: string,
@@ -53,6 +53,16 @@ export const submitContact = form(
       }),
       { expirationTtl: 60 * 60 * 24 * 90 },
     );
+
+    const sendEmail = getSendEmail();
+    if (sendEmail) {
+      await sendEmail.send({
+        from: "michael.tsai@vartifact.cc",
+        to: "mingxcv@gmail.com",
+        subject: `[Blog] New contact from ${data.name}`,
+        text: `Name: ${data.name}\nEmail: ${data.email}\n\n${data.message}`,
+      });
+    }
 
     return { success: true };
   },
