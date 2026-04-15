@@ -61,9 +61,11 @@
 
 <Popover>
   <PopoverTrigger>
-    <Button variant="outline" aria-label="主題設定" title="主題設定">
-      <RiPaletteLine class="size-4" />
-    </Button>
+    {#snippet child({ props })}
+      <Button {...props} variant="outline" aria-label="主題設定" title="主題設定">
+        <RiPaletteLine class="size-4" />
+      </Button>
+    {/snippet}
   </PopoverTrigger>
   <PopoverContent align="end" class="w-fit">
     <div class="grid gap-x-4 grid-cols-[auto_1fr] gap-y-1">

@@ -3,8 +3,7 @@
   import BackToPrev from "@/components/BackToPrev.svelte";
   import { onMount } from "svelte";
 
-  // Turnstile test key for development — replace via wrangler.jsonc in production
-  const SITE_KEY = "0x4AAAAAAC9uFe71dDNfqvcZ";
+  let { data } = $props();
 
   let name = $state("");
   let email = $state("");
@@ -22,7 +21,7 @@
     script.onload = () => {
       if (turnstileEl && window.turnstile) {
         window.turnstile.render(turnstileEl, {
-          sitekey: SITE_KEY,
+          sitekey: data.turnstileSiteKey,
           callback: (token: string) => {
             turnstileToken = token;
           },
@@ -59,7 +58,7 @@
         email = "";
         message = "";
       } else {
-        const data = await res.json().catch(() => ({}));
+        const data: any = await res.json().catch(() => ({}));
         errorMsg = data.error || "送出失敗，請稍後再試";
         status = "error";
       }
