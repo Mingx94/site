@@ -19,6 +19,7 @@
       if (window.turnstile) {
         window.turnstile.render(node as HTMLElement, {
           sitekey: data.turnstileSiteKey,
+          "response-field-name": "turnstileToken",
         });
       }
     };
