@@ -12,17 +12,56 @@
   let post = $derived(data.metadata);
   let Content = $derived(data.content as Component);
   let views = $state<number | null>(null);
+  let counted = false;
 
-  onMount(async () => {
-    try {
-      const res = await fetch(`/api/views/${data.id}`, { method: "POST" });
-      if (res.ok) {
-        const json = await res.json();
-        views = json.views;
+  onMount(() => {
+    // Fetch current view count (read only)
+    fetch(`/api/views/${data.id}`)
+      .then((r) => r.ok ? r.json() : null)
+      .then((json) => { if (json) views = json.views; })
+      .catch(() => {});
+
+    // Track genuine reading: time spent (visible) + scroll depth
+    const minSeconds = Math.max(10, (data.readingTime ?? 1) * 60 * 0.3);
+    const scrollThreshold = 0.6;
+    let visibleSeconds = 0;
+    let maxScroll = 0;
+    let timer: ReturnType<typeof setInterval>;
+
+    function checkAndCount() {
+      if (counted) return;
+      if (visibleSeconds >= minSeconds && maxScroll >= scrollThreshold) {
+        counted = true;
+        clearInterval(timer);
+        fetch(`/api/views/${data.id}`, { method: "POST" })
+          .then((r) => r.ok ? r.json() : null)
+          .then((json) => { if (json) views = json.views; })
+          .catch(() => {});
       }
-    } catch {
-      // ignore — KV may not be available in dev
     }
+
+    // Count visible time (pause when tab is hidden)
+    timer = setInterval(() => {
+      if (!document.hidden) {
+        visibleSeconds++;
+        checkAndCount();
+      }
+    }, 1000);
+
+    // Track scroll depth
+    function onScroll() {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      if (scrollable > 0) {
+        maxScroll = Math.max(maxScroll, window.scrollY / scrollable);
+        checkAndCount();
+      }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("scroll", onScroll);
+    };
   });
 </script>
 
