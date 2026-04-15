@@ -22,11 +22,7 @@ declare global {
     // interface PageData {}
     // interface PageState {}
     interface Platform {
-      env?: {
-        BLOG_KV: KVNamespace;
-        TURNSTILE_SITE_KEY: string;
-        TURNSTILE_SECRET_KEY: string;
-      };
+      env?: Cloudflare.Env;
     }
   }
 }

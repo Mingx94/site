@@ -8,7 +8,8 @@
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check-rs",
     "check:watch": "svelte-kit sync && svelte-check-rs --watch",
-    "format": "prettier -w ."
+    "format": "prettier -w .",
+    "cf-typegen": "wrangler types ./src/worker-configuration.d.ts"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.462",
