@@ -1,6 +1,15 @@
 import "unplugin-icons/types/svelte";
 
 declare global {
+  interface Window {
+    turnstile?: {
+      render: (
+        element: HTMLElement,
+        options: { sitekey: string; callback: (token: string) => void },
+      ) => void;
+    };
+  }
+
   interface Array<T> {
     filter<S extends T>(
       predicate: (value: T, index: number, array: T[]) => value is S,
@@ -12,7 +21,13 @@ declare global {
     // interface Locals {}
     // interface PageData {}
     // interface PageState {}
-    // interface Platform {}
+    interface Platform {
+      env?: {
+        BLOG_KV: KVNamespace;
+        TURNSTILE_SITE_KEY: string;
+        TURNSTILE_SECRET_KEY: string;
+      };
+    }
   }
 }
 

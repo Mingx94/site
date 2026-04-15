@@ -12,7 +12,6 @@
     "strictNullChecks": true,
     "skipLibCheck": true,
     "jsx": "react-jsx",
-    "jsxImportSource": "react",
-    "types": ["unplugin-icons/types/svelte"]
+    "jsxImportSource": "react"
   }
 }

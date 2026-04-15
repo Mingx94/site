@@ -12,6 +12,7 @@
       </Link>
       <nav class="flex gap-1">
         <Link href="/blog">blog</Link>
+        <Link href="/contact">contact</Link>
       </nav>
     </div>
   </Container>
