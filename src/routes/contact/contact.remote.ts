@@ -59,8 +59,16 @@ export const submitContact = form(
       await sendEmail.send({
         from: "michael.tsai@vartifact.cc",
         to: "mingxcv@gmail.com",
-        subject: `[Blog] New contact from ${data.name}`,
-        text: `Name: ${data.name}\nEmail: ${data.email}\n\n${data.message}`,
+        subject: `網站聯絡表單 — ${data.name} 的訊息`,
+        text: [
+          `寄件者：${data.name}`,
+          `電子郵件：${data.email}`,
+          `時間：${new Date().toLocaleString("zh-TW", { timeZone: "Asia/Taipei" })}`,
+          "",
+          "--- 訊息內容 ---",
+          "",
+          data.message,
+        ].join("\n"),
       });
     }
 
