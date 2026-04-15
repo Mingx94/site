@@ -1,5 +1,6 @@
 import { allPosts, filterDrafts } from "@/lib/posts";
 import config from "@/config";
+import { escapeXml } from "@/lib/utils";
 import { format } from "date-fns";
 import type { RequestHandler } from "./$types";
 
@@ -13,7 +14,7 @@ export const GET: RequestHandler = () => {
     .map(
       (post) => `
     <url>
-      <loc>${baseUrl}/blog/${post.id}/</loc>
+      <loc>${baseUrl}/blog/${escapeXml(post.id)}/</loc>
       <lastmod>${format(post.date, "yyyy-MM-dd")}</lastmod>
     </url>`,
     )

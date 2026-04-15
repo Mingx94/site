@@ -1,6 +1,5 @@
 <script lang="ts">
   import { toggleTheme } from "@/lib/theme";
-  import { onMount } from "svelte";
   import LucideMoon from "~icons/lucide/moon";
   import LucideSun from "~icons/lucide/sun";
   import RiPaletteLine from "~icons/ri/palette-line";
@@ -32,21 +31,6 @@
       localStorage.setItem("theme", theme);
     }
   }
-
-  onMount(() => {
-    const handleThemeChange = () => {
-      if (!localStorage.getItem("theme")) {
-        toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
-      }
-    };
-
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    media.addEventListener("change", handleThemeChange);
-
-    return () => {
-      media.removeEventListener("change", handleThemeChange);
-    };
-  });
 </script>
 
 {#snippet themeIcon(theme: "light" | "dark" | "system")}

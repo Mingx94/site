@@ -4,7 +4,7 @@
   import "@/styles/global.css";
   import config from "@/config";
   import { onMount } from "svelte";
-  import { animate, onScroll } from "@/lib/domEvent";
+  import { onScroll } from "@/lib/domEvent";
   import { initFont } from "@/lib/font";
   import { initTheme } from "@/lib/theme";
   import { page } from "$app/state";
@@ -12,7 +12,7 @@
 
   interface Props {
     children: import("svelte").Snippet;
-    data: {
+    data: import("./$types").LayoutData & {
       title?: string;
       description?: string;
       og?: string;
@@ -32,11 +32,6 @@
   const fullOgUrl = $derived(
     og?.startsWith("http") ? og : new URL(og, page.url).href,
   );
-
-  $effect(() => {
-    page.url;
-    animate();
-  });
 
   onMount(() => {
     initTheme();
@@ -110,7 +105,7 @@
   />
   <link
     rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Huninn&display=swap"
   />
 
   <!-- RSS + Sitemap -->

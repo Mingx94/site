@@ -44,7 +44,6 @@
     if (reacted.has(emoji)) return;
 
     reacted.add(emoji);
-    reacted = new Set(reacted);
 
     try {
       localStorage.setItem(getStorageKey(), JSON.stringify([...reacted]));

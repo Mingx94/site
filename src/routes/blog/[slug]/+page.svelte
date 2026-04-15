@@ -5,6 +5,7 @@
   import FormattedDate from "@/components/FormattedDate.svelte";
   import ReactionBar from "@/components/ReactionBar.svelte";
   import TableOfContents from "@/components/TableOfContents.svelte";
+  import { staggerIn } from "@/lib/domEvent";
   import { onMount } from "svelte";
   import type { Component } from "svelte";
 
@@ -70,7 +71,7 @@
 <Container>
   <article>
     <div class="space-y-1 my-10">
-      <div class="animate flex items-center gap-1.5">
+      <div use:staggerIn class="animate flex items-center gap-1.5">
         <div class="text-sm">
           <FormattedDate date={post.date} />
         </div>
@@ -94,20 +95,20 @@
           </div>
         {/if}
       </div>
-      <h1 class="animate text-2xl font-semibold text-black dark:text-white">
+      <h1 use:staggerIn class="animate text-2xl font-semibold text-black dark:text-white">
         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
         {@html post.title}
       </h1>
     </div>
 
-    <div class="animate content">
+    <div use:staggerIn class="animate content">
       <Content />
     </div>
 
     <ReactionBar slug={data.id} />
   </article>
 
-  <div class="animate flex mt-16">
+  <div use:staggerIn class="animate flex mt-16">
     <BackToPrev />
     <BackToTop />
   </div>

@@ -24,6 +24,7 @@
 <a
   {href}
   target={external ? "_blank" : undefined}
+  rel={external ? "noopener noreferrer" : undefined}
   data-underline={underline}
   class={cn(
     "inline-block decoration-current/15 hover:decoration-current/25 text-accent-foreground hover:text-accent-foreground/80 transition-colors duration-300 ease-in-out data-underline:underline data-underline:underline-offset-2",

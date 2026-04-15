@@ -1,20 +1,21 @@
 <script lang="ts">
   import Container from "@/components/Container.svelte";
   import BackToPrev from "@/components/BackToPrev.svelte";
+  import { staggerIn } from "@/lib/domEvent";
+  import { enhance } from "$app/forms";
   import { onMount } from "svelte";
 
-  let { data } = $props();
+  let { data, form } = $props();
 
-  let name = $state("");
-  let email = $state("");
-  let message = $state("");
-  let turnstileToken = $state("");
-  let status = $state<"idle" | "sending" | "sent" | "error">("idle");
-  let errorMsg = $state("");
+  let status = $state<"idle" | "sending" | "sent">("idle");
   let turnstileEl: HTMLDivElement | undefined = $state();
 
+  let sent = $derived(form?.success === true);
+  let errorMsg = $derived(
+    form && "error" in form ? (form.error as string) : "",
+  );
+
   onMount(() => {
-    // Load Turnstile script
     const script = document.createElement("script");
     script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
     script.async = true;
@@ -22,9 +23,6 @@
       if (turnstileEl && window.turnstile) {
         window.turnstile.render(turnstileEl, {
           sitekey: data.turnstileSiteKey,
-          callback: (token: string) => {
-            turnstileToken = token;
-          },
         });
       }
     };
@@ -34,39 +32,6 @@
       script.remove();
     };
   });
-
-  async function handleSubmit(e: SubmitEvent) {
-    e.preventDefault();
-    if (!turnstileToken) {
-      errorMsg = "請完成驗證";
-      return;
-    }
-
-    status = "sending";
-    errorMsg = "";
-
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message, token: turnstileToken }),
-      });
-
-      if (res.ok) {
-        status = "sent";
-        name = "";
-        email = "";
-        message = "";
-      } else {
-        const data: any = await res.json().catch(() => ({}));
-        errorMsg = data.error || "送出失敗，請稍後再試";
-        status = "error";
-      }
-    } catch {
-      errorMsg = "網路錯誤，請稍後再試";
-      status = "error";
-    }
-  }
 </script>
 
 <svelte:head>
@@ -75,26 +40,40 @@
 
 <Container>
   <div class="space-y-6 my-10 max-w-lg mx-auto">
-    <div class="animate">
+    <div use:staggerIn class="animate">
       <BackToPrev />
     </div>
 
-    <h1 class="animate text-2xl font-semibold text-black dark:text-white">
+    <h1 use:staggerIn class="animate text-2xl font-semibold text-black dark:text-white">
       聯絡我
     </h1>
 
-    {#if status === "sent"}
-      <div class="animate rounded-lg border border-green-500/30 bg-green-500/10 p-4 text-sm">
+    {#if sent}
+      <div
+        use:staggerIn
+        class="animate rounded-lg border border-green-500/30 bg-green-500/10 p-4 text-sm"
+      >
         感謝你的訊息！我會盡快回覆。
       </div>
     {:else}
-      <form onsubmit={handleSubmit} class="animate space-y-4">
+      <form
+        method="POST"
+        use:enhance={() => {
+          status = "sending";
+          return async ({ update }) => {
+            status = "idle";
+            await update();
+          };
+        }}
+        use:staggerIn
+        class="animate space-y-4"
+      >
         <div class="space-y-1">
           <label for="name" class="text-sm font-medium">名稱</label>
           <input
             id="name"
+            name="name"
             type="text"
-            bind:value={name}
             required
             maxlength="100"
             class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
@@ -105,8 +84,8 @@
           <label for="email" class="text-sm font-medium">Email</label>
           <input
             id="email"
+            name="email"
             type="email"
-            bind:value={email}
             required
             maxlength="200"
             class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
@@ -117,7 +96,7 @@
           <label for="message" class="text-sm font-medium">訊息</label>
           <textarea
             id="message"
-            bind:value={message}
+            name="message"
             required
             maxlength="2000"
             rows="5"

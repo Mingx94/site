@@ -1,6 +1,8 @@
 import { allPosts, filterDrafts, sortByDate } from "@/lib/posts";
 import config from "@/config";
 
+export const prerender = true;
+
 export function load() {
   const blogs = filterDrafts(allPosts);
   const recentBlogs = sortByDate(blogs).slice(
