@@ -13,6 +13,7 @@ declare global {
   namespace Cloudflare {
     interface Env {
       TURNSTILE_SECRET_KEY: string;
+      SEND_EMAIL: SendEmail;
     }
   }
 
