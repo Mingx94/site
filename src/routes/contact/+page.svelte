@@ -39,14 +39,14 @@
       <BackToPrev />
     </div>
 
-    <h1 {@attach staggerIn} class="animate text-2xl font-semibold text-foreground">
+    <h1 {@attach staggerIn} class="animate text-3xl font-bold tracking-tight text-foreground">
       聯絡我
     </h1>
 
     {#if sent}
       <div
         {@attach staggerIn}
-        class="animate rounded-lg border border-green-500/30 bg-green-500/10 p-4 text-sm"
+        class="animate rounded-lg border border-primary/30 bg-primary/10 p-4 text-sm"
       >
         感謝你的訊息！我會盡快回覆。
       </div>
@@ -104,7 +104,7 @@
         <div {@attach loadTurnstile}></div>
 
         {#if errorMsg}
-          <div class="text-sm text-red-500">{errorMsg}</div>
+          <div class="text-sm text-destructive">{errorMsg}</div>
         {/if}
 
         <Button type="submit" disabled={!!submitContact.pending}>

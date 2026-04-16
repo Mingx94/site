@@ -3,7 +3,6 @@
   import LucideMoon from "~icons/lucide/moon";
   import LucideSun from "~icons/lucide/sun";
   import RiPaletteLine from "~icons/ri/palette-line";
-  import FontSelect from "./FontSelect.svelte";
   import { Button } from "./ui/button";
   import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
@@ -52,18 +51,12 @@
     {/snippet}
   </PopoverTrigger>
   <PopoverContent align="end" class="w-fit">
-    <div class="grid gap-x-4 grid-cols-[auto_1fr] gap-y-1">
-      <p class="text-sm self-center">暗色模式</p>
-      <div class="flex items-center gap-1">
-        {#each themeList as theme (theme.value)}
-          <Button variant="outline" onclick={() => onSelectTheme(theme.value)}>
-            {@render themeIcon(theme.value)}
-          </Button>
-        {/each}
-      </div>
-
-      <p class="text-sm self-center">字體</p>
-      <FontSelect />
+    <div class="flex items-center gap-1">
+      {#each themeList as theme (theme.value)}
+        <Button variant="outline" onclick={() => onSelectTheme(theme.value)}>
+          {@render themeIcon(theme.value)}
+        </Button>
+      {/each}
     </div>
   </PopoverContent>
 </Popover>

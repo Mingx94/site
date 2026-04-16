@@ -15,7 +15,7 @@
       </div>
       <div class="flex flex-wrap gap-3 items-center">
         <Link
-          aria-label="rss feed"
+          aria-label="RSS 訂閱"
           href="/rss.xml"
           external={true}
           underline={false}

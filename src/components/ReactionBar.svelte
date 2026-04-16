@@ -7,12 +7,12 @@
 
   let { slug }: Props = $props();
 
-  const EMOJI_MAP: Record<string, string> = {
-    thumbsup: "\u{1F44D}",
-    heart: "\u2764\uFE0F",
-    fire: "\u{1F525}",
-    bulb: "\u{1F4A1}",
-    party: "\u{1F389}",
+  const EMOJI_MAP: Record<string, { emoji: string; label: string }> = {
+    thumbsup: { emoji: "\u{1F44D}", label: "讚" },
+    heart: { emoji: "\u2764\uFE0F", label: "愛心" },
+    fire: { emoji: "\u{1F525}", label: "火熱" },
+    bulb: { emoji: "\u{1F4A1}", label: "啟發" },
+    party: { emoji: "\u{1F389}", label: "慶祝" },
   };
 
   // Anchor query to reactive context — addReaction calls refresh() → auto-updates
@@ -57,21 +57,22 @@
   }
 </script>
 
-{#if !reactionsQuery.loading}
-  <div class="flex flex-wrap gap-2 mt-8">
-    {#each Object.entries(EMOJI_MAP) as [key, emoji]}
-      <button
-        onclick={() => react(key)}
-        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-colors duration-200
-          {reacted.has(key)
-          ? 'border-primary/30 bg-primary/10 cursor-pointer'
-          : 'border-border hover:border-primary/30 hover:bg-muted cursor-pointer'}"
-      >
-        <span class="text-lg">{emoji}</span>
-        {#if reactionsQuery.current?.[key]}
-          <span class="text-sm text-muted-foreground">{reactionsQuery.current[key]}</span>
-        {/if}
-      </button>
-    {/each}
-  </div>
-{/if}
+<div class="flex flex-wrap gap-2 mt-12 pt-8 border-t border-border">
+  {#each Object.entries(EMOJI_MAP) as [key, { emoji, label }]}
+    <button
+      onclick={() => react(key)}
+      disabled={reactionsQuery.loading}
+      aria-label="{label}{reactionsQuery.current?.[key] ? `，${reactionsQuery.current[key]} 個` : ''}"
+      class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-colors duration-200
+        {reacted.has(key)
+        ? 'border-primary/30 bg-primary/10 cursor-pointer'
+        : 'border-border hover:border-primary/30 hover:bg-muted cursor-pointer'}
+        {reactionsQuery.loading ? 'opacity-50' : ''}"
+    >
+      <span class="text-lg" aria-hidden="true">{emoji}</span>
+      {#if reactionsQuery.current?.[key]}
+        <span class="text-sm text-muted-foreground">{reactionsQuery.current[key]}</span>
+      {/if}
+    </button>
+  {/each}
+</div>

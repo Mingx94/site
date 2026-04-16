@@ -7,18 +7,21 @@
 
 <Container>
   <div {@attach staggerIn} class="space-y-4 my-20 animate">
-    <h1 class="text-2xl font-semibold text-foreground">
-      {page.status} — {page.error?.message ?? "發生錯誤"}
+    <h1 class="text-3xl font-bold tracking-tight text-foreground">
+      {page.status}
     </h1>
-    <p>
+    <p class="text-muted-foreground">
       {#if page.status === 404}
-        這個頁面不存在或已被移除。
+        找不到這個頁面，它可能已被移動或刪除。
       {:else if page.status >= 500}
-        伺服器發生錯誤，請稍後再試。
+        伺服器發生了一些問題，請稍後再試。
       {:else}
-        發生錯誤，請稍後再試。
+        發生了一些問題，請稍後再試。
       {/if}
     </p>
-    <Link href="/">回到首頁</Link>
+    <div class="flex gap-3">
+      <Link href="/">回到首頁</Link>
+      <Link href="/blog">瀏覽文章</Link>
+    </div>
   </div>
 </Container>
