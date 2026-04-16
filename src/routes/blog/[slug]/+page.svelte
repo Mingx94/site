@@ -58,9 +58,13 @@
 
 <Container>
   <article>
-    <div class="space-y-1 my-10">
-      <div {@attach staggerIn} class="animate flex items-center gap-1.5">
-        <div class="text-sm">
+    <div class="mt-10 mb-12">
+      <h1 {@attach staggerIn} class="animate text-4xl font-bold tracking-tight text-foreground md:text-5xl">
+        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+        {@html post.title}
+      </h1>
+      <div {@attach staggerIn} class="animate flex items-center gap-1.5 mt-3">
+        <div class="text-sm text-muted-foreground">
           <FormattedDate date={post.date} />
         </div>
         {#if data.readingTime}
@@ -69,7 +73,7 @@
             {data.readingTime} 分鐘閱讀
           </div>
         {/if}
-        {#if !viewsQuery.loading && viewsQuery.current != null}
+        {#if viewsQuery.current != null}
           <span class="text-sm text-muted-foreground">&middot;</span>
           <div class="text-sm text-muted-foreground">
             {viewsQuery.current} 次瀏覽
@@ -77,16 +81,12 @@
         {/if}
         {#if post.draft}
           <div
-            class="text-sm text-red-500 border border-red-500 rounded-lg px-2 py-0.5"
+            class="text-sm text-destructive border border-destructive rounded-lg px-2 py-0.5"
           >
             草稿
           </div>
         {/if}
       </div>
-      <h1 {@attach staggerIn} class="animate text-3xl font-semibold text-foreground">
-        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-        {@html post.title}
-      </h1>
     </div>
 
     <div {@attach staggerIn} class="animate content">
@@ -96,7 +96,7 @@
     <ReactionBar slug={data.id} />
   </article>
 
-  <div {@attach staggerIn} class="animate flex mt-16">
+  <div {@attach staggerIn} class="animate flex mt-20">
     <BackToPrev />
     <BackToTop />
   </div>

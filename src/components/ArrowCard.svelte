@@ -10,7 +10,7 @@
 
 <a
   href={`/blog/${entry.id}`}
-  class="relative group flex items-center flex-nowrap py-3 px-4 pr-12 md:pr-15 rounded-lg border border-border bg-card hover:bg-muted/80 hover:text-muted-foreground/80 text-card-foreground transition-colors duration-300 ease-in-out"
+  class="relative group flex items-center flex-nowrap py-3 px-4 pr-12 md:pr-15 rounded-lg border border-border bg-card hover:border-primary/40 hover:bg-secondary/50 text-card-foreground transition-colors duration-300 ease-in-out"
 >
   <div class="flex flex-col flex-1 min-w-0 gap-1">
     <div class="font-semibold truncate">{entry.title}</div>
@@ -19,7 +19,8 @@
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
-    class="absolute top-1/2 right-4 -translate-y-1/2 size-6 md:size-8 stroke-1 fill-none stroke-current"
+    aria-hidden="true"
+    class="absolute top-1/2 right-4 -translate-y-1/2 size-6 md:size-8 stroke-1 fill-none stroke-current group-hover:stroke-primary transition-colors duration-300"
   >
     <line
       x1="5"

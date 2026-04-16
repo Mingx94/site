@@ -16,13 +16,13 @@
 </script>
 
 <Container>
-  <div class="space-y-16">
+  <div class="space-y-20">
     <section>
       <article>
-        <h1 {@attach staggerIn} class="animate text-3xl font-semibold text-foreground mb-4">
+        <h1 {@attach staggerIn} class="animate text-4xl font-bold tracking-tight text-foreground mb-3">
           嗨，我是 Michael <span class="text-xl">👋</span>
         </h1>
-        <p {@attach staggerIn} class="animate text-lg">
+        <p {@attach staggerIn} class="animate text-lg text-muted-foreground">
           現職前端工程師，工作上使用 React、Next.js 開發。
           喜歡拍照，部落格使用的圖片都是自己拍的。
         </p>
@@ -30,7 +30,7 @@
       <Social
         source={socialList}
         className={{
-          list: "flex flex-wrap gap-2 animate mt-2",
+          list: "flex flex-wrap gap-2 animate mt-4",
           item: "flex",
           icon: "size-5",
         }}
@@ -39,7 +39,7 @@
 
     <section {@attach staggerIn} class="animate space-y-6">
       <div class="flex flex-wrap gap-y-2 items-center justify-between">
-        <h2 class="text-xl font-semibold text-foreground">最近發表的文章</h2>
+        <h2 class="text-xl font-bold text-foreground">最近發表的文章</h2>
         {#if data.showMoreLink}
           <Link href="/blog">更多文章</Link>
         {/if}
@@ -54,7 +54,7 @@
     </section>
   </div>
 
-  <div {@attach staggerIn} class="animate flex mt-24">
+  <div {@attach staggerIn} class="animate flex mt-20">
     <BackToTop />
   </div>
 </Container>
