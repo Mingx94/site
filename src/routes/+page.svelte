@@ -18,19 +18,27 @@
 <Container>
   <div class="space-y-20">
     <section>
-      <article>
-        <h1 {@attach staggerIn} class="animate text-4xl font-bold tracking-tight text-foreground mb-3">
-          嗨，我是 Michael <span class="text-xl">👋</span>
+      <article class="space-y-4">
+        <p
+          {@attach staggerIn}
+          class="animate text-sm font-medium text-primary tracking-widest uppercase"
+        >
+          Michael Tsai
+        </p>
+        <h1
+          {@attach staggerIn}
+          class="animate text-4xl font-bold tracking-tight text-foreground leading-snug"
+        >
+          前端工程師，<br class="hidden sm:block" />打造細緻的網路體驗。
         </h1>
-        <p {@attach staggerIn} class="animate text-lg text-muted-foreground">
-          現職前端工程師，工作上使用 React、Next.js 開發。
-          喜歡拍照，部落格使用的圖片都是自己拍的。
+        <p {@attach staggerIn} class="animate text-lg text-muted-foreground leading-relaxed">
+          專注在 Web 技術與使用者體驗，熱愛把細節做到位。也喜歡用鏡頭記錄生活。
         </p>
       </article>
       <Social
         source={socialList}
         className={{
-          list: "flex flex-wrap gap-2 animate mt-4",
+          list: "flex flex-wrap gap-2 animate mt-5",
           item: "flex",
           icon: "size-5",
         }}
@@ -38,14 +46,16 @@
     </section>
 
     <section {@attach staggerIn} class="animate space-y-6">
-      <div class="flex flex-wrap gap-y-2 items-center justify-between">
-        <h2 class="text-xl font-bold text-foreground">最近發表的文章</h2>
+      <div class="flex flex-wrap gap-y-2 items-baseline justify-between">
+        <h2 class="text-xl font-bold text-foreground">最近發表</h2>
         {#if data.showMoreLink}
-          <Link href="/blog">更多文章</Link>
+          <Link href="/blog" class="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            所有文章 →
+          </Link>
         {/if}
       </div>
       <ul class="flex flex-col gap-4">
-        {#each data.recentBlogs as post}
+        {#each data.recentBlogs as post (post.id)}
           <li>
             <ArrowCard entry={post} />
           </li>

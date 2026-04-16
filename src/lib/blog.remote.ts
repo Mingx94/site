@@ -61,3 +61,21 @@ export const addReaction = command(
     void getReactions(slug).refresh();
   },
 );
+
+export const removeReaction = command(
+  v.object({ slug: v.string(), emoji: v.string() }),
+  async ({ slug, emoji }) => {
+    if (!ALLOWED_EMOJIS.includes(emoji as (typeof ALLOWED_EMOJIS)[number])) {
+      return;
+    }
+
+    const kv = getKV();
+    if (!kv) return;
+
+    const key = `reactions:${slug}:${emoji}`;
+    const current = parseInt((await kv.get(key)) ?? "0", 10);
+    await kv.put(key, Math.max(0, current - 1).toString());
+
+    void getReactions(slug).refresh();
+  },
+);

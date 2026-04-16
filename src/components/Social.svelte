@@ -26,18 +26,18 @@
   let { source, className }: Props = $props();
 
   const renderMap = {
-    bluesky: { Icon: RiBlueskyLine, ariaLabel: "bluesky" },
-    facebook: { Icon: RiFacebookCircleLine, ariaLabel: "facebook" },
-    twitter: { Icon: RiTwitterLine, ariaLabel: "twitter" },
-    mastodon: { Icon: RiMastodonLine, ariaLabel: "mastodon" },
-    instagram: { Icon: RiInstagramLine, ariaLabel: "instagram" },
-    threads: { Icon: RiThreadsLine, ariaLabel: "threads" },
-    reddit: { Icon: RiRedditLine, ariaLabel: "reddit" },
-    youtube: { Icon: RiYoutubeLine, ariaLabel: "youtube" },
-    linkedin: { Icon: RiLinkedinLine, ariaLabel: "linkedin" },
-    codepen: { Icon: RiCodepenLine, ariaLabel: "codepen" },
-    github: { Icon: RiGithubLine, ariaLabel: "github" },
-    email: { Icon: RiMailLine, ariaLabel: "email" },
+    bluesky: { Icon: RiBlueskyLine, ariaLabel: "Bluesky" },
+    facebook: { Icon: RiFacebookCircleLine, ariaLabel: "Facebook" },
+    twitter: { Icon: RiTwitterLine, ariaLabel: "Twitter" },
+    mastodon: { Icon: RiMastodonLine, ariaLabel: "Mastodon" },
+    instagram: { Icon: RiInstagramLine, ariaLabel: "Instagram" },
+    threads: { Icon: RiThreadsLine, ariaLabel: "Threads" },
+    reddit: { Icon: RiRedditLine, ariaLabel: "Reddit" },
+    youtube: { Icon: RiYoutubeLine, ariaLabel: "YouTube" },
+    linkedin: { Icon: RiLinkedinLine, ariaLabel: "LinkedIn" },
+    codepen: { Icon: RiCodepenLine, ariaLabel: "CodePen" },
+    github: { Icon: RiGithubLine, ariaLabel: "GitHub" },
+    email: { Icon: RiMailLine, ariaLabel: "電子郵件" },
   };
 
   type KeyOfRenderMap = keyof typeof renderMap;

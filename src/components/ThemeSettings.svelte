@@ -1,6 +1,7 @@
 <script lang="ts">
   import { toggleTheme } from "@/lib/theme";
   import LucideMoon from "~icons/lucide/moon";
+  import LucideMonitor from "~icons/lucide/monitor";
   import LucideSun from "~icons/lucide/sun";
   import RiPaletteLine from "~icons/ri/palette-line";
   import { Button } from "./ui/button";
@@ -34,7 +35,7 @@
 
 {#snippet themeIcon(theme: "light" | "dark" | "system")}
   {#if theme === "system"}
-    <p>系統</p>
+    <LucideMonitor class="size-4" />
   {:else if theme === "dark"}
     <LucideMoon class="size-4" />
   {:else}

@@ -9,11 +9,22 @@ export const staggerIn: Attachment = (node) => {
   if (!scheduled) {
     scheduled = true;
     requestAnimationFrame(() => {
+      // Fresh browser load → full stagger (120ms per element, cinematic reveal)
+      // SPA navigation within same session → fast stagger (40ms, barely noticeable)
+      const isRevisit =
+        typeof sessionStorage !== "undefined" &&
+        sessionStorage.getItem("site:visited") === "1";
+      const interval = isRevisit ? 40 : 120;
+
       queue.forEach((el, i) => {
-        setTimeout(() => el.classList.add("show"), i * 150);
+        setTimeout(() => el.classList.add("show"), i * interval);
       });
       queue = [];
       scheduled = false;
+
+      if (typeof sessionStorage !== "undefined") {
+        sessionStorage.setItem("site:visited", "1");
+      }
     });
   }
 };

@@ -7,6 +7,7 @@
 
   const navItems = [
     { href: "/blog", label: "文章" },
+    { href: "/about", label: "關於" },
     { href: "/contact", label: "聯絡" },
   ];
 
