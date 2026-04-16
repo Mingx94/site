@@ -20,6 +20,7 @@
   let counted = false;
   let visibleSeconds = 0;
   let maxScroll = 0;
+  let readingProgress = $state(0);
 
   const minSeconds = $derived(Math.max(10, (data.readingTime ?? 1) * 60 * 0.3));
   const scrollThreshold = 0.6;
@@ -38,7 +39,9 @@
   function handleScroll() {
     const scrollable = document.documentElement.scrollHeight - window.innerHeight;
     if (scrollable > 0) {
-      maxScroll = Math.max(maxScroll, window.scrollY / scrollable);
+      const ratio = window.scrollY / scrollable;
+      readingProgress = Math.min(100, ratio * 100);
+      maxScroll = Math.max(maxScroll, ratio);
       checkAndCount();
     }
   }
@@ -53,6 +56,14 @@
 </script>
 
 <svelte:window onscroll={handleScroll} />
+
+<!-- Reading progress bar -->
+<div class="fixed top-0 left-0 right-0 z-[51] h-0.5 bg-border/50" aria-hidden="true">
+  <div
+    class="h-full bg-primary transition-[width] duration-75 ease-linear"
+    style:width="{readingProgress}%"
+  ></div>
+</div>
 
 <TableOfContents />
 

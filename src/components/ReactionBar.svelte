@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getReactions, addReaction } from "@/lib/blog.remote";
+  import { getReactions, addReaction, removeReaction } from "@/lib/blog.remote";
 
   interface Props {
     slug: string;
@@ -35,6 +35,11 @@
       reacted.delete(emoji);
       try {
         localStorage.setItem(`reactions:${slug}`, JSON.stringify([...reacted]));
+      } catch {
+        // ignore
+      }
+      try {
+        await removeReaction({ slug, emoji });
       } catch {
         // ignore
       }

@@ -73,6 +73,7 @@
             {...submitContact.fields.name.as("text")}
             id="name"
             required
+            autocomplete="name"
             maxlength={100}
             class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
           />
@@ -84,6 +85,7 @@
             {...submitContact.fields.email.as("email")}
             id="email"
             required
+            autocomplete="email"
             maxlength={200}
             class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
           />
