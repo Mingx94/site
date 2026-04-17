@@ -53,7 +53,7 @@
 </script>
 
 <ul {@attach staggerIn} class={className?.list}>
-  {#each sorted as [key, value]}
+  {#each sorted as [key, value] (key)}
     {#if source[key]}
       <li class={className?.item}>
         <Link

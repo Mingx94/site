@@ -28,9 +28,9 @@
     class="inline-flex items-center gap-0.5 rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
     aria-label="切換字體：{fonts.find((f) => f.value === selected)?.label}"
   >
-    <span class="font-iansui" class:opacity-40={selected !== "iansui"}>芫</span>
+    <span class={["font-iansui", selected !== "iansui" && "opacity-40"]}>芫</span>
     <span class="text-border">/</span>
-    <span class="font-huninn" class:opacity-40={selected !== "huninn"}>粉</span>
+    <span class={["font-huninn", selected !== "huninn" && "opacity-40"]}>粉</span>
   </button>
   <!-- Styled tooltip -->
   <div

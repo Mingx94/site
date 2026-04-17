@@ -63,7 +63,7 @@
 </script>
 
 <div class="flex flex-wrap gap-2 mt-12 pt-8 border-t border-border">
-  {#each Object.entries(EMOJI_MAP) as [key, { emoji, label }]}
+  {#each Object.entries(EMOJI_MAP) as [key, { emoji, label }] (key)}
     <button
       onclick={() => react(key)}
       disabled={reactionsQuery.loading}

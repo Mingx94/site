@@ -141,7 +141,7 @@
     {:else}
       <!-- Year groups -->
       <div class="space-y-16 md:space-y-20">
-        {#each data.years as year, yi (year)}
+        {#each data.years as year (year)}
           <section {@attach staggerIn} class="animate">
             <div
               class="mb-4 flex items-baseline justify-between border-t border-border pt-4"
