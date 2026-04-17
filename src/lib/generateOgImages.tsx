@@ -1,13 +1,16 @@
 import { ImageResponse } from "@vercel/og";
-import { readFile } from "node:fs/promises";
 import React from "react";
-import logo from "../assets/logo.png?filepath";
 
 // prevent editor from remove import
 React.version;
 
-async function loadGoogleFont(font: string, text: string) {
-  const url = `https://fonts.googleapis.com/css2?family=${font}&text=${encodeURIComponent(text)}`;
+async function loadGoogleFont(
+  family: string,
+  text: string,
+  weight?: number,
+) {
+  const spec = weight ? `${family}:wght@${weight}` : family;
+  const url = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(spec)}&text=${encodeURIComponent(text)}`;
   const css = await (await fetch(url)).text();
   const resource = css.match(
     /src: url\((.+)\) format\('(opentype|truetype)'\)/,
@@ -21,12 +24,6 @@ async function loadGoogleFont(font: string, text: string) {
   }
 
   throw new Error("failed to load font data");
-}
-
-async function loadImage(url: string) {
-  const readImage = await readFile(url);
-  // to base64
-  return readImage.toString("base64");
 }
 
 export async function generateOgImageForPost(post: {
@@ -69,17 +66,19 @@ export async function generateOgImageForPost(post: {
           justifyContent: "space-between",
         }}
       >
-        {/* Logo — top left */}
-        <div style={{ display: "flex", width: "172px", height: "40px" }}>
-          <img
-            src={`data:image/png;base64,${await loadImage(logo)}`}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
-              objectPosition: "left center",
-            }}
-          />
+        {/* Wordmark — top left */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            fontFamily: "Schibsted Grotesk",
+            fontWeight: 700,
+            fontSize: "36px",
+            letterSpacing: "-0.02em",
+          }}
+        >
+          <span style={{ color: "rgb(64, 50, 38)" }}>vartifact</span>
+          <span style={{ color: "rgb(48, 131, 84)" }}>.</span>
         </div>
 
         {/* Text block — bottom */}
@@ -133,6 +132,12 @@ export async function generateOgImageForPost(post: {
       width: 1200,
       height: 630,
       fonts: [
+        {
+          name: "Schibsted Grotesk",
+          data: await loadGoogleFont("Schibsted Grotesk", "vartifact.", 700),
+          style: "normal",
+          weight: 700,
+        },
         {
           name: "Huninn",
           data: await loadGoogleFont(

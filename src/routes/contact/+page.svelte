@@ -1,6 +1,7 @@
 <script lang="ts">
   import BackToPrev from "@/components/BackToPrev.svelte";
   import Container from "@/components/Container.svelte";
+  import Seo from "@/components/Seo.svelte";
   import { Button } from "@/components/ui/button";
   import { staggerIn } from "@/lib/domEvent";
   import { submitContact } from "./contact.remote";
@@ -28,9 +29,10 @@
   };
 </script>
 
-<svelte:head>
-  <title>聯絡 | Vartifact</title>
-</svelte:head>
+<Seo
+  title="聯絡 | Vartifact"
+  description="合作、提問、或打個招呼——請留下訊息。"
+/>
 
 <Container>
   <div class="pt-4 md:pt-8 pb-8 space-y-12 md:space-y-16">

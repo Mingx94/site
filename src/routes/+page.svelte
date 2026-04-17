@@ -3,6 +3,7 @@
   import Container from "@/components/Container.svelte";
   import FormattedDate from "@/components/FormattedDate.svelte";
   import Link from "@/components/Link.svelte";
+  import Seo from "@/components/Seo.svelte";
   import config from "@/config";
   import { staggerIn } from "@/lib/domEvent";
   import RiArrowRightUpLine from "~icons/ri/arrow-right-up-line";
@@ -22,6 +23,8 @@
     { label: "X", href: config.social.twitter, handle: "mingx94" },
   ].filter((i) => i.href);
 </script>
+
+<Seo />
 
 <Container>
   <div class="py-8 md:py-12 space-y-24 md:space-y-32">

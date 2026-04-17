@@ -7,31 +7,13 @@
   import { onScroll } from "@/lib/domEvent";
   import { initFont } from "@/lib/font";
   import { initTheme } from "@/lib/theme";
-  import { page } from "$app/state";
   import TwSizeIndicator from "@/components/TwSizeIndicator.svelte";
 
   interface Props {
     children: import("svelte").Snippet;
-    data: import("./$types").LayoutData & {
-      title?: string;
-      description?: string;
-      og?: string;
-      noindex?: boolean;
-    };
   }
 
-  let { children, data }: Props = $props();
-
-  const title = $derived(data?.title ?? config.site.title);
-  const description = $derived(
-    data?.description ?? config.metadata.meta_description,
-  );
-  const og = $derived(data?.og ?? "/og.jpg");
-  const noindex = $derived(data?.noindex ?? false);
-  const fullPageUrl = $derived(page.url.href);
-  const fullOgUrl = $derived(
-    og?.startsWith("http") ? og : new URL(og, page.url).href,
-  );
+  let { children }: Props = $props();
 
   onMount(() => {
     initTheme();
@@ -56,29 +38,8 @@
 
 <svelte:head>
   <meta charset="utf-8" />
-  <title>{title}</title>
-  <meta name="description" content={description} />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="author" content={config.metadata.meta_author} />
-  {#if noindex}
-    <meta name="robots" content="noindex,nofollow" />
-  {/if}
-
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content={title} />
-  <meta property="og:url" content={fullPageUrl} />
-  <meta property="og:image" content={fullOgUrl} />
-  <meta property="og:description" content={description} />
-  <meta property="og:site_name" content={config.site.title} />
-  <meta property="article:author" content={config.metadata.meta_author} />
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:creator" content={config.metadata.meta_author} />
-  <meta name="twitter:title" content={title} />
-  <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content={fullOgUrl} />
 
   <!-- Icons -->
   <link rel="icon" type="image/x-icon" href={config.site.favicon} />

@@ -1,9 +1,12 @@
 <script lang="ts">
   import Container from "@/components/Container.svelte";
   import Link from "@/components/Link.svelte";
+  import Seo from "@/components/Seo.svelte";
   import { staggerIn } from "@/lib/domEvent";
   import { page } from "$app/state";
 </script>
+
+<Seo title="{page.status} | Vartifact" noindex />
 
 <Container>
   <div {@attach staggerIn} class="space-y-4 my-20 animate">
