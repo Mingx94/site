@@ -8,11 +8,3 @@ Modular instruction files organized by topic. Load the relevant section based on
 | Coding Rules | `agents/rules.md` | 所有程式碼變更前必讀 |
 | Design Context | `.impeccable.md` | UI/UX、樣式、設計決策 |
 | Cloudflare | [docs](https://developers.cloudflare.com/llms-full.txt) | Workers、D1、KV、部署相關 |
-
----
-
-@agents/rules.md
-
-@agents/svelte.md
-
-@.impeccable.md
