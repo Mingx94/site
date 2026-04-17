@@ -6,12 +6,6 @@ updated: 2025-06-25
 draft: false
 ---
 
-<script>
-  import Cover from "@/content/components/Cover.svelte"
-</script>
-
-<Cover {title} />
-
 2025 年已經有許多成熟的 [JAMStack](https://jamstack.org/generators/)，原本是使用 [SvelteKit](https://svelte.dev/docs/kit/introduction) 來開發網站。但是在實際開發中，SvelteKit 並不是專門為了生成靜態網頁而設計的，如果需要生成靜態網頁，則需要再手動加入一些工具，例如 [MDsveX](https://github.com/pngwn/MDsveX) 等來轉換 Markdown 文件渲染為 HTML。
 
 ## Astro

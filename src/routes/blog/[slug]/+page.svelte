@@ -6,6 +6,7 @@
   import ReactionBar from "@/components/ReactionBar.svelte";
   import Seo from "@/components/Seo.svelte";
   import TableOfContents from "@/components/TableOfContents.svelte";
+  import Cover from "@/content/components/Cover.svelte";
   import { staggerIn } from "@/lib/domEvent";
   import { getViews, trackView } from "@/lib/blog.remote";
   import type { Component } from "svelte";
@@ -135,6 +136,9 @@
         {/if}
       </div>
     </div>
+
+    <!-- Cover image (full article width — visual anchor) -->
+    <Cover title={post.title} />
 
     <!-- Content -->
     <div {@attach staggerIn} class="animate content">
