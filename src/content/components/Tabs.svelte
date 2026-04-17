@@ -20,7 +20,7 @@
 
 <Tabs.Root value={tabs[0]}>
   <Tabs.List>
-    {#each tabs as tab}
+    {#each tabs as tab (tab)}
       <Tabs.Trigger value={tab}>{tab}</Tabs.Trigger>
     {/each}
   </Tabs.List>
@@ -29,7 +29,7 @@
     {@render children()}
   </div>
 
-  {#each tabList as tab}
+  {#each tabList as tab (tab.name)}
     <Tabs.Content value={tab.name} class={tab.children?.className}>
       {@html tab.children?.innerHTML}
     </Tabs.Content>

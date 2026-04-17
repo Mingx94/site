@@ -26,7 +26,7 @@
       </Link>
 
       <nav class="flex items-center gap-1 md:gap-2">
-        {#each navItems as item}
+        {#each navItems as item (item.href)}
           <Link
             href={item.href}
             underline={false}
