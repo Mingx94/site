@@ -55,8 +55,8 @@
 <svelte:window onkeydown={open ? handleKeydown : undefined} />
 
 {#if headings.length > 0}
-  <!-- Desktop sidebar (xl+) — unchanged -->
-  <nav class="hidden xl:block fixed top-32 right-8 w-56 max-h-[calc(100vh-12rem)] overflow-y-auto">
+  <!-- Desktop sidebar (2xl+) — left-anchored to container right edge -->
+  <nav class="hidden 2xl:block fixed top-32 w-56 max-h-[calc(100vh-12rem)] overflow-y-auto" style="left: calc(50% + 32rem + 1.5rem)">
     <div class="text-xs font-semibold text-muted-foreground mb-2">目錄</div>
     <ul class="space-y-1 text-sm border-l border-border">
       {#each headings as heading (heading.id)}
@@ -76,10 +76,10 @@
     </ul>
   </nav>
 
-  <!-- Mobile floating button (below xl) -->
+  <!-- Mobile floating button (below 2xl) -->
   <button
     onclick={() => (open = true)}
-    class="xl:hidden fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95"
+    class="2xl:hidden fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95"
     aria-label="開啟目錄"
   >
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -92,11 +92,11 @@
     </svg>
   </button>
 
-  <!-- Mobile panel (below xl) -->
+  <!-- Mobile panel (below 2xl) -->
   {#if open}
     <!-- Backdrop -->
     <div
-      class="xl:hidden fixed inset-0 z-40 bg-foreground/40"
+      class="2xl:hidden fixed inset-0 z-40 bg-foreground/40"
       role="presentation"
       onclick={close}
       onkeydown={handleKeydown}
@@ -105,7 +105,7 @@
 
     <!-- Slide-up panel -->
     <nav
-      class="xl:hidden fixed bottom-0 left-0 right-0 z-50 max-h-[70vh] overflow-y-auto rounded-t-2xl border-t border-border bg-background shadow-2xl"
+      class="2xl:hidden fixed bottom-0 left-0 right-0 z-50 max-h-[70vh] overflow-y-auto rounded-t-2xl border-t border-border bg-background shadow-2xl"
       aria-label="目錄"
       transition:fly={{ y: 300, duration: 300 }}
     >

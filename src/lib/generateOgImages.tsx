@@ -33,6 +33,12 @@ export async function generateOgImageForPost(post: {
   title: string;
   description: string | undefined;
 }) {
+  // Brand palette (approximated from oklch tokens)
+  // --background: oklch(0.9711 0.0074 80.7211) → warm off-white
+  // --primary: oklch(0.5234 0.1347 144.1672) → brand green
+  // --foreground: oklch(0.3 0.0358 30.2042) → dark warm brown
+  // --muted-foreground: oklch(0.4495 0.0486 39.211) → medium warm
+
   return new ImageResponse(
     <div
       style={{
@@ -40,79 +46,85 @@ export async function generateOgImageForPost(post: {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        padding: "2.5rem",
-        backgroundImage:
-          "linear-gradient(109.6deg, rgb(204, 228, 247) 11.2%, rgb(237, 246, 250) 100.2%)",
+        backgroundColor: "rgb(242, 238, 228)",
+        fontFamily: "Huninn",
       }}
     >
+      {/* Brand green top accent bar */}
+      <div
+        style={{
+          height: "8px",
+          backgroundColor: "rgb(48, 131, 84)",
+          flexShrink: 0,
+        }}
+      />
+
+      {/* Main content area */}
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           flex: 1,
-          padding: "3rem",
-          backgroundColor: "rgba(130, 130, 130, 0.1)",
-          borderRadius: "2rem",
-          border: "2px solid rgba(130, 130, 130, 0.2)",
+          padding: "48px 64px 56px",
+          justifyContent: "space-between",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            position: "absolute",
-            top: "0rem",
-            left: "3rem",
-            width: "22rem",
-            height: "10rem",
-          }}
-        >
+        {/* Logo — top left */}
+        <div style={{ display: "flex", width: "172px", height: "40px" }}>
           <img
             src={`data:image/png;base64,${await loadImage(logo)}`}
             style={{
               width: "100%",
               height: "100%",
               objectFit: "contain",
+              objectPosition: "left center",
             }}
           />
         </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            height: "100%",
-            color: "black",
-          }}
-        >
+
+        {/* Text block — bottom */}
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          {/* Title */}
           <div
             style={{
-              display: "flex",
-              marginTop: "6rem",
-              fontSize: "3.75rem",
-              lineHeight: 1.1,
+              fontSize: "58px",
+              lineHeight: "1.1",
+              color: "rgb(64, 50, 38)",
+              fontWeight: "bold",
+              marginBottom: post.description ? "20px" : "40px",
+              maxWidth: "900px",
             }}
           >
             {post.title}
           </div>
-          <div
-            style={{
-              display: "flex",
-              marginTop: "2.5rem",
-              fontSize: "1.75rem",
-              lineHeight: 1.25,
-            }}
-          >
-            {post.description}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              marginLeft: "auto",
-              marginTop: "auto",
-              fontSize: "1.5rem",
-              lineHeight: 1.25,
-            }}
-          >
-            by Michael Tsai
+
+          {/* Description (optional) */}
+          {post.description ? (
+            <div
+              style={{
+                fontSize: "24px",
+                lineHeight: "1.45",
+                color: "rgb(110, 88, 68)",
+                marginBottom: "40px",
+                maxWidth: "820px",
+              }}
+            >
+              {post.description}
+            </div>
+          ) : null}
+
+          {/* Attribution */}
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div
+              style={{
+                width: "3px",
+                height: "20px",
+                backgroundColor: "rgb(48, 131, 84)",
+              }}
+            />
+            <div style={{ fontSize: "20px", color: "rgb(110, 88, 68)" }}>
+              Michael Tsai
+            </div>
           </div>
         </div>
       </div>
@@ -127,8 +139,8 @@ export async function generateOgImageForPost(post: {
             "Huninn",
             `
               ${post.title}
-              ${post.description}
-              by Michael Tsai
+              ${post.description ?? ""}
+              Michael Tsai
             `,
           ),
           style: "normal",

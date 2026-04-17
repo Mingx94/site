@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from "svelte";
   import { toggleTheme } from "@/lib/theme";
   import LucideMoon from "~icons/lucide/moon";
   import LucideMonitor from "~icons/lucide/monitor";
@@ -22,7 +23,15 @@
     },
   ] as const;
 
+  let activeTheme = $state<"light" | "dark" | "system">("system");
+
+  onMount(() => {
+    const stored = localStorage.getItem("theme");
+    activeTheme = (stored as "light" | "dark") ?? "system";
+  });
+
   function onSelectTheme(theme: "light" | "dark" | "system") {
+    activeTheme = theme;
     if (theme === "system") {
       toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
       localStorage.removeItem("theme");
@@ -54,7 +63,15 @@
   <PopoverContent align="end" class="w-fit">
     <div class="flex items-center gap-1">
       {#each themeList as theme (theme.value)}
-        <Button variant="outline" onclick={() => onSelectTheme(theme.value)}>
+        <Button
+          variant="outline"
+          onclick={() => onSelectTheme(theme.value)}
+          aria-pressed={activeTheme === theme.value}
+          title={theme.name}
+          class={activeTheme === theme.value
+            ? "bg-primary/10 border-primary/40 text-primary"
+            : ""}
+        >
           {@render themeIcon(theme.value)}
         </Button>
       {/each}
