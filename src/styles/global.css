@@ -10,8 +10,8 @@
 @theme inline {
   --font-iansui: "Iansui";
   --font-huninn: "Huninn";
-  --font-sans-iansui: "Inter", "Iansui", sans-serif;
-  --font-sans-huninn: "Inter", "Huninn", sans-serif;
+  --font-sans-iansui: "Schibsted Grotesk", "Iansui", sans-serif;
+  --font-sans-huninn: "Schibsted Grotesk", "Huninn", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
   --radius-sm: calc(var(--radius) - 4px);
@@ -48,6 +48,11 @@
 :root {
   --radius: 0.5rem;
   --background: oklch(0.9711 0.0074 80.7211);
+  /* Notice component semantic colors */
+  --notice-note: oklch(0.50 0.18 240);
+  --notice-tip: oklch(0.52 0.17 160);
+  --notice-info: oklch(0.56 0.14 75);
+  --notice-warning: oklch(0.52 0.20 25);
   --foreground: oklch(0.3 0.0358 30.2042);
   --card: oklch(0.9711 0.0074 80.7211);
   --card-foreground: oklch(0.3 0.0358 30.2042);
@@ -70,6 +75,11 @@
 
 .dark {
   --background: oklch(0.2683 0.0279 150.7681);
+  /* Notice component semantic colors — lighter for dark backgrounds */
+  --notice-note: oklch(0.72 0.16 240);
+  --notice-tip: oklch(0.72 0.15 160);
+  --notice-info: oklch(0.78 0.13 75);
+  --notice-warning: oklch(0.72 0.18 25);
   --foreground: oklch(0.9423 0.0097 72.6595);
   --card: oklch(0.3327 0.0271 146.9867);
   --card-foreground: oklch(0.9423 0.0097 72.6595);
@@ -231,22 +241,22 @@ html.scrolled #back-to-top {
     }
 
     &.note {
-      @apply text-[#1B83E2];
+      color: var(--notice-note);
       @apply border-current;
     }
 
     &.tip {
-      @apply text-[#40D294];
+      color: var(--notice-tip);
       @apply border-current;
     }
 
     &.info {
-      @apply text-[#E3A72C];
+      color: var(--notice-info);
       @apply border-current;
     }
 
     &.warning {
-      @apply text-[#DB2C23];
+      color: var(--notice-warning);
       @apply border-current;
     }
   }
