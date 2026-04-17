@@ -4,6 +4,7 @@
   import Container from "@/components/Container.svelte";
   import FormattedDate from "@/components/FormattedDate.svelte";
   import ReactionBar from "@/components/ReactionBar.svelte";
+  import Seo from "@/components/Seo.svelte";
   import TableOfContents from "@/components/TableOfContents.svelte";
   import { staggerIn } from "@/lib/domEvent";
   import { getViews, trackView } from "@/lib/blog.remote";
@@ -61,6 +62,12 @@
     return `${y}.${m}.${day}`;
   }
 </script>
+
+<Seo
+  title="{post.title} | Vartifact"
+  description={post.description}
+  og="/og/{encodeURIComponent(data.id)}"
+/>
 
 <svelte:window onscroll={handleScroll} />
 

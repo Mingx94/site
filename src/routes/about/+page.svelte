@@ -3,6 +3,7 @@
   import BackToTop from "@/components/BackToTop.svelte";
   import Container from "@/components/Container.svelte";
   import Link from "@/components/Link.svelte";
+  import Seo from "@/components/Seo.svelte";
   import config from "@/config";
   import { staggerIn } from "@/lib/domEvent";
   import RiArrowRightUpLine from "~icons/ri/arrow-right-up-line";
@@ -38,13 +39,10 @@
   ];
 </script>
 
-<svelte:head>
-  <title>關於 | Vartifact</title>
-  <meta
-    name="description"
-    content="關於 Michael Tsai — 前端工程師，Vartifact 部落格的作者。"
-  />
-</svelte:head>
+<Seo
+  title="關於 | Vartifact"
+  description="關於 Michael Tsai — 前端工程師，Vartifact 部落格的作者。"
+/>
 
 <Container>
   <div class="pt-4 md:pt-8 pb-8 space-y-16 md:space-y-20">

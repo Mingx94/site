@@ -2,6 +2,7 @@
   import BackToTop from "@/components/BackToTop.svelte";
   import Container from "@/components/Container.svelte";
   import FormattedDate from "@/components/FormattedDate.svelte";
+  import Seo from "@/components/Seo.svelte";
   import { staggerIn } from "@/lib/domEvent";
   import type { Post } from "@/lib/posts";
   import RiArrowRightUpLine from "~icons/ri/arrow-right-up-line";
@@ -33,6 +34,8 @@
         }),
   );
 </script>
+
+<Seo title="文章 | Vartifact" description="技術隨筆、閱讀筆記，以及其他片段。" />
 
 <Container>
   <div class="pt-4 md:pt-8 pb-8">
