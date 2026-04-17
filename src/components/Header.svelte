@@ -6,33 +6,50 @@
   import { page } from "$app/state";
 
   const navItems = [
-    { href: "/blog", label: "文章" },
-    { href: "/about", label: "關於" },
-    { href: "/contact", label: "聯絡" },
+    { href: "/blog", label: "文章", index: "01" },
+    { href: "/about", label: "關於", index: "02" },
+    { href: "/contact", label: "聯絡", index: "03" },
   ];
 
   function isActive(href: string): boolean {
-    return page.url.pathname === href || page.url.pathname.startsWith(href + "/");
+    return (
+      page.url.pathname === href || page.url.pathname.startsWith(href + "/")
+    );
   }
 </script>
 
-<header class="pt-6">
+<header class="pt-5">
   <Container>
-    <div class="flex flex-wrap gap-y-2 justify-between items-center">
-      <Link href="/" underline={false} title="首頁">
+    <div class="flex items-center justify-between gap-4">
+      <Link href="/" underline={false} title="首頁" class="!text-foreground">
         <Logo />
       </Link>
-      <nav class="flex items-center gap-1">
+
+      <nav class="flex items-center gap-1 md:gap-2">
         {#each navItems as item}
           <Link
             href={item.href}
             underline={false}
-            class={isActive(item.href) ? "text-primary font-semibold" : ""}
+            class="group relative px-1.5 py-1 text-sm transition-colors duration-200 {isActive(
+              item.href,
+            )
+              ? '!text-primary'
+              : '!text-muted-foreground hover:!text-foreground'}"
           >
+            <span
+              class="mr-1 hidden font-mono text-[9px] uppercase tracking-widest opacity-60 md:inline"
+              aria-hidden="true">N°{item.index}</span
+            >
             {item.label}
+            {#if isActive(item.href)}
+              <span
+                class="absolute -bottom-0.5 left-1.5 right-1.5 h-px bg-primary"
+                aria-hidden="true"
+              ></span>
+            {/if}
           </Link>
         {/each}
-        <span class="mx-1 h-4 w-px bg-border" aria-hidden="true"></span>
+        <span class="mx-1 h-3 w-px bg-border" aria-hidden="true"></span>
         <FontToggle />
       </nav>
     </div>

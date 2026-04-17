@@ -7,23 +7,53 @@
   import RiRssLine from "~icons/ri/rss-line";
 </script>
 
-<footer {@attach staggerIn} class="animate">
+<footer {@attach staggerIn} class="animate pb-6">
   <Container>
-    <div class="flex justify-between items-center">
-      <div>
-        {config.params.copyright}
+    <div class="border-t border-border pt-5">
+      <!-- Top row: masthead + service links -->
+      <div
+        class="mb-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+      >
+        <span>— Vartifact / Personal Site</span>
+        <div class="flex items-baseline gap-5">
+          <Link
+            href="/blog"
+            underline={false}
+            class="!text-muted-foreground hover:!text-foreground">Writing</Link
+          >
+          <Link
+            href="/about"
+            underline={false}
+            class="!text-muted-foreground hover:!text-foreground">About</Link
+          >
+          <Link
+            href="/contact"
+            underline={false}
+            class="!text-muted-foreground hover:!text-foreground">Contact</Link
+          >
+        </div>
       </div>
-      <div class="flex flex-wrap gap-3 items-center">
-        <Link
-          aria-label="RSS 訂閱"
-          href="/rss.xml"
-          external={true}
-          underline={false}
-          class="flex size-8 items-center justify-center"
-        >
-          <RiRssLine class="size-5" />
-        </Link>
-        <ThemeSettings />
+
+      <!-- Bottom row: copyright + controls -->
+      <div
+        class="flex flex-wrap items-center justify-between gap-y-2 text-sm"
+      >
+        <span class="text-muted-foreground">
+          {config.params.copyright}
+        </span>
+        <div class="flex items-center gap-2">
+          <Link
+            aria-label="RSS 訂閱"
+            title="RSS"
+            href="/rss.xml"
+            external={true}
+            underline={false}
+            class="inline-flex size-8 items-center justify-center rounded-md !text-muted-foreground transition-colors hover:!text-primary"
+          >
+            <RiRssLine class="size-4" />
+          </Link>
+          <ThemeSettings />
+        </div>
       </div>
     </div>
   </Container>

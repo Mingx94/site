@@ -13,8 +13,6 @@
   let post = $derived(data.metadata);
   let Content = $derived(data.content as Component);
 
-  // Anchor the query to this component's reactive context
-  // trackView calls getViews(slug).set(next) on server → auto-updates here
   const viewsQuery = $derived(getViews(data.id));
 
   let counted = false;
@@ -25,7 +23,6 @@
   const minSeconds = $derived(Math.max(10, (data.readingTime ?? 1) * 60 * 0.3));
   const scrollThreshold = 0.6;
 
-  // Timer for genuine-reading tracking (pause when tab hidden)
   $effect(() => {
     const timer = setInterval(() => {
       if (!document.hidden) {
@@ -37,7 +34,8 @@
   });
 
   function handleScroll() {
-    const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollable =
+      document.documentElement.scrollHeight - window.innerHeight;
     if (scrollable > 0) {
       const ratio = window.scrollY / scrollable;
       readingProgress = Math.min(100, ratio * 100);
@@ -53,12 +51,24 @@
       trackView(data.id).catch(() => {});
     }
   }
+
+  function formatStamp(d: Date | string | undefined): string {
+    if (!d) return "";
+    const date = new Date(d);
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${y}.${m}.${day}`;
+  }
 </script>
 
 <svelte:window onscroll={handleScroll} />
 
 <!-- Reading progress bar -->
-<div class="fixed top-0 left-0 right-0 z-[51] h-0.5 bg-border/50" aria-hidden="true">
+<div
+  class="fixed top-0 right-0 left-0 z-[51] h-0.5 bg-border/50"
+  aria-hidden="true"
+>
   <div
     class="h-full bg-primary transition-[width] duration-75 ease-linear"
     style:width="{readingProgress}%"
@@ -68,46 +78,76 @@
 <TableOfContents />
 
 <Container>
-  <article>
-    <div class="mt-10 mb-12">
-      <h1 {@attach staggerIn} class="animate text-4xl font-bold tracking-tight text-foreground md:text-5xl">
+  <article class="pt-4 md:pt-8">
+    <!-- Masthead strip -->
+    <div
+      {@attach staggerIn}
+      class="animate flex items-baseline justify-between gap-4 border-t border-border pt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground"
+    >
+      <span>· Essay · {formatStamp(post.date)}</span>
+      {#if post.draft}
+        <span class="text-destructive">Draft</span>
+      {/if}
+    </div>
+
+    <!-- Title block -->
+    <div class="mt-8 md:mt-12 mb-10 md:mb-14 space-y-6">
+      <h1
+        {@attach staggerIn}
+        class="animate text-balance font-bold leading-[1.05] tracking-tight text-foreground text-[clamp(2.25rem,6vw,4.5rem)]"
+      >
         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
         {@html post.title}
       </h1>
-      <div {@attach staggerIn} class="animate flex items-center gap-1.5 mt-3">
-        <div class="text-sm text-muted-foreground">
-          <FormattedDate date={post.date} />
-        </div>
+
+      {#if post.description}
+        <p
+          {@attach staggerIn}
+          class="animate max-w-2xl text-lg md:text-xl leading-relaxed text-muted-foreground"
+        >
+          {post.description}
+        </p>
+      {/if}
+    </div>
+
+    <!-- Byline ruler -->
+    <div
+      {@attach staggerIn}
+      class="animate flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-y border-border py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-12 md:mb-16"
+    >
+      <span>By Michael Tsai</span>
+      <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <FormattedDate date={post.date} />
         {#if data.readingTime}
-          <span class="text-sm text-muted-foreground">&middot;</span>
-          <div class="text-sm text-muted-foreground">
-            {data.readingTime} 分鐘閱讀
-          </div>
+          <span aria-hidden="true">·</span>
+          <span>{data.readingTime} min read</span>
         {/if}
         {#if viewsQuery.current != null}
-          <span class="text-sm text-muted-foreground">&middot;</span>
-          <div class="text-sm text-muted-foreground">
-            {viewsQuery.current} 次瀏覽
-          </div>
-        {/if}
-        {#if post.draft}
-          <div
-            class="text-sm text-destructive border border-destructive rounded-lg px-2 py-0.5"
-          >
-            草稿
-          </div>
+          <span aria-hidden="true">·</span>
+          <span>{viewsQuery.current} views</span>
         {/if}
       </div>
     </div>
 
+    <!-- Content -->
     <div {@attach staggerIn} class="animate content">
       <Content />
     </div>
 
     <ReactionBar slug={data.id} />
+
+    <!-- Colophon -->
+    <div
+      class="mt-16 flex flex-wrap items-baseline justify-between gap-y-2 border-t border-border pt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
+    >
+      <span>Filed {formatStamp(post.date)}</span>
+      {#if post.updated}
+        <span>Revised {formatStamp(post.updated)}</span>
+      {/if}
+    </div>
   </article>
 
-  <div {@attach staggerIn} class="animate flex mt-20">
+  <div {@attach staggerIn} class="animate mt-12 flex">
     <BackToPrev />
     <BackToTop />
   </div>

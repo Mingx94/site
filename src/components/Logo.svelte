@@ -1,12 +1,5 @@
-<script lang="ts">
-</script>
-
-<img
-  src="/logo.png"
-  width="206"
-  height="48"
-  alt="Vartifact"
-  loading="eager"
-  fetchpriority="high"
-  class="dark:invert"
-/>
+<span
+  class="inline-flex items-baseline font-bold text-lg tracking-tight text-foreground"
+>
+  vartifact<span class="text-primary">.</span>
+</span>
