@@ -1,31 +1,54 @@
-<script>
-  import { staggerIn } from "@/lib/domEvent";
+<script module>
+  // Eagerly pick up every post's cover image at two resolutions:
+  // the main srcset (served responsively) and a pre-blurred 32px LQIP.
+  // Module-level so glob evaluates once per build, not per instance.
+  const covers = import.meta.glob("/src/content/posts/*/cover.jpg", {
+    eager: true,
+    query: { enhanced: true, w: "1280;640;400" },
+  });
 
-  let { image, placeholder, title } = $props();
-  let loaded = $state(false);
+  const placeholders = import.meta.glob("/src/content/posts/*/cover.jpg", {
+    eager: true,
+    query: { enhanced: true, w: "32", blur: "10" },
+  });
 </script>
 
-<div
-  {@attach staggerIn}
-  class="animate relative mx-auto mt-8 mb-2 aspect-3/2 overflow-hidden rounded-lg"
->
-  <!-- LQIP: tiny blurred placeholder -->
-  <enhanced:img
-    src={placeholder}
-    alt=""
-    aria-hidden="true"
-    class="absolute inset-0 h-full w-full scale-110 object-cover blur-xl"
-  />
+<script>
+  import { page } from "$app/state";
+  import { staggerIn } from "@/lib/domEvent";
 
-  <!-- Full image fades in on top -->
-  <enhanced:img
-    src={image}
-    sizes="(min-width:1920px) 1280px, (min-width:1080px) 640px, (min-width:768px) 400px"
-    alt={title}
-    fetchpriority="high"
-    onload={() => (loaded = true)}
-    class="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out"
-    style:opacity={loaded ? 1 : 0}
-    loading="eager"
-  />
-</div>
+  let { title } = $props();
+  let loaded = $state(false);
+
+  const slug = $derived(page.params.slug);
+  const key = $derived(`/src/content/posts/${slug}/cover.jpg`);
+  const image = $derived(covers[key]?.default);
+  const placeholder = $derived(placeholders[key]?.default);
+</script>
+
+{#if image && placeholder}
+  <div
+    {@attach staggerIn}
+    class="animate relative mx-auto mt-8 mb-2 aspect-3/2 overflow-hidden rounded-lg"
+  >
+    <!-- LQIP: tiny pre-blurred placeholder -->
+    <enhanced:img
+      src={placeholder}
+      alt=""
+      aria-hidden="true"
+      class="absolute inset-0 h-full w-full object-cover"
+    />
+
+    <!-- Full image fades in on top -->
+    <enhanced:img
+      src={image}
+      sizes="(min-width:1920px) 1280px, (min-width:1080px) 640px, (min-width:768px) 400px"
+      alt={title}
+      fetchpriority="high"
+      onload={() => (loaded = true)}
+      class="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out"
+      style:opacity={loaded ? 1 : 0}
+      loading="eager"
+    />
+  </div>
+{/if}
