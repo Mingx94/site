@@ -1,0 +1,1843 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SVX Editor — Wireframes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --paper: #f3ede0;
+        --paper-2: #ebe3d1;
+        --ink: #2a241b;
+        --ink-soft: #5c5346;
+        --ink-fade: #8a7f6c;
+        --line: #c3b89f;
+        --line-soft: #d8cfb8;
+        --accent: #b2462d; /* warm red ink */
+        --accent-2: #3a6b52; /* forest stamp */
+        --hand: "Caveat", "Kalam", cursive;
+        --hand-body: "Kalam", "Caveat", cursive;
+        --mono: "JetBrains Mono", ui-monospace, monospace;
+      }
+
+      html,
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: var(--hand-body);
+        /* subtle paper grain via layered gradients */
+        background-image:
+          radial-gradient(
+            circle at 22% 18%,
+            rgba(180, 150, 95, 0.1),
+            transparent 45%
+          ),
+          radial-gradient(
+            circle at 78% 68%,
+            rgba(120, 90, 50, 0.08),
+            transparent 50%
+          ),
+          repeating-linear-gradient(
+            0deg,
+            rgba(120, 90, 40, 0.018) 0,
+            rgba(120, 90, 40, 0.018) 1px,
+            transparent 1px,
+            transparent 3px
+          );
+      }
+
+      .page {
+        max-width: 1680px;
+        margin: 0 auto;
+        padding: 44px 56px 120px;
+      }
+
+      /* Top header strip, handwritten notebook feel */
+      .doc-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 40px;
+        border-bottom: 2px solid var(--ink);
+        padding-bottom: 14px;
+        margin-bottom: 26px;
+        position: relative;
+      }
+      .doc-header::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -6px;
+        height: 1px;
+        background: var(--ink-soft);
+      }
+      .doc-title {
+        font-family: var(--hand);
+        font-size: 64px;
+        font-weight: 700;
+        line-height: 0.95;
+        letter-spacing: -0.5px;
+        margin: 0;
+        transform: rotate(-0.4deg);
+      }
+      .doc-title em {
+        color: var(--accent);
+        font-style: normal;
+        position: relative;
+      }
+      .doc-title em::after {
+        content: "";
+        position: absolute;
+        left: -2px;
+        right: -4px;
+        bottom: 4px;
+        height: 10px;
+        background: rgba(178, 70, 45, 0.18);
+        z-index: -1;
+        transform: rotate(-1deg);
+      }
+      .doc-sub {
+        font-family: var(--hand);
+        font-size: 22px;
+        color: var(--ink-soft);
+        max-width: 540px;
+        text-align: right;
+        line-height: 1.25;
+      }
+      .doc-sub .pill {
+        display: inline-block;
+        padding: 2px 10px 3px;
+        border: 1.5px solid var(--ink);
+        border-radius: 999px;
+        font-size: 16px;
+        margin-left: 6px;
+        background: var(--paper-2);
+      }
+      .meta-row {
+        display: flex;
+        gap: 18px;
+        font-family: var(--hand);
+        font-size: 18px;
+        color: var(--ink-fade);
+        margin-bottom: 32px;
+      }
+      .meta-row span b {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      /* Wireframe card */
+      .wf {
+        background: #fcf8ed;
+        border: 1.5px solid var(--ink);
+        border-radius: 3px;
+        box-shadow:
+          2px 3px 0 0 var(--ink-soft),
+          8px 12px 28px -10px rgba(60, 40, 10, 0.25);
+        position: relative;
+        margin-bottom: 56px;
+        overflow: hidden;
+      }
+      .wf::before {
+        /* torn/taped corner feel */
+        content: "";
+        position: absolute;
+        top: -10px;
+        left: 32px;
+        width: 74px;
+        height: 22px;
+        background: rgba(220, 190, 100, 0.35);
+        border: 1px dashed rgba(90, 60, 20, 0.3);
+        transform: rotate(-3deg);
+        border-radius: 2px;
+      }
+
+      .wf-label {
+        position: absolute;
+        top: -6px;
+        left: 44px;
+        font-family: var(--hand);
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--ink);
+        transform: rotate(-2deg);
+        z-index: 2;
+        pointer-events: none;
+      }
+      .wf-num {
+        position: absolute;
+        top: 18px;
+        right: 22px;
+        font-family: var(--hand);
+        font-size: 56px;
+        font-weight: 700;
+        color: rgba(178, 70, 45, 0.18);
+        line-height: 1;
+        z-index: 0;
+      }
+
+      .wf-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 34px 28px 12px;
+        border-bottom: 1.5px dashed var(--line);
+        position: relative;
+      }
+      .wf-title {
+        font-family: var(--hand);
+        font-size: 32px;
+        font-weight: 600;
+        margin: 0;
+      }
+      .wf-desc {
+        font-family: var(--hand);
+        font-size: 18px;
+        color: var(--ink-soft);
+        max-width: 620px;
+        text-align: right;
+        line-height: 1.25;
+      }
+
+      /* Mock app window */
+      .win {
+        margin: 22px 24px 24px;
+        border: 1.5px solid var(--ink);
+        border-radius: 6px;
+        background: #fffdf6;
+        box-shadow: inset 0 0 0 1px rgba(200, 175, 130, 0.4);
+        overflow: hidden;
+        height: 560px;
+        display: grid;
+        grid-template-rows: 34px 1fr;
+      }
+      .titlebar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 12px;
+        border-bottom: 1.5px solid var(--ink);
+        background: var(--paper-2);
+      }
+      .dots {
+        display: flex;
+        gap: 6px;
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border: 1.2px solid var(--ink);
+        border-radius: 50%;
+      }
+      .dot.r {
+        background: #e6a79a;
+      }
+      .dot.y {
+        background: #ecd68b;
+      }
+      .dot.g {
+        background: #a8c9a6;
+      }
+      .tb-title {
+        font-family: var(--hand);
+        font-size: 18px;
+        color: var(--ink-soft);
+        flex: 1;
+        text-align: center;
+      }
+      .tb-spacer {
+        width: 54px;
+      }
+
+      /* --- inside: sidebar + panes --- */
+      .scribble-line {
+        height: 1px;
+        background: repeating-linear-gradient(
+          90deg,
+          var(--line) 0 6px,
+          transparent 6px 10px
+        );
+      }
+      .ph-line {
+        height: 8px;
+        background: var(--line);
+        opacity: 0.42;
+        border-radius: 2px;
+      }
+      .ph-line.short {
+        width: 40%;
+      }
+      .ph-line.med {
+        width: 72%;
+      }
+      .ph-line.long {
+        width: 92%;
+      }
+      .ph-line.h1 {
+        height: 14px;
+        width: 55%;
+        background: var(--ink);
+        opacity: 0.85;
+      }
+      .ph-line.h2 {
+        height: 11px;
+        width: 40%;
+        background: var(--ink);
+        opacity: 0.7;
+      }
+      .ph-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      /* Sidebar shared */
+      .sidebar {
+        border-right: 1.5px solid var(--ink);
+        background: var(--paper-2);
+        padding: 14px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        font-family: var(--hand);
+        font-size: 18px;
+      }
+      .sb-search {
+        border: 1.2px solid var(--ink);
+        border-radius: 4px;
+        padding: 4px 8px 5px;
+        background: #fffdf6;
+        color: var(--ink-fade);
+        font-family: var(--hand);
+        font-size: 17px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .sb-search::before {
+        content: "⌕";
+        font-size: 19px;
+      }
+      .sb-section {
+        font-size: 14px;
+        letter-spacing: 1px;
+        color: var(--ink-fade);
+        text-transform: uppercase;
+        margin-top: 6px;
+        font-family: var(--mono);
+      }
+      .tree {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .tree .node {
+        padding: 2px 4px 2px 6px;
+        border-radius: 3px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        line-height: 1.1;
+      }
+      .tree .node.dir {
+        color: var(--ink);
+        font-weight: 600;
+      }
+      .tree .node.file {
+        color: var(--ink-soft);
+      }
+      .tree .node.active {
+        background: rgba(178, 70, 45, 0.14);
+        color: var(--accent);
+      }
+      .tree .node.dirty::after {
+        content: "●";
+        margin-left: auto;
+        color: var(--accent);
+        font-size: 13px;
+      }
+      .tree .node.git-m::after {
+        content: "M";
+        margin-left: auto;
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--accent-2);
+      }
+      .tree .node.indent {
+        padding-left: 22px;
+      }
+      .tree .node.indent2 {
+        padding-left: 38px;
+      }
+      .tree .node .i {
+        width: 10px;
+        opacity: 0.6;
+      }
+
+      /* Tabs row */
+      .tabs-row {
+        display: flex;
+        border-bottom: 1.5px solid var(--ink);
+        background: var(--paper-2);
+        font-family: var(--hand);
+        font-size: 17px;
+        overflow: hidden;
+      }
+      .tab {
+        padding: 6px 14px;
+        border-right: 1px solid var(--line);
+        color: var(--ink-soft);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .tab.active {
+        background: #fffdf6;
+        color: var(--ink);
+        position: relative;
+      }
+      .tab.active::after {
+        content: "";
+        position: absolute;
+        left: 10%;
+        right: 10%;
+        bottom: -1px;
+        height: 2px;
+        background: var(--accent);
+      }
+      .tab .x {
+        opacity: 0.5;
+        font-size: 13px;
+      }
+      .tab .dot-s {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+
+      /* Toolbar */
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 10px;
+        border-bottom: 1.5px dashed var(--line);
+        background: #fffdf6;
+        font-family: var(--mono);
+        font-size: 13px;
+        color: var(--ink-soft);
+      }
+      .tb-btn {
+        padding: 2px 7px;
+        border: 1px solid var(--line);
+        border-radius: 3px;
+        background: var(--paper-2);
+      }
+      .tb-btn.b {
+        font-weight: 700;
+        color: var(--ink);
+      }
+      .tb-btn.i {
+        font-style: italic;
+      }
+      .tb-btn.u {
+        text-decoration: underline;
+      }
+      .tb-sep {
+        width: 1px;
+        height: 16px;
+        background: var(--line);
+        margin: 0 4px;
+      }
+
+      /* Editor pane */
+      .pane {
+        padding: 16px 22px;
+        font-family: var(--mono);
+        font-size: 13px;
+        color: var(--ink);
+        overflow: hidden;
+      }
+      .pane.editor {
+        background: #fffdf6;
+      }
+      .pane.preview {
+        background: #faf4e3;
+        border-left: 1.5px dashed var(--line);
+        font-family: var(--hand-body);
+        font-size: 16px;
+      }
+      .fm-block {
+        background: #f3ecd6;
+        border-left: 3px solid var(--accent-2);
+        padding: 8px 10px;
+        margin-bottom: 12px;
+        color: var(--ink-soft);
+        font-size: 12px;
+        line-height: 1.6;
+      }
+      .fm-block .k {
+        color: var(--accent-2);
+      }
+      .code-line {
+        line-height: 1.7;
+        white-space: pre;
+      }
+      .code-line .h {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .code-line .tag {
+        color: var(--accent-2);
+      }
+      .code-line .str {
+        color: #8a6a1f;
+      }
+      .code-line .com {
+        color: var(--ink-fade);
+      }
+      .caret {
+        display: inline-block;
+        width: 1px;
+        height: 14px;
+        background: var(--accent);
+        vertical-align: -2px;
+        animation: blink 1s steps(2) infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      .preview h1.p-h1 {
+        font-family: var(--hand);
+        font-size: 28px;
+        margin: 0 0 6px;
+      }
+      .preview h2.p-h2 {
+        font-family: var(--hand);
+        font-size: 21px;
+        margin: 16px 0 4px;
+        border-bottom: 1px dashed var(--line);
+        padding-bottom: 2px;
+      }
+      .preview p.p-p {
+        margin: 6px 0;
+        line-height: 1.5;
+        font-size: 15px;
+      }
+      .preview .p-link {
+        color: var(--accent);
+        border-bottom: 1px solid var(--accent);
+      }
+      .notice-mock {
+        border: 1.2px solid var(--accent-2);
+        background: rgba(58, 107, 82, 0.08);
+        border-radius: 4px;
+        padding: 8px 10px;
+        margin: 10px 0;
+        font-size: 14px;
+        color: var(--ink);
+      }
+      .notice-mock b {
+        color: var(--accent-2);
+      }
+
+      /* Right rail */
+      .rail {
+        border-left: 1.5px solid var(--ink);
+        background: var(--paper-2);
+        padding: 14px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        font-family: var(--hand);
+        font-size: 17px;
+        overflow: hidden;
+      }
+      .rail h4 {
+        font-family: var(--mono);
+        font-size: 11px;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: var(--ink-fade);
+        margin: 0 0 6px;
+        font-weight: 500;
+      }
+      .frontmatter-card {
+        background: #fffdf6;
+        border: 1.2px solid var(--line);
+        border-radius: 4px;
+        padding: 8px 10px;
+      }
+      .fm-row {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin-bottom: 8px;
+        font-size: 15px;
+      }
+      .fm-row label {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--ink-fade);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+      .fm-row .val {
+        border-bottom: 1px dotted var(--line);
+        padding-bottom: 2px;
+        color: var(--ink);
+      }
+      .tag-chip {
+        display: inline-block;
+        border: 1px solid var(--ink-soft);
+        border-radius: 999px;
+        padding: 1px 8px;
+        font-size: 13px;
+        margin: 2px 3px 0 0;
+        background: #fffdf6;
+      }
+
+      .toc-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+      .toc-list li {
+        color: var(--ink-soft);
+        padding: 1px 0;
+      }
+      .toc-list li.sub {
+        padding-left: 14px;
+        color: var(--ink-fade);
+      }
+      .toc-list li.active {
+        color: var(--accent);
+      }
+      .toc-list li.active::before {
+        content: "▸ ";
+        color: var(--accent);
+      }
+
+      .palette {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .comp-card {
+        border: 1.2px solid var(--line);
+        border-radius: 4px;
+        padding: 6px 8px;
+        background: #fffdf6;
+        cursor: grab;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+      }
+      .comp-card .g {
+        width: 18px;
+        height: 18px;
+        border: 1px dashed var(--line);
+        border-radius: 3px;
+        display: grid;
+        place-items: center;
+        font-family: var(--mono);
+        font-size: 9px;
+        color: var(--ink-fade);
+      }
+      .comp-card .name {
+        font-family: var(--hand);
+        font-weight: 600;
+      }
+
+      /* Status bar */
+      .statusbar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        gap: 18px;
+        padding: 4px 12px;
+        border-top: 1px solid var(--line);
+        background: var(--paper-2);
+        font-family: var(--mono);
+        font-size: 11px;
+        color: var(--ink-fade);
+      }
+      .statusbar .branch {
+        color: var(--accent-2);
+      }
+      .statusbar .dirty {
+        color: var(--accent);
+      }
+      .statusbar .spacer {
+        flex: 1;
+      }
+
+      /* Annotations */
+      .annot {
+        position: absolute;
+        font-family: var(--hand);
+        color: var(--accent);
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 1.1;
+        transform: rotate(-2.5deg);
+        z-index: 5;
+        pointer-events: none;
+      }
+      .annot .arrow {
+        display: block;
+        font-size: 30px;
+        line-height: 1;
+      }
+      .annot small {
+        font-size: 15px;
+        color: var(--ink-soft);
+        display: block;
+        font-weight: 400;
+      }
+
+      /* Decisions row (bottom) */
+      .decision {
+        margin-top: 56px;
+        border: 2px dashed var(--ink);
+        border-radius: 6px;
+        padding: 22px 26px;
+        background: rgba(255, 255, 255, 0.35);
+      }
+      .decision h3 {
+        font-family: var(--hand);
+        font-size: 28px;
+        margin: 0 0 6px;
+      }
+      .decision p {
+        font-family: var(--hand-body);
+        font-size: 17px;
+        color: var(--ink-soft);
+        margin: 0 0 12px;
+        max-width: 780px;
+      }
+      .pick-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .pick-btn {
+        font-family: var(--hand);
+        font-size: 20px;
+        padding: 6px 14px;
+        border: 1.5px solid var(--ink);
+        background: #fffdf6;
+        border-radius: 4px;
+        cursor: pointer;
+        color: var(--ink);
+        box-shadow: 2px 2px 0 var(--ink-soft);
+      }
+      .pick-btn:hover {
+        background: rgba(178, 70, 45, 0.1);
+      }
+
+      /* Layout-specific grids */
+      .layout-A {
+        grid-template-columns: 210px 1fr;
+      }
+      .layout-A .body {
+        display: grid;
+        grid-template-columns: 210px 1fr 1fr;
+        grid-template-rows: 32px 34px 1fr 22px;
+        grid-template-areas:
+          "sb tabs tabs"
+          "sb tools tools"
+          "sb ed pv"
+          "sb st st";
+        height: calc(560px - 34px);
+      }
+      .layout-A .sidebar {
+        grid-area: sb;
+      }
+      .layout-A .tabs-row {
+        grid-area: tabs;
+      }
+      .layout-A .toolbar {
+        grid-area: tools;
+      }
+      .layout-A .pane.editor {
+        grid-area: ed;
+      }
+      .layout-A .pane.preview {
+        grid-area: pv;
+      }
+      .layout-A .statusbar {
+        grid-area: st;
+        position: static;
+      }
+
+      .layout-B .body {
+        display: grid;
+        grid-template-columns: 200px 1fr 230px;
+        grid-template-rows: 32px 34px 1fr 22px;
+        grid-template-areas:
+          "sb tabs tabs"
+          "sb tools rail"
+          "sb ed rail"
+          "sb st st";
+        height: calc(560px - 34px);
+      }
+      .layout-B .sidebar {
+        grid-area: sb;
+      }
+      .layout-B .tabs-row {
+        grid-area: tabs;
+      }
+      .layout-B .toolbar {
+        grid-area: tools;
+      }
+      .layout-B .pane.editor {
+        grid-area: ed;
+      }
+      .layout-B .rail {
+        grid-area: rail;
+      }
+      .layout-B .statusbar {
+        grid-area: st;
+        position: static;
+      }
+
+      .layout-C .body {
+        display: grid;
+        grid-template-columns: 200px 1fr 1fr 230px;
+        grid-template-rows: 32px 34px 1fr 22px;
+        grid-template-areas:
+          "sb tabs tabs tabs"
+          "sb tools tools rail"
+          "sb ed pv rail"
+          "sb st st st";
+        height: calc(560px - 34px);
+      }
+      .layout-C .sidebar {
+        grid-area: sb;
+      }
+      .layout-C .tabs-row {
+        grid-area: tabs;
+      }
+      .layout-C .toolbar {
+        grid-area: tools;
+      }
+      .layout-C .pane.editor {
+        grid-area: ed;
+      }
+      .layout-C .pane.preview {
+        grid-area: pv;
+      }
+      .layout-C .rail {
+        grid-area: rail;
+      }
+      .layout-C .statusbar {
+        grid-area: st;
+        position: static;
+      }
+
+      /* D: WYSIWYG single pane, with floating palette */
+      .layout-D .body {
+        display: grid;
+        grid-template-columns: 200px 1fr 230px;
+        grid-template-rows: 32px 34px 1fr 22px;
+        grid-template-areas:
+          "sb tabs tabs"
+          "sb tools rail"
+          "sb ed rail"
+          "sb st st";
+        height: calc(560px - 34px);
+      }
+      .layout-D .sidebar {
+        grid-area: sb;
+      }
+      .layout-D .tabs-row {
+        grid-area: tabs;
+      }
+      .layout-D .toolbar {
+        grid-area: tools;
+      }
+      .layout-D .pane.editor {
+        grid-area: ed;
+        background: #fffdf6;
+        font-family: var(--hand-body);
+        font-size: 16px;
+        padding: 22px 40px;
+      }
+      .layout-D .rail {
+        grid-area: rail;
+      }
+      .layout-D .statusbar {
+        grid-area: st;
+        position: static;
+      }
+
+      /* WYSIWYG inline bits */
+      .wyz h1 {
+        font-family: var(--hand);
+        font-size: 34px;
+        margin: 4px 0 2px;
+      }
+      .wyz h2 {
+        font-family: var(--hand);
+        font-size: 22px;
+        margin: 16px 0 2px;
+      }
+      .wyz p {
+        margin: 6px 0;
+        line-height: 1.55;
+      }
+      .wyz .inline-code {
+        background: #f3ecd6;
+        border: 1px solid var(--line);
+        border-radius: 3px;
+        padding: 0 5px;
+        font-family: var(--mono);
+        font-size: 13px;
+      }
+      .wyz .comp-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--mono);
+        font-size: 12px;
+        background: rgba(58, 107, 82, 0.1);
+        border: 1px dashed var(--accent-2);
+        color: var(--accent-2);
+        padding: 1px 7px;
+        border-radius: 3px;
+      }
+      .wyz .notice-mock.inline {
+        margin: 10px 0;
+      }
+
+      /* Layout E: overlay preview (toggle) — not used but keep hooks */
+
+      /* Comparison table */
+      .compare {
+        margin-top: 36px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+      }
+      .compare .col {
+        border: 1.5px solid var(--ink);
+        border-radius: 4px;
+        padding: 14px 14px 12px;
+        background: #fcf8ed;
+      }
+      .compare h4 {
+        font-family: var(--hand);
+        font-size: 22px;
+        margin: 0 0 6px;
+      }
+      .compare h4 span {
+        color: var(--accent);
+        font-weight: 700;
+      }
+      .compare ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-family: var(--hand-body);
+        font-size: 15px;
+        color: var(--ink-soft);
+      }
+      .compare li {
+        padding: 2px 0 2px 16px;
+        position: relative;
+      }
+      .compare li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: var(--accent-2);
+        font-weight: 700;
+      }
+      .compare li.minus::before {
+        content: "✕";
+        color: var(--accent);
+      }
+      .compare .score {
+        font-family: var(--hand);
+        color: var(--ink-fade);
+        font-size: 15px;
+        margin-top: 10px;
+        border-top: 1px dashed var(--line);
+        padding-top: 6px;
+      }
+
+      /* Tweaks panel */
+      .tweaks {
+        position: fixed;
+        bottom: 22px;
+        right: 22px;
+        width: 260px;
+        background: #fffdf6;
+        border: 1.5px solid var(--ink);
+        border-radius: 6px;
+        padding: 14px 16px 12px;
+        font-family: var(--hand-body);
+        box-shadow: 3px 4px 0 var(--ink-soft);
+        font-size: 15px;
+        z-index: 50;
+        display: none;
+      }
+      .tweaks.on {
+        display: block;
+      }
+      .tweaks h5 {
+        font-family: var(--hand);
+        font-size: 22px;
+        margin: 0 0 8px;
+      }
+      .tweaks .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+        border-top: 1px dashed var(--line);
+      }
+      .tweaks .row:first-of-type {
+        border-top: 0;
+      }
+      .tweaks label {
+        font-size: 14px;
+      }
+      .tweaks .seg {
+        display: inline-flex;
+        border: 1px solid var(--ink);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .tweaks .seg button {
+        font-family: var(--hand);
+        font-size: 14px;
+        padding: 2px 8px;
+        border: 0;
+        background: #fffdf6;
+        color: var(--ink-soft);
+        border-right: 1px solid var(--ink);
+        cursor: pointer;
+      }
+      .tweaks .seg button:last-child {
+        border-right: 0;
+      }
+      .tweaks .seg button.on {
+        background: var(--accent);
+        color: #fffdf6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <!-- title -->
+      <header class="doc-header">
+        <h1 class="doc-title">
+          svx <em>editor</em> · low-fi wireframes
+        </h1>
+        <div class="doc-sub">
+          4 layout options for a paper-feel writing workspace
+          <span class="pill">v1 · sketch</span>
+        </div>
+      </header>
+
+      <div class="meta-row">
+        <span><b>目的</b> · 探索工作區佈局</span>
+        <span><b>情境</b> · Obsidian-like, 但為 svx/mdsvex 設計</span>
+        <span><b>風格</b> · 紙質、溫暖、寫作感</span>
+        <span><b>下一步</b> · 挑一個做高保真</span>
+      </div>
+
+      <!-- ===================== WIREFRAME A ===================== -->
+      <section class="wf layout-A">
+        <span class="wf-label">A</span>
+        <span class="wf-num">01</span>
+        <div class="wf-head">
+          <h2 class="wf-title">並排預覽 · 左檔案樹</h2>
+          <div class="wf-desc">
+            最直覺。左邊檔案樹，中間原始碼，右邊即時 rendered 預覽。<br />
+            Frontmatter & TOC 在下方或浮動。
+          </div>
+        </div>
+        <div class="win">
+          <div class="titlebar">
+            <div class="dots">
+              <span class="dot r"></span
+              ><span class="dot y"></span
+              ><span class="dot g"></span>
+            </div>
+            <div class="tb-title">svx-editor — ~/site/src/content</div>
+            <div class="tb-spacer"></div>
+          </div>
+          <div class="body">
+            <aside class="sidebar">
+              <div class="sb-search">搜尋檔案…</div>
+              <div class="sb-section">VAULT</div>
+              <div class="tree">
+                <div class="node dir">▾ content</div>
+                <div class="node dir indent">▾ blog</div>
+                <div class="node file indent2 active">
+                  ✎ astro-intro.svx
+                </div>
+                <div class="node file indent2 dirty">
+                  ✎ svelte-5.svx
+                </div>
+                <div class="node file indent2 git-m">
+                  ✎ og-image.md
+                </div>
+                <div class="node dir indent">▸ components</div>
+                <div class="node dir">▸ drafts</div>
+                <div class="node dir">▸ assets</div>
+              </div>
+            </aside>
+
+            <div class="tabs-row">
+              <div class="tab active">
+                <span class="dot-s"></span> astro-intro.svx
+                <span class="x">×</span>
+              </div>
+              <div class="tab">svelte-5.svx <span class="x">×</span></div>
+              <div class="tab">og-image.md <span class="x">×</span></div>
+            </div>
+
+            <div class="toolbar">
+              <span class="tb-btn b">B</span><span class="tb-btn i">I</span
+              ><span class="tb-btn u">U</span>
+              <span class="tb-sep"></span>
+              <span class="tb-btn">H1</span><span class="tb-btn">H2</span
+              ><span class="tb-btn">H3</span>
+              <span class="tb-sep"></span>
+              <span class="tb-btn">link</span><span class="tb-btn">img</span
+              ><span class="tb-btn">code</span><span class="tb-btn">list</span>
+              <span class="tb-sep"></span>
+              <span class="tb-btn" style="color: var(--accent-2)"
+                >＋ Notice</span
+              >
+              <span class="tb-btn" style="color: var(--accent-2)">＋ Tabs</span>
+              <span style="flex: 1"></span>
+              <span class="tb-btn">預覽</span>
+            </div>
+
+            <div class="pane editor">
+              <div class="fm-block">
+                <span class="k">---</span><br />
+                <span class="k">title</span>: "初次使用 Astro.js"<br />
+                <span class="k">date</span>: 2025-02-02 ·
+                <span class="k">tags</span>: [astro, blog]<br />
+                <span class="k">---</span>
+              </div>
+              <div class="code-line"><span class="h">## Astro</span></div>
+              <div class="code-line">
+                2025 年已經有許多成熟的 <span class="str">[JAMStack]</span
+                ><span class="com">(https://...)</span>，<br />原本是使用
+                SvelteKit 來開發網站<span class="caret"></span>
+              </div>
+              <div class="code-line" style="margin-top: 8px">
+                <span class="tag">&lt;Notice type="tip"&gt;</span>
+              </div>
+              <div class="code-line" style="padding-left: 16px">
+                Astro 以更少的 JavaScript 聞名。
+              </div>
+              <div class="code-line">
+                <span class="tag">&lt;/Notice&gt;</span>
+              </div>
+            </div>
+
+            <div class="pane preview">
+              <h1 class="p-h1">初次使用 Astro.js</h1>
+              <div
+                style="
+                  color: var(--ink-fade);
+                  font-size: 13px;
+                  font-family: var(--mono);
+                  margin-bottom: 10px;
+                "
+              >
+                2025-02-02 · 3 min read
+              </div>
+              <h2 class="p-h2">Astro</h2>
+              <p class="p-p">
+                2025 年已經有許多成熟的
+                <span class="p-link">JAMStack</span>，原本是使用 SvelteKit
+                來開發網站。
+              </p>
+              <div class="notice-mock">
+                <b>💡 Tip</b> · Astro 以更少的 JavaScript 聞名。
+              </div>
+              <p class="p-p">最吸引我的地方在於 Astro 可以支援各種前端框架…</p>
+            </div>
+
+            <div class="statusbar">
+              <span class="branch">⎇ main</span>
+              <span class="dirty">● 1 modified</span>
+              <span>UTF-8</span>
+              <span>mdsvex</span>
+              <span class="spacer"></span>
+              <span>Ln 12, Col 34</span>
+              <span>預覽：sync</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- annotations -->
+        <div class="annot" style="top: 120px; left: 20px">
+          <span class="arrow">↘</span>
+          handwritten tab<br /><small>active = warm red underline</small>
+        </div>
+        <div class="annot" style="top: 380px; right: 40px">
+          <span class="arrow">↖</span>
+          Svelte 元件<br /><small>即時渲染為卡片</small>
+        </div>
+      </section>
+
+      <!-- ===================== WIREFRAME B ===================== -->
+      <section class="wf layout-B">
+        <span class="wf-label">B</span>
+        <span class="wf-num">02</span>
+        <div class="wf-head">
+          <h2 class="wf-title">WYSIWYG · Frontmatter + Palette 右側</h2>
+          <div class="wf-desc">
+            Typora 式所見即所得。沒有並排，右側是 Frontmatter 編輯器 + <br />
+            Svelte 元件 palette（可拖曳進編輯器）。
+          </div>
+        </div>
+        <div class="win">
+          <div class="titlebar">
+            <div class="dots">
+              <span class="dot r"></span
+              ><span class="dot y"></span
+              ><span class="dot g"></span>
+            </div>
+            <div class="tb-title">svx-editor — wysiwyg mode</div>
+            <div class="tb-spacer"></div>
+          </div>
+          <div class="body">
+            <aside class="sidebar">
+              <div class="sb-search">搜尋…</div>
+              <div class="sb-section">VAULT</div>
+              <div class="tree">
+                <div class="node dir">▾ blog</div>
+                <div class="node file indent active">astro-intro.svx</div>
+                <div class="node file indent dirty">svelte-5.svx</div>
+                <div class="node file indent">og-image.md</div>
+                <div class="node dir">▸ drafts</div>
+                <div class="node dir">▸ assets</div>
+              </div>
+            </aside>
+
+            <div class="tabs-row">
+              <div class="tab active">
+                astro-intro.svx <span class="x">×</span>
+              </div>
+              <div class="tab">svelte-5.svx <span class="x">×</span></div>
+            </div>
+
+            <div class="toolbar">
+              <span class="tb-btn b">B</span><span class="tb-btn i">I</span
+              ><span class="tb-btn u">U</span>
+              <span class="tb-sep"></span>
+              <span class="tb-btn">H1</span><span class="tb-btn">H2</span>
+              <span class="tb-sep"></span>
+              <span class="tb-btn">“ ”</span><span class="tb-btn">link</span
+              ><span class="tb-btn">img</span>
+              <span class="tb-sep"></span>
+              <span class="tb-btn">⌘K</span>
+              <span style="flex: 1"></span>
+              <span class="tb-btn">僅原始碼</span>
+            </div>
+
+            <div class="pane editor wyz" style="padding: 24px 40px">
+              <h1>初次使用 Astro.js</h1>
+              <div
+                style="
+                  color: var(--ink-fade);
+                  font-size: 13px;
+                  font-family: var(--mono);
+                  margin-bottom: 14px;
+                "
+              >
+                2025-02-02 · updated 2025-06-25 · draft
+              </div>
+              <p>
+                2025 年已經有許多成熟的
+                <span class="p-link">JAMStack</span>，原本是使用
+                <span class="inline-code">SvelteKit</span> 來開發網站<span
+                  class="caret"
+                ></span>
+              </p>
+              <h2>Astro</h2>
+              <p>
+                <span class="p-link">Astro</span> 是個 web
+                框架，用於打造以內容為中心的網站。
+              </p>
+              <div class="notice-mock inline">
+                <b>💡 Tip</b> · Astro 以更少的 JavaScript 聞名，可支援 Vue /
+                React / Svelte。
+              </div>
+              <p>
+                <span class="comp-chip">&lt;Cover src="hero.png" /&gt;</span>
+                最吸引我的地方在於…
+              </p>
+            </div>
+
+            <aside class="rail">
+              <div>
+                <h4>Frontmatter</h4>
+                <div class="frontmatter-card">
+                  <div class="fm-row">
+                    <label>title</label
+                    ><span class="val">初次使用 Astro.js</span>
+                  </div>
+                  <div class="fm-row">
+                    <label>date</label><span class="val">2025-02-02</span>
+                  </div>
+                  <div class="fm-row">
+                    <label>updated</label><span class="val">2025-06-25</span>
+                  </div>
+                  <div class="fm-row">
+                    <label>draft</label
+                    ><span class="val" style="color: var(--accent)">false</span>
+                  </div>
+                  <div class="fm-row">
+                    <label>tags</label>
+                    <div>
+                      <span class="tag-chip">astro</span
+                      ><span class="tag-chip">blog</span
+                      ><span class="tag-chip">+</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h4>元件 Palette</h4>
+                <div class="palette">
+                  <div class="comp-card">
+                    <span class="g">!</span
+                    ><span class="name">Notice</span>
+                  </div>
+                  <div class="comp-card">
+                    <span class="g">◨</span><span class="name">Tabs</span>
+                  </div>
+                  <div class="comp-card">
+                    <span class="g">▤</span><span class="name">Cover</span>
+                  </div>
+                  <div class="comp-card">
+                    <span class="g">▷</span><span class="name">Video</span>
+                  </div>
+                  <div class="comp-card">
+                    <span class="g">≡</span
+                    ><span class="name">Accordion</span>
+                  </div>
+                  <div class="comp-card">
+                    <span class="g">◎</span><span class="name">Button</span>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            <div class="statusbar">
+              <span class="branch">⎇ main</span>
+              <span class="dirty">● saved 12s ago</span>
+              <span class="spacer"></span>
+              <span>820 字 · 3 min</span>
+              <span>mdsvex · wysiwyg</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="annot" style="top: 115px; right: 280px">
+          <span class="arrow">↘</span>
+          拖曳到編輯器即插入<br /><small>import 自動加上</small>
+        </div>
+        <div class="annot" style="top: 260px; left: 260px">
+          <span class="arrow">↑</span>
+          點擊 Notice 可切回<br /><small>原始 &lt;Notice&gt; 標籤</small>
+        </div>
+      </section>
+
+      <!-- ===================== WIREFRAME C ===================== -->
+      <section class="wf layout-C">
+        <span class="wf-label">C</span>
+        <span class="wf-num">03</span>
+        <div class="wf-head">
+          <h2 class="wf-title">三欄全配 · 檔案樹 + 並排預覽 + 右側資訊</h2>
+          <div class="wf-desc">
+            最大化資訊密度：檔案樹、原始碼、預覽、TOC + Frontmatter + <br />
+            Palette 都在一起。適合長文寫作與結構管理。
+          </div>
+        </div>
+        <div class="win">
+          <div class="titlebar">
+            <div class="dots">
+              <span class="dot r"></span
+              ><span class="dot y"></span
+              ><span class="dot g"></span>
+            </div>
+            <div class="tb-title">svx-editor — full layout</div>
+            <div class="tb-spacer"></div>
+          </div>
+          <div class="body">
+            <aside class="sidebar">
+              <div class="sb-search">⌘P 快速開啟…</div>
+              <div class="sb-section">VAULT</div>
+              <div class="tree">
+                <div class="node dir">▾ blog</div>
+                <div class="node file indent active">astro-intro</div>
+                <div class="node file indent dirty">svelte-5</div>
+                <div class="node file indent git-m">og-image</div>
+                <div class="node dir">▸ drafts</div>
+                <div class="node dir">▸ assets</div>
+              </div>
+              <div class="sb-section">RECENT</div>
+              <div class="tree">
+                <div class="node file">readingTime.ts</div>
+                <div class="node file">theme.ts</div>
+              </div>
+            </aside>
+
+            <div class="tabs-row">
+              <div class="tab active">
+                astro-intro.svx <span class="x">×</span>
+              </div>
+              <div class="tab">svelte-5.svx <span class="x">×</span></div>
+              <div class="tab">og-image.md <span class="x">×</span></div>
+            </div>
+
+            <div class="toolbar">
+              <span class="tb-btn b">B</span><span class="tb-btn i">I</span
+              ><span class="tb-btn u">U</span>
+              <span class="tb-sep"></span>
+              <span class="tb-btn">H1</span><span class="tb-btn">H2</span>
+              <span class="tb-sep"></span>
+              <span class="tb-btn">link</span><span class="tb-btn">img</span
+              ><span class="tb-btn">code</span>
+              <span class="tb-sep"></span>
+              <span class="tb-btn">quote</span><span class="tb-btn">list</span>
+              <span style="flex: 1"></span>
+              <span class="tb-btn">↔ sync</span>
+            </div>
+
+            <div class="pane editor">
+              <div class="fm-block">
+                <span class="k">title</span>: "初次使用 Astro.js"<br />
+                <span class="k">date</span>: 2025-02-02
+              </div>
+              <div class="code-line"><span class="h">## Astro</span></div>
+              <div class="code-line">
+                2025 年已經有許多成熟的 <span class="str">[JAMStack]</span>。
+              </div>
+              <div class="code-line" style="margin-top: 8px">
+                <span class="tag">&lt;Notice type="tip"&gt;</span>
+              </div>
+              <div class="code-line" style="padding-left: 16px">
+                Astro 以更少的 JavaScript 聞名<span class="caret"></span>
+              </div>
+              <div class="code-line">
+                <span class="tag">&lt;/Notice&gt;</span>
+              </div>
+              <div class="code-line" style="margin-top: 8px">
+                最吸引我的地方在於 Astro 可以支援 Vue / React / Svelte。
+              </div>
+            </div>
+
+            <div class="pane preview">
+              <h1 class="p-h1">初次使用 Astro.js</h1>
+              <h2 class="p-h2">Astro</h2>
+              <p class="p-p">
+                2025 年已經有許多成熟的
+                <span class="p-link">JAMStack</span>。
+              </p>
+              <div class="notice-mock">
+                <b>💡 Tip</b> · Astro 以更少的 JavaScript 聞名
+              </div>
+              <p class="p-p">最吸引我的地方在於…</p>
+            </div>
+
+            <aside class="rail">
+              <div>
+                <h4>Frontmatter</h4>
+                <div class="frontmatter-card">
+                  <div class="fm-row">
+                    <label>title</label
+                    ><span class="val">初次使用 Astro.js</span>
+                  </div>
+                  <div class="fm-row">
+                    <label>date</label><span class="val">2025-02-02</span>
+                  </div>
+                  <div class="fm-row">
+                    <label>tags</label>
+                    <div>
+                      <span class="tag-chip">astro</span
+                      ><span class="tag-chip">blog</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h4>Outline</h4>
+                <ul class="toc-list">
+                  <li>初次使用 Astro.js</li>
+                  <li class="sub active">Astro</li>
+                  <li class="sub">生態系</li>
+                  <li class="sub">MDX vs Svx</li>
+                </ul>
+              </div>
+              <div>
+                <h4>Components</h4>
+                <div class="palette">
+                  <div class="comp-card">
+                    <span class="g">!</span
+                    ><span class="name">Notice</span>
+                  </div>
+                  <div class="comp-card">
+                    <span class="g">◨</span><span class="name">Tabs</span>
+                  </div>
+                  <div class="comp-card">
+                    <span class="g">▤</span><span class="name">Cover</span>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            <div class="statusbar">
+              <span class="branch">⎇ main</span>
+              <span class="dirty">● 2 modified</span>
+              <span>mdsvex</span>
+              <span class="spacer"></span>
+              <span>820 字</span>
+              <span>Ln 18, Col 2</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="annot" style="top: 130px; left: 250px">
+          <span class="arrow">↘</span>
+          密度高<br /><small>適合資深寫作者</small>
+        </div>
+      </section>
+
+      <!-- ===================== WIREFRAME D ===================== -->
+      <section class="wf layout-D">
+        <span class="wf-label">D</span>
+        <span class="wf-num">04</span>
+        <div class="wf-head">
+          <h2 class="wf-title">專注模式 · WYSIWYG 全寬 + 浮動右側</h2>
+          <div class="wf-desc">
+            排版優先。中間大片留白的寫作區，預覽自動疊加。<br />
+            右側可收合，只在需要時出現。
+          </div>
+        </div>
+        <div class="win">
+          <div class="titlebar">
+            <div class="dots">
+              <span class="dot r"></span
+              ><span class="dot y"></span
+              ><span class="dot g"></span>
+            </div>
+            <div class="tb-title">svx-editor — focus</div>
+            <div class="tb-spacer"></div>
+          </div>
+          <div class="body">
+            <aside class="sidebar">
+              <div class="sb-search">搜尋…</div>
+              <div class="sb-section">VAULT</div>
+              <div class="tree">
+                <div class="node dir">▾ blog</div>
+                <div class="node file indent active">astro-intro.svx</div>
+                <div class="node file indent dirty">svelte-5.svx</div>
+                <div class="node dir">▸ drafts</div>
+              </div>
+            </aside>
+
+            <div class="tabs-row">
+              <div class="tab active">
+                astro-intro.svx <span class="x">×</span>
+              </div>
+              <div class="tab">＋</div>
+            </div>
+
+            <div class="toolbar">
+              <span class="tb-btn">專注</span>
+              <span class="tb-sep"></span>
+              <span class="tb-btn b">B</span><span class="tb-btn i">I</span>
+              <span class="tb-sep"></span>
+              <span class="tb-btn">H1</span><span class="tb-btn">H2</span
+              ><span class="tb-btn">link</span>
+              <span style="flex: 1"></span>
+              <span class="tb-btn">⌘K 指令</span>
+              <span class="tb-btn">隱藏右欄</span>
+            </div>
+
+            <div class="pane editor wyz">
+              <h1>初次使用 Astro.js</h1>
+              <div
+                style="
+                  color: var(--ink-fade);
+                  font-size: 13px;
+                  font-family: var(--mono);
+                  margin-bottom: 18px;
+                "
+              >
+                2025-02-02 · 3 min
+              </div>
+              <p>
+                2025 年已經有許多成熟的
+                <span class="p-link">JAMStack</span>，原本是使用
+                <span class="inline-code">SvelteKit</span> 來開發網站。
+              </p>
+              <h2>Astro</h2>
+              <p>
+                <span class="p-link">Astro</span> 是個 web
+                框架，用於打造以內容為中心的網站，例如部落格、行銷、電商。
+              </p>
+              <div class="notice-mock inline">
+                <b>💡 Tip</b> · Astro 以更少的 JavaScript 聞名。
+              </div>
+              <p>
+                最吸引我的地方在於 Astro 可以支援 Vue、React、Svelte<span
+                  class="caret"
+                ></span>
+              </p>
+            </div>
+
+            <aside class="rail">
+              <div>
+                <h4>Frontmatter</h4>
+                <div class="frontmatter-card">
+                  <div class="fm-row">
+                    <label>title</label
+                    ><span class="val">初次使用 Astro.js</span>
+                  </div>
+                  <div class="fm-row">
+                    <label>date</label><span class="val">2025-02-02</span>
+                  </div>
+                  <div class="fm-row">
+                    <label>draft</label><span class="val">false</span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h4>Outline</h4>
+                <ul class="toc-list">
+                  <li>初次使用 Astro.js</li>
+                  <li class="sub active">Astro</li>
+                </ul>
+              </div>
+              <div>
+                <h4>Components</h4>
+                <div class="palette">
+                  <div class="comp-card">
+                    <span class="g">!</span
+                    ><span class="name">Notice</span>
+                  </div>
+                  <div class="comp-card">
+                    <span class="g">▤</span><span class="name">Cover</span>
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            <div class="statusbar">
+              <span class="branch">⎇ main</span>
+              <span class="dirty">● unsaved</span>
+              <span class="spacer"></span>
+              <span>focus · wysiwyg</span>
+              <span>820 字 · 3 min</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="annot" style="top: 110px; right: 280px">
+          <span class="arrow">↗</span>
+          右欄可收合<br /><small>「隱藏右欄」 → 全寬寫作</small>
+        </div>
+      </section>
+
+      <!-- ===================== Comparison ===================== -->
+      <div class="compare">
+        <div class="col">
+          <h4><span>A</span> · 並排預覽</h4>
+          <ul>
+            <li>所見即所得 + 原始碼並存</li>
+            <li>最易上手</li>
+            <li>元件 → 即時看</li>
+            <li class="minus">資訊較少（無 TOC/Frontmatter）</li>
+          </ul>
+          <div class="score">最適合：混合寫 md + Svelte 標籤的人</div>
+        </div>
+        <div class="col">
+          <h4><span>B</span> · WYSIWYG + Palette</h4>
+          <ul>
+            <li>閱讀體驗最像成品</li>
+            <li>拖曳插入元件很順手</li>
+            <li>Frontmatter 表單化</li>
+            <li class="minus">編 raw 標籤需切模式</li>
+          </ul>
+          <div class="score">最適合：Obsidian 使用者、純寫作者</div>
+        </div>
+        <div class="col">
+          <h4><span>C</span> · 三欄全配</h4>
+          <ul>
+            <li>功能最完整</li>
+            <li>TOC + Frontmatter + Palette 全部一次有</li>
+            <li>適合長文</li>
+            <li class="minus">小螢幕會擠</li>
+          </ul>
+          <div class="score">最適合：重度部落格作者</div>
+        </div>
+        <div class="col">
+          <h4><span>D</span> · 專注 WYSIWYG</h4>
+          <ul>
+            <li>排版最美、留白大</li>
+            <li>右欄可收合</li>
+            <li>⌘K 指令面板為主</li>
+            <li class="minus">進階功能需學習快捷鍵</li>
+          </ul>
+          <div class="score">最適合：寫作為主、偶而嵌元件</div>
+        </div>
+      </div>
+
+      <!-- Decision -->
+      <div class="decision">
+        <h3>下一步 · 挑一個做高保真</h3>
+        <p>
+          我的推薦是 <b>C（三欄全配）</b> —— 因為你列了很多功能（多分頁、搜尋、Frontmatter、TOC、Git）而且想要元件 palette 拖曳。C 可以一次把它們擺得最舒服；寫作時右欄也可以收合變成類似 D 的專注模式。告訴我要哪一個，我就做高保真。
+        </p>
+        <div class="pick-row">
+          <button class="pick-btn" onclick="pick('A')">選 A · 並排</button>
+          <button class="pick-btn" onclick="pick('B')">選 B · WYSIWYG</button>
+          <button class="pick-btn" onclick="pick('C')" style="border-color: var(--accent); color: var(--accent)">選 C · 三欄（推）</button>
+          <button class="pick-btn" onclick="pick('D')">選 D · 專注</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tweaks panel -->
+    <div class="tweaks" id="tweaks">
+      <h5>Tweaks</h5>
+      <div class="row">
+        <label>紙張色調</label>
+        <span class="seg" data-k="tone">
+          <button class="on" data-v="warm">暖</button>
+          <button data-v="cool">冷</button>
+          <button data-v="neutral">中</button>
+        </span>
+      </div>
+      <div class="row">
+        <label>墨水強度</label>
+        <span class="seg" data-k="ink">
+          <button data-v="soft">淡</button>
+          <button class="on" data-v="med">中</button>
+          <button data-v="strong">深</button>
+        </span>
+      </div>
+      <div class="row">
+        <label>手寫感</label>
+        <span class="seg" data-k="hand">
+          <button data-v="less">少</button>
+          <button class="on" data-v="med">中</button>
+          <button data-v="more">多</button>
+        </span>
+      </div>
+      <div class="row">
+        <label>Annotations</label>
+        <span class="seg" data-k="annot">
+          <button class="on" data-v="on">on</button>
+          <button data-v="off">off</button>
+        </span>
+      </div>
+    </div>
+
+    <script>
+      const TWEAKS = /*EDITMODE-BEGIN*/ {
+        "tone": "warm",
+        "ink": "med",
+        "hand": "med",
+        "annot": "on"
+      } /*EDITMODE-END*/;
+
+      function applyTweaks(t) {
+        const root = document.documentElement.style;
+        if (t.tone === "warm") {
+          root.setProperty("--paper", "#f3ede0");
+          root.setProperty("--paper-2", "#ebe3d1");
+        } else if (t.tone === "cool") {
+          root.setProperty("--paper", "#e9ece9");
+          root.setProperty("--paper-2", "#dde2dd");
+        } else {
+          root.setProperty("--paper", "#ececea");
+          root.setProperty("--paper-2", "#e0e0dd");
+        }
+        root.setProperty(
+          "--ink",
+          t.ink === "soft" ? "#52493a" : t.ink === "strong" ? "#110d06" : "#2a241b"
+        );
+        document.querySelectorAll(".annot").forEach((el) => {
+          el.style.display = t.annot === "off" ? "none" : "";
+        });
+        document.body.style.fontFamily =
+          t.hand === "less"
+            ? '"Newsreader", serif'
+            : t.hand === "more"
+              ? '"Caveat", cursive'
+              : '"Kalam", "Caveat", cursive';
+      }
+
+      applyTweaks(TWEAKS);
+
+      // Edit-mode protocol
+      window.addEventListener("message", (e) => {
+        const d = e.data || {};
+        if (d.type === "__activate_edit_mode") {
+          document.getElementById("tweaks").classList.add("on");
+        } else if (d.type === "__deactivate_edit_mode") {
+          document.getElementById("tweaks").classList.remove("on");
+        }
+      });
+      window.parent.postMessage({ type: "__edit_mode_available" }, "*");
+
+      document.querySelectorAll(".tweaks .seg").forEach((seg) => {
+        const k = seg.dataset.k;
+        seg.querySelectorAll("button").forEach((b) => {
+          b.addEventListener("click", () => {
+            seg
+              .querySelectorAll("button")
+              .forEach((x) => x.classList.remove("on"));
+            b.classList.add("on");
+            TWEAKS[k] = b.dataset.v;
+            applyTweaks(TWEAKS);
+            window.parent.postMessage(
+              { type: "__edit_mode_set_keys", edits: { [k]: b.dataset.v } },
+              "*"
+            );
+          });
+        });
+      });
+
+      function pick(which) {
+        alert(
+          "你選了 " + which + " — 把這封訊息傳回給我，我就開始做高保真版本"
+        );
+      }
+    </script>
+  </body>
+</html>

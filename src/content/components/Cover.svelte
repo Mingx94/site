@@ -2,12 +2,15 @@
   // Eagerly pick up every post's cover image at two resolutions:
   // the main srcset (served responsively) and a pre-blurred 32px LQIP.
   // Module-level so glob evaluates once per build, not per instance.
-  const covers = import.meta.glob("/src/content/posts/*/cover.jpg", {
+  // Path is relative to this component so it resolves the same in both
+  // the SvelteKit site (Vite root = site/) and the editor sub-app
+  // (Vite root = site/editor/).
+  const covers = import.meta.glob("../posts/*/cover.jpg", {
     eager: true,
     query: { enhanced: true, w: "1280;640;400" },
   });
 
-  const placeholders = import.meta.glob("/src/content/posts/*/cover.jpg", {
+  const placeholders = import.meta.glob("../posts/*/cover.jpg", {
     eager: true,
     query: { enhanced: true, w: "32", blur: "10" },
   });
@@ -21,7 +24,7 @@
   let loaded = $state(false);
 
   const slug = $derived(page.params.slug);
-  const key = $derived(`/src/content/posts/${slug}/cover.jpg`);
+  const key = $derived(`../posts/${slug}/cover.jpg`);
   const image = $derived(covers[key]?.default);
   const placeholder = $derived(placeholders[key]?.default);
 </script>
