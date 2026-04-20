@@ -68,6 +68,7 @@
       onclick={() => react(key)}
       disabled={reactionsQuery.loading}
       aria-label="{label}{reactionsQuery.current?.[key] ? `，${reactionsQuery.current[key]} 個` : ''}"
+      title={label}
       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-colors duration-200
         {reacted.has(key)
         ? 'border-primary/30 bg-primary/10 cursor-pointer'

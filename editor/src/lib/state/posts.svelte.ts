@@ -63,8 +63,12 @@ class PostsStore {
         (c) => c.type === 'file' && c.name === 'article.svx',
       );
       if (!article) continue;
+      // Match the site's Cover.svelte glob (../posts/*/cover.jpg) exactly —
+      // accepting any cover.* here would show a thumbnail in the editor for
+      // files the live site can't render, silently diverging preview from
+      // production.
       const cover = child.children.find(
-        (c) => c.type === 'file' && c.name.startsWith('cover.'),
+        (c) => c.type === 'file' && c.name === 'cover.jpg',
       );
       out.push({
         slug: child.name,

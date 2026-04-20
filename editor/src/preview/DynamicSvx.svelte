@@ -10,15 +10,11 @@
   let instance: ReturnType<typeof mount> | null = null;
   let runId = 0;
 
-  async function render(src: string, fm: Record<string, unknown>) {
-    const myRun = ++runId;
-    const result = await compileSvxToComponent(src);
-    if (myRun !== runId) return;
-    if (!host) return;
-    if (!result.ok) {
-      error = result.error;
-      return;
-    }
+  // Unmount the previous instance and clear host DOM. Pulled out so the
+  // error path can call it too — previously a failed compile would leave the
+  // last-valid instance mounted, its effects still running and orphaned from
+  // our `instance` reference.
+  function tearDown() {
     if (instance) {
       try {
         unmount(instance);
@@ -27,7 +23,20 @@
       }
       instance = null;
     }
-    host.innerHTML = '';
+    if (host) host.innerHTML = '';
+  }
+
+  async function render(src: string, fm: Record<string, unknown>) {
+    const myRun = ++runId;
+    const result = await compileSvxToComponent(src);
+    if (myRun !== runId) return;
+    if (!host) return;
+    if (!result.ok) {
+      tearDown();
+      error = result.error;
+      return;
+    }
+    tearDown();
     try {
       instance = mount(result.Component as never, {
         target: host,

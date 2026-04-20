@@ -11,6 +11,9 @@ const WORDS_PER_MINUTE = 200;
  */
 export function getReadingTime(text: string): number {
   const stripped = text
+    // Drop the leading YAML/TOML frontmatter block if present — title,
+    // description and other metadata shouldn't inflate reading time.
+    .replace(/^---\n[\s\S]*?\n---\n?/, "")
     .replace(/<[^>]*>/g, "") // HTML tags
     .replace(/```[\s\S]*?```/g, "") // code blocks
     .replace(/`[^`]*`/g, "") // inline code

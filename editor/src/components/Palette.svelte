@@ -24,8 +24,14 @@
     {
       name: 'Cover',
       icon: '▤',
-      desc: '封面圖片',
-      snippet: '<Cover src="/assets/image.png" alt="" />',
+      desc: '封面圖片（自動綁 posts/<slug>/cover.jpg）',
+      snippet: '<Cover title="文章標題" />',
+    },
+    {
+      name: 'Figure',
+      icon: '🖼',
+      desc: '內文圖片（posts/<slug>/ 底下檔名）',
+      snippet: '<Figure src="diagram.png" alt="" caption="" />',
     },
     {
       name: 'Video',

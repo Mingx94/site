@@ -12,8 +12,17 @@
   import TweaksPanel from './components/TweaksPanel.svelte';
 
   import { workspace, loadWorkspace, refreshTree } from '$state/workspace.svelte';
-  import { tabs, closeTab, toggleRail } from '$state/tabs.svelte';
-  import { saveFile, dirtyCount, files, isDirty, reloadFromDisk } from '$state/files.svelte';
+  import { tabs, closeTab, toggleRail, openTab } from '$state/tabs.svelte';
+  import {
+    saveFile,
+    dirtyCount,
+    files,
+    isDirty,
+    reloadFromDisk,
+    restoreDirtySnapshots,
+    SaveConflictError,
+  } from '$state/files.svelte';
+  import ConfirmDialog from './components/ConfirmDialog.svelte';
   import { loadTweaks, togglePanel, tweaks } from '$state/tweaks.svelte';
   import { ui, toggleCmd, closeCmd } from '$state/ui.svelte';
   import {
@@ -27,6 +36,48 @@
     type: 'add' | 'change' | 'unlink' | 'addDir' | 'unlinkDir';
     path: string;
   };
+
+  // Save-conflict dialog state. When another editor touched a file we're
+  // about to save, the server rejects the PUT (ETag mismatch) and we
+  // surface a confirm dialog offering overwrite or reload.
+  let conflict = $state<{ path: string } | null>(null);
+
+  // Wrapper around saveFile that surfaces SaveConflictError through a
+  // dialog instead of letting it bubble up as a console error. Used by
+  // Ctrl+S and any UI entry point that saves the active buffer.
+  async function saveActive(path: string) {
+    try {
+      await saveFile(path);
+    } catch (e) {
+      if (e instanceof SaveConflictError) {
+        conflict = { path: e.path };
+      } else {
+        console.error('[editor] save failed:', e);
+      }
+    }
+  }
+
+  async function overwriteConflict() {
+    if (!conflict) return;
+    const path = conflict.path;
+    conflict = null;
+    try {
+      await saveFile(path, true);
+    } catch (e) {
+      console.error('[editor] overwrite failed:', e);
+    }
+  }
+
+  async function reloadConflict() {
+    if (!conflict) return;
+    const path = conflict.path;
+    conflict = null;
+    try {
+      await reloadFromDisk(path);
+    } catch (e) {
+      console.error('[editor] reload failed:', e);
+    }
+  }
 
   // Returns true when focus is in an editable element — used to suppress
   // non-modifier shortcuts (F2) that would otherwise eat normal typing.
@@ -82,7 +133,7 @@
         toggleCmd();
       } else if (mod && ev.key.toLowerCase() === 's') {
         ev.preventDefault();
-        if (tabs.active) await saveFile(tabs.active);
+        if (tabs.active) await saveActive(tabs.active);
       } else if (mod && ev.key.toLowerCase() === 'w') {
         ev.preventDefault();
         if (tabs.active) closeTab(tabs.active);
@@ -129,6 +180,18 @@
     (async () => {
       await loadTweaks();
       await loadWorkspace();
+      // After the workspace is ready, rehydrate any dirty buffers that were
+      // left in localStorage from a previous session and re-open their tabs.
+      // Each `openTab` call triggers `loadFile` which reconciles the buffer
+      // against fresh disk content (see loadFile's snapshot restore logic).
+      const restored = restoreDirtySnapshots();
+      for (const p of restored) {
+        try {
+          await openTab(p);
+        } catch {
+          /* file may have been deleted externally — skip silently */
+        }
+      }
     })();
 
     return () => {
@@ -186,6 +249,18 @@
 
   {#if tweaks.panelOpen}
     <TweaksPanel />
+  {/if}
+
+  {#if conflict}
+    <ConfirmDialog
+      title="外部編輯衝突"
+      message="檔案在其他編輯器被改過了。要以你目前的內容覆蓋，還是捨棄本機修改改用 disk 版本？"
+      confirmLabel="覆蓋 disk"
+      cancelLabel="重新載入 disk"
+      danger
+      onConfirm={overwriteConflict}
+      onCancel={reloadConflict}
+    />
   {/if}
 </div>
 

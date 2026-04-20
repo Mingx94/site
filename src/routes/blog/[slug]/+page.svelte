@@ -26,6 +26,10 @@
   const scrollThreshold = 0.6;
 
   $effect(() => {
+    // Drafts only render in dev (filterDrafts); no need to track views for
+    // them — avoids polluting KV counters and running pointless timers
+    // during hot-reload in dev.
+    if (post.draft) return;
     const timer = setInterval(() => {
       if (!document.hidden) {
         visibleSeconds++;

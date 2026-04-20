@@ -78,9 +78,37 @@
   <link rel="sitemap" href="/sitemap.xml" />
 </svelte:head>
 
+<!-- Skip link: first focusable element on the page. Visually hidden until
+     focus so keyboard users can jump past the header / nav directly to
+     the main content. Pairs with id="main" on the <main> landmark below. -->
+<a href="#main" class="skip-link">跳到主要內容</a>
+
 <Header />
 <TwSizeIndicator />
-<main>
+<main id="main" tabindex="-1">
   {@render children()}
 </main>
 <Footer />
+
+<style>
+  .skip-link {
+    position: fixed;
+    top: 0.5rem;
+    left: 0.5rem;
+    z-index: 100;
+    padding: 0.5rem 0.75rem;
+    background: var(--background, #fff);
+    color: var(--foreground, #000);
+    border: 2px solid currentColor;
+    border-radius: 4px;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.875rem;
+    text-decoration: none;
+    transform: translateY(-200%);
+    transition: transform 150ms ease-out;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+    outline: none;
+  }
+</style>

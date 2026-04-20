@@ -7,6 +7,7 @@
     ensurePostMeta,
   } from '$state/posts.svelte';
   import type { TreeNode } from '$lib/io/fs-access';
+  import { focusTrap } from '$lib/actions/focusTrap';
 
   type Props = { onClose: () => void };
   const { onClose }: Props = $props();
@@ -90,7 +91,15 @@
 <div class="cmd-overlay" onclick={onClose}>
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div class="cmd-box" onclick={(e) => e.stopPropagation()}>
+  <div
+    class="cmd-box"
+    role="dialog"
+    aria-modal="true"
+    aria-label="命令選擇器"
+    tabindex="-1"
+    onclick={(e) => e.stopPropagation()}
+    use:focusTrap
+  >
     <!-- svelte-ignore a11y_autofocus -->
     <input
       autofocus
