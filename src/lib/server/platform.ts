@@ -29,3 +29,21 @@ export function getSendEmail() {
   const event = getRequestEvent();
   return event.platform?.env?.SEND_EMAIL;
 }
+
+export function getRateLimit() {
+  const event = getRequestEvent();
+  return event.platform?.env?.BLOG_RATE;
+}
+
+// Client IP from the current request — used as part of the rate-limit
+// and dedup keys. Falls back to a fixed string in dev / unknown cases so
+// the logic runs uniformly, at the cost of collapsing all local traffic
+// into a single bucket during `wrangler dev`.
+export function getClientIp(): string {
+  try {
+    const event = getRequestEvent();
+    return event.getClientAddress();
+  } catch {
+    return "unknown";
+  }
+}
