@@ -30,6 +30,17 @@ export default defineConfig({
     svelte(),
     editorContentApi({ root: SITE_CONTENT }),
   ],
+  build: {
+    rollupOptions: {
+      // preview-host.html is the document loaded inside the sandboxed
+      // preview iframe; it needs to be its own Vite entry so the compile
+      // pipeline and site CSS are bundled for iframe consumption.
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        'preview-host': resolve(__dirname, 'preview-host.html'),
+      },
+    },
+  },
   optimizeDeps: {
     include: ['mdsvex', 'svelte/compiler', 'bits-ui'],
   },
