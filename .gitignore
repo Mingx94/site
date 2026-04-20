@@ -28,3 +28,8 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# editor sub-app (Vite build artefacts)
+editor/node_modules/
+editor/dist/
+editor/.vite/
