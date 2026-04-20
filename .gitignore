@@ -36,3 +36,6 @@ editor/.vite/
 
 # dogfood / QA output (screenshots, videos, reports)
 dogfood-output/
+
+# OG images generated at build time (scripts/gen-og.ts → static/og/)
+static/og/*.png
