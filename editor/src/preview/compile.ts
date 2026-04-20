@@ -3,6 +3,7 @@ import * as svelteCompiler from 'svelte/compiler';
 import * as svelteClient from 'svelte/internal/client';
 import * as svelteDisclose from 'svelte/internal/disclose-version';
 import * as svelte from 'svelte';
+import { init as lexerInit, parse as lexerParse } from 'es-module-lexer';
 import { registry } from './registry';
 
 const registryNames = Object.keys(registry);
@@ -40,6 +41,10 @@ function namedBindings(named: string): string {
     .map((part) => {
       const p = part.trim();
       if (!p) return '';
+      // Drop type-only specifiers (`type Foo`, `type Foo as Bar`) that
+      // TypeScript source could carry through mdsvex; compiled Svelte
+      // output shouldn't have them, but cheap to be defensive.
+      if (/^type\s/.test(p)) return '';
       const asMatch = p.match(/^([A-Za-z_$][\w$]*)\s+as\s+([A-Za-z_$][\w$]*)$/);
       if (asMatch) return `${asMatch[1]}: ${asMatch[2]}`;
       return p;
@@ -52,66 +57,121 @@ function safeId(spec: string): string {
   return spec.replace(/[^A-Za-z0-9_]/g, '_');
 }
 
-function rewriteImports(code: string): string {
-  const M = '__modules__';
-  let src = code;
+// Turn the binding portion of an `import ... from '<spec>'` statement into
+// the equivalent `const` bindings reading from `__modules__[<spec>]`.
+//
+// The binding portion is the text between `import` and `from` (or empty for
+// side-effect imports). Because es-module-lexer has already told us exactly
+// where the statement is in the source, the shapes we need to handle here
+// are much narrower than the whole-file regex approach this replaced:
+//   - '' (side-effect only: `import 'x';`)
+//   - 'Default'
+//   - 'Default, { a, b as c }'
+//   - 'Default, * as NS'
+//   - '* as NS'
+//   - '{ a, b as c }'
+//   - 'type { T }' or starts with 'type ' — dropped (TS type-only, never in
+//      compiled Svelte output, but defensive)
+function bindingReplacement(bindingText: string, spec: string): string {
+  const trimmed = bindingText.trim();
+  const modRef = `__modules__[${JSON.stringify(spec)}]`;
+  const id = safeId(spec);
+  const mName = `__m_${id}`;
 
-  src = src.replace(
-    /^\s*import\s+["']([^"']+)["']\s*;?\s*$/gm,
-    (_m, spec: string) => `/* side-effect: ${spec} */`,
-  );
+  if (!trimmed) return `/* side-effect: ${spec} */`;
+  if (/^type\b/.test(trimmed)) return `/* type-only: ${spec} */`;
 
-  src = src.replace(
-    /^\s*import\s+\*\s+as\s+([A-Za-z_$][\w$]*)\s+from\s+["']([^"']+)["']\s*;?\s*$/gm,
-    (_m, ident: string, spec: string) =>
-      `const ${ident} = ${M}[${JSON.stringify(spec)}];`,
-  );
+  let defaultName: string | null = null;
+  let namespaceName: string | null = null;
+  let namedText: string | null = null;
+  let rest = trimmed;
 
-  src = src.replace(
-    /^\s*import\s+([A-Za-z_$][\w$]*)\s*,\s*\{([^}]*)\}\s+from\s+["']([^"']+)["']\s*;?\s*$/gm,
-    (_m, def: string, named: string, spec: string) => {
-      const id = safeId(spec);
-      return `const __m_${id} = ${M}[${JSON.stringify(spec)}];\nconst ${def} = __m_${id}.default ?? __m_${id};\nconst { ${namedBindings(named)} } = __m_${id};`;
-    },
-  );
+  // Default binding, if present, always comes first. It's a bare identifier
+  // optionally followed by `,` then namespace or named.
+  const defMatch = rest.match(/^([A-Za-z_$][\w$]*)\s*(?:,\s*|$)/);
+  if (defMatch) {
+    defaultName = defMatch[1];
+    rest = rest.slice(defMatch[0].length);
+  }
 
-  src = src.replace(
-    /^\s*import\s+([A-Za-z_$][\w$]*)\s+from\s+["']([^"']+)["']\s*;?\s*$/gm,
-    (_m, def: string, spec: string) => {
-      const id = safeId(spec);
-      return `const __m_${id} = ${M}[${JSON.stringify(spec)}];\nconst ${def} = __m_${id}.default ?? __m_${id};`;
-    },
-  );
+  // Second binding slot: namespace or named. Not both — ES spec forbids it.
+  const nsMatch = rest.match(/^\*\s+as\s+([A-Za-z_$][\w$]*)/);
+  if (nsMatch) {
+    namespaceName = nsMatch[1];
+  } else if (rest.startsWith('{')) {
+    const close = rest.lastIndexOf('}');
+    if (close > 0) namedText = rest.slice(1, close);
+  }
 
-  src = src.replace(
-    /^\s*import\s+\{([^}]*)\}\s+from\s+["']([^"']+)["']\s*;?\s*$/gm,
-    (_m, named: string, spec: string) =>
-      `const { ${namedBindings(named)} } = ${M}[${JSON.stringify(spec)}];`,
-  );
+  const lines: string[] = [`const ${mName} = ${modRef};`];
+  if (defaultName) {
+    lines.push(`const ${defaultName} = ${mName}.default ?? ${mName};`);
+  }
+  if (namespaceName) {
+    lines.push(`const ${namespaceName} = ${mName};`);
+  }
+  if (namedText) {
+    const bindings = namedBindings(namedText);
+    if (bindings) lines.push(`const { ${bindings} } = ${mName};`);
+  }
+  return lines.join('\n');
+}
 
-  src = src.replace(
+// Static import → `const` rewriting via es-module-lexer. Walks statements
+// in reverse so splicing earlier positions doesn't invalidate later spans.
+// Only handles static imports; dynamic `import()` and `import.meta` are
+// left untouched (d !== -1).
+async function rewriteImports(code: string): Promise<string> {
+  await lexerInit;
+  const [imports] = lexerParse(code);
+  let out = code;
+  for (let i = imports.length - 1; i >= 0; i--) {
+    const imp = imports[i];
+    if (imp.d !== -1) continue; // dynamic import / import.meta → leave alone
+    const spec = imp.n;
+    if (!spec) continue; // unparsable (rare) — skip rather than corrupt
+
+    // Binding text = slice from after `import` to right before the opening
+    // quote of the specifier, with trailing `from` stripped.
+    const openingQuoteIdx = imp.s - 1;
+    const head = out.slice(imp.ss, openingQuoteIdx);
+    let bindingText = head.replace(/^\s*import\b/, '');
+    bindingText = bindingText.replace(/\bfrom\s*$/, '').trim();
+
+    const replacement = bindingReplacement(bindingText, spec);
+    out = out.slice(0, imp.ss) + replacement + out.slice(imp.se);
+  }
+  return rewriteExports(out);
+}
+
+// Export rewriting stays regex-based: the compiled Svelte output only emits
+// a small, regular set of export forms (`export default function`, occasional
+// `export const` / `export function`). The lexer's ExportSpecifier doesn't
+// surface full-statement ranges, so a targeted regex is both simpler and no
+// worse than the lexer approach here.
+function rewriteExports(src: string): string {
+  let out = src;
+  out = out.replace(
     /^\s*export\s+default\s+function\s+/gm,
     '__default__ = function ',
   );
-  src = src.replace(
+  out = out.replace(
     /^\s*export\s+default\s+class\s+/gm,
     '__default__ = class ',
   );
-  src = src.replace(
+  out = out.replace(
     /^\s*export\s+default\s+([A-Za-z_$][\w$]*)\s*;?\s*$/gm,
     '__default__ = $1;',
   );
-
-  src = src.replace(
+  out = out.replace(
     /^\s*export\s+\{[^}]*\}\s*(?:from\s+["'][^"']+["'])?\s*;?\s*$/gm,
     '/* export list stripped */',
   );
-  src = src.replace(/^\s*export\s+const\s+/gm, 'const ');
-  src = src.replace(/^\s*export\s+let\s+/gm, 'let ');
-  src = src.replace(/^\s*export\s+function\s+/gm, 'function ');
-  src = src.replace(/^\s*export\s+class\s+/gm, 'class ');
-
-  return src;
+  out = out.replace(/^\s*export\s+const\s+/gm, 'const ');
+  out = out.replace(/^\s*export\s+let\s+/gm, 'let ');
+  out = out.replace(/^\s*export\s+function\s+/gm, 'function ');
+  out = out.replace(/^\s*export\s+class\s+/gm, 'class ');
+  return out;
 }
 
 export type CompileResult =
@@ -132,7 +192,7 @@ export async function compileSvxToComponent(source: string): Promise<CompileResu
       filename: 'preview.svelte',
     });
 
-    const js = rewriteImports(compiled.js.code);
+    const js = await rewriteImports(compiled.js.code);
 
     const fn = new Function(
       '__modules__',
