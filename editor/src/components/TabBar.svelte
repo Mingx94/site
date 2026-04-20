@@ -1,7 +1,18 @@
 <script lang="ts">
   import { tabs, setActive, closeTab } from '$state/tabs.svelte';
   import { files, isDirty } from '$state/files.svelte';
-  import { postLabelFor, slugFromArticlePath } from '$state/posts.svelte';
+  import {
+    postLabelFor,
+    slugFromArticlePath,
+    ensurePostMeta,
+  } from '$state/posts.svelte';
+
+  // Fill the frontmatter cache for every open tab so `postLabelFor` resolves
+  // to the real title. Done here (not inside the pure label helper) to avoid
+  // mutating $state during a derived/render pass.
+  $effect(() => {
+    for (const path of tabs.open) ensurePostMeta(path);
+  });
 </script>
 
 <div class="tabs">

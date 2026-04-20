@@ -20,11 +20,15 @@
   const fullOgUrl = $derived(
     finalOg.startsWith("http") ? finalOg : new URL(finalOg, page.url).href,
   );
+  // Canonical URL — origin + pathname only, drops query strings & fragment
+  // so variants like ?ref=… don't register as duplicate content.
+  const canonicalUrl = $derived(page.url.origin + page.url.pathname);
 </script>
 
 <svelte:head>
   <title>{finalTitle}</title>
   <meta name="description" content={finalDescription} />
+  <link rel="canonical" href={canonicalUrl} />
   {#if noindex}
     <meta name="robots" content="noindex,nofollow" />
   {/if}

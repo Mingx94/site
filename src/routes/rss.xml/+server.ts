@@ -9,26 +9,31 @@ export const GET: RequestHandler = async () => {
   const posts = filterDrafts(allPosts);
   const baseUrl = config.site.base_url;
 
+  // lastBuildDate = most recent post update/date, falls back to now if no posts.
+  const latest = posts
+    .map((p) => new Date(p.updated ?? p.date).getTime())
+    .reduce((a, b) => Math.max(a, b), 0);
+  const lastBuildDate = new Date(latest || Date.now()).toUTCString();
+
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0"
-  xmlns:content="http://purl.org/rss/1.0/modules/content/"
-  xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${escapeXml(config.site.title)}</title>
     <link>${baseUrl}</link>
     <description>${escapeXml(config.metadata.meta_description)}</description>
+    <language>zh-tw</language>
+    <lastBuildDate>${lastBuildDate}</lastBuildDate>
     <atom:link href="${baseUrl}/rss.xml" rel="self" type="application/rss+xml" />
     ${posts
       .map(
         (post) => `
-						<item>
-							<title>${escapeXml(post.title)}</title>
-							<description>${escapeXml(post.description ?? "")}</description>
-							<link>${baseUrl}/blog/${encodeURIComponent(post.id)}</link>
-							<guid isPermaLink="true">${baseUrl}/blog/${encodeURIComponent(post.id)}</guid>
-							<pubDate>${new Date(post.date).toUTCString()}</pubDate>
-						</item>
-					`,
+    <item>
+      <title>${escapeXml(post.title)}</title>
+      <description>${escapeXml(post.description ?? "")}</description>
+      <link>${baseUrl}/blog/${encodeURIComponent(post.id)}/</link>
+      <guid isPermaLink="true">${baseUrl}/blog/${encodeURIComponent(post.id)}/</guid>
+      <pubDate>${new Date(post.date).toUTCString()}</pubDate>
+    </item>`,
       )
       .join("")}
   </channel>

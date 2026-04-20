@@ -20,10 +20,13 @@
   import { page } from "$app/state";
   import { staggerIn } from "@/lib/domEvent";
 
-  let { title } = $props();
+  // `slug` is optional — when omitted we fall back to the route param so the
+  // post page keeps working untouched. Pass it explicitly from any caller
+  // that isn't `/blog/[slug]` (list views, editor preview, embeds…).
+  let { title, slug: slugProp = undefined } = $props();
   let loaded = $state(false);
 
-  const slug = $derived(page.params.slug);
+  const slug = $derived(slugProp ?? page.params.slug);
   const key = $derived(`../posts/${slug}/cover.jpg`);
   const image = $derived(covers[key]?.default);
   const placeholder = $derived(placeholders[key]?.default);

@@ -104,8 +104,7 @@
         {@attach staggerIn}
         class="animate text-balance font-bold leading-[1.05] tracking-tight text-foreground text-[clamp(2.25rem,6vw,4.5rem)]"
       >
-        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-        {@html post.title}
+        {post.title}
       </h1>
 
       {#if post.description}
