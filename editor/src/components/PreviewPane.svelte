@@ -4,8 +4,9 @@
   import { parseDoc } from '$lib/frontmatter';
   import { wordCount, readingTime } from '$lib/util';
   import { setCurrentSlug } from '$lib/sveltekit-shim/state.svelte';
+  import { postsStore, coverBust } from '$state/posts.svelte';
+  import { assetUrlFor } from '$lib/io/fs-access';
   import DynamicSvx from '$preview/DynamicSvx.svelte';
-  import Cover from '$content/components/Cover.svelte';
 
   const activeFile = $derived(tabs.active ? files.byPath[tabs.active] : null);
   const parsed = $derived(
@@ -21,6 +22,19 @@
   const slug = $derived(deriveSlug(tabs.active));
   $effect(() => {
     setCurrentSlug(slug);
+  });
+
+  // Cover image URL — bypasses Cover.svelte's build-time `import.meta.glob`
+  // (which Vite's enhanced-img loader caches and doesn't invalidate when
+  // the file changes), going straight to the dev server's asset endpoint
+  // with a cache-bust counter that CoverPicker bumps on upload/remove.
+  // Trade-off: editor preview loses Cover.svelte's LQIP fade transition,
+  // but every replace lands instantly in the preview.
+  const post = $derived(postsStore.list.find((p) => p.slug === slug));
+  const coverUrl = $derived.by(() => {
+    if (!post?.coverPath) return null;
+    const v = coverBust[slug] ?? 0;
+    return `${assetUrlFor(post.coverPath)}&v=${v}`;
   });
 
   const title = $derived(typeof fm.title === 'string' ? fm.title : '');
@@ -68,7 +82,7 @@
       <div class="mt-8 md:mt-12 mb-10 md:mb-14 space-y-6">
         {#if title}
           <h1
-            class="text-balance font-bold leading-[1.05] tracking-tight text-foreground text-[clamp(2.25rem,6vw,4.5rem)]"
+            class="text-balance break-words font-bold leading-[1.05] tracking-tight text-foreground text-[clamp(1.75rem,4vw,3.25rem)]"
           >
             {title}
           </h1>
@@ -94,8 +108,18 @@
         </div>
       </div>
 
-      <!-- Cover image (resolved by current-slug shim) -->
-      <Cover {title} />
+      <!-- Cover image — see coverUrl derivation above -->
+      {#if coverUrl}
+        <div
+          class="relative mx-auto mt-8 mb-2 aspect-3/2 overflow-hidden rounded-lg"
+        >
+          <img
+            src={coverUrl}
+            alt={title}
+            class="absolute inset-0 h-full w-full object-cover"
+          />
+        </div>
+      {/if}
 
       <!-- Rendered .svx body — styled via shared .content class -->
       <div class="content">

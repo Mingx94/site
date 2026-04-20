@@ -11,11 +11,53 @@
   import CommandPalette from './components/CommandPalette.svelte';
   import TweaksPanel from './components/TweaksPanel.svelte';
 
-  import { workspace, loadWorkspace } from '$state/workspace.svelte';
+  import { workspace, loadWorkspace, refreshTree } from '$state/workspace.svelte';
   import { tabs, closeTab, toggleRail } from '$state/tabs.svelte';
-  import { saveFile, dirtyCount } from '$state/files.svelte';
+  import { saveFile, dirtyCount, files, isDirty, reloadFromDisk } from '$state/files.svelte';
   import { loadTweaks, togglePanel, tweaks } from '$state/tweaks.svelte';
   import { ui, toggleCmd, closeCmd } from '$state/ui.svelte';
+  import {
+    slugFromArticlePath,
+    invalidatePostMeta,
+    loadPostMeta,
+  } from '$state/posts.svelte';
+  import { startRename, edits } from '$state/edits.svelte';
+
+  type FsEvent = {
+    type: 'add' | 'change' | 'unlink' | 'addDir' | 'unlinkDir';
+    path: string;
+  };
+
+  // Coalesce bursts of chokidar events (e.g. an editor saving via temp+rename
+  // emits unlink+add in quick succession) so we don't refreshTree twice.
+  let pendingTreeRefresh: ReturnType<typeof setTimeout> | null = null;
+  function scheduleTreeRefresh() {
+    if (pendingTreeRefresh) return;
+    pendingTreeRefresh = setTimeout(() => {
+      pendingTreeRefresh = null;
+      refreshTree();
+    }, 150);
+  }
+
+  async function handleFsEvent(e: FsEvent) {
+    if (e.type === 'change') {
+      // File rewritten externally — refresh in-memory buffer if we have it
+      // open AND the user hasn't started editing locally. Dirty buffers
+      // win to avoid clobbering unsaved work.
+      const f = files.byPath[e.path];
+      if (f && !isDirty(e.path)) {
+        try { await reloadFromDisk(e.path); } catch { /* ignore */ }
+      }
+      // Refresh cached post metadata so the sidebar title stays current.
+      if (e.path.endsWith('/article.svx')) {
+        invalidatePostMeta(e.path);
+        loadPostMeta(e.path, true);
+      }
+    } else {
+      // Something appeared / disappeared — tree shape changed.
+      scheduleTreeRefresh();
+    }
+  }
 
   onMount(() => {
     const keyHandler = async (ev: KeyboardEvent) => {
@@ -32,6 +74,15 @@
       } else if (mod && ev.key === '\\') {
         ev.preventDefault();
         toggleRail();
+      } else if (ev.key === 'F2' && !edits.renaming) {
+        // Rename the currently active post from anywhere — matches the
+        // hint shown in PostList's right-click menu so the shortcut isn't
+        // tied to focus being inside the sidebar listbox.
+        const slug = slugFromArticlePath(tabs.active);
+        if (slug) {
+          ev.preventDefault();
+          startRename(slug);
+        }
       } else if (ev.key === 'Escape') {
         if (ui.cmdOpen) closeCmd();
         else if (tweaks.panelOpen) togglePanel();
@@ -49,6 +100,15 @@
     };
     window.addEventListener('beforeunload', onBeforeUnload);
 
+    // Subscribe to out-of-band filesystem events from the dev server.
+    // Only available in `vite dev` (production builds have no HMR client).
+    let offFs: (() => void) | null = null;
+    if (import.meta.hot) {
+      const handler = (data: FsEvent) => handleFsEvent(data);
+      import.meta.hot.on('editor:fs', handler);
+      offFs = () => import.meta.hot?.off('editor:fs', handler);
+    }
+
     (async () => {
       await loadTweaks();
       await loadWorkspace();
@@ -57,6 +117,7 @@
     return () => {
       window.removeEventListener('keydown', keyHandler);
       window.removeEventListener('beforeunload', onBeforeUnload);
+      offFs?.();
     };
   });
 </script>
@@ -91,7 +152,7 @@
           <div class="ed-empty">
             {workspace.loading
               ? '載入工作區中…'
-              : '從左側選一個 .svx 或 .md 開始編輯'}
+              : '從左側選一篇文章開始編輯'}
           </div>
         {/if}
       </div>

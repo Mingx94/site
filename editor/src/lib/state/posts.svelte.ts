@@ -35,6 +35,18 @@ export type PostMeta = {
 const metaCache = $state<Record<string, PostMeta>>({});
 export const postMeta = metaCache;
 
+// Cache-bust counter per slug. Bumped after the cover image is replaced
+// so any DOM referencing the cover via assetUrlFor can append `&v=…` and
+// dodge the browser disk cache. Vite's enhanced-img loader doesn't react
+// to file changes for already-evaluated globs, so the article preview
+// renders the cover via this counter instead of going through Cover.svelte.
+const coverBustState = $state<Record<string, number>>({});
+export const coverBust = coverBustState;
+
+export function bumpCoverBust(slug: string): void {
+  coverBustState[slug] = (coverBustState[slug] ?? 0) + 1;
+}
+
 // Wrapped in a class so $derived can be re-evaluated on every read inside
 // a reactive consumer. Module-level `export const x = $derived.by(...)`
 // would freeze x at import time — see Svelte 5 docs on exporting state.
@@ -87,6 +99,28 @@ export async function loadPostMeta(
 
 export function invalidatePostMeta(articlePath: string): void {
   delete metaCache[articlePath];
+}
+
+// Returns the post slug for an article path (e.g. 'posts/why-astro/article.svx'
+// → 'why-astro'). Returns null if the path isn't a post article.
+export function slugFromArticlePath(path: string | null | undefined): string | null {
+  if (!path) return null;
+  const segs = path.split('/');
+  if (segs.length !== 3 || segs[0] !== 'posts' || segs[2] !== 'article.svx') {
+    return null;
+  }
+  return segs[1];
+}
+
+// Display label for a post article — title from frontmatter cache when
+// available, slug as fallback. Used by TabBar and Command Palette so users
+// can tell posts apart at a glance instead of seeing a wall of "article.svx".
+// Triggers a cache load as a side-effect so the title shows up once read.
+export function postLabelFor(articlePath: string): string {
+  const slug = slugFromArticlePath(articlePath);
+  if (!slug) return articlePath.split('/').pop() ?? articlePath;
+  void loadPostMeta(articlePath);
+  return metaCache[articlePath]?.title || slug;
 }
 
 // ---------- post-level CRUD wrappers ----------

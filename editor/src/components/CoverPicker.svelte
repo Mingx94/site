@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tabs } from '$state/tabs.svelte';
   import { refreshTree } from '$state/workspace.svelte';
-  import { postsStore } from '$state/posts.svelte';
+  import { postsStore, bumpCoverBust } from '$state/posts.svelte';
   import {
     uploadFileRel,
     assetUrlFor,
@@ -21,8 +21,9 @@
   const slug = $derived(deriveSlugFrom(tabs.active));
   const post = $derived(postsStore.list.find((p) => p.slug === slug));
 
-  // Cache-buster: bumped after every upload / removal so the browser
-  // doesn't keep serving the previous cover.jpg from disk cache.
+  // Cache-buster: shared with PreviewPane so the article preview's
+  // <img> tag refreshes in lockstep with this thumbnail. Module-level
+  // (in posts.svelte.ts) so the value persists across remounts.
   let bust = $state(0);
 
   const coverUrl = $derived(
@@ -44,6 +45,7 @@
       await uploadFileRel(`posts/${slug}/cover.jpg`, jpeg);
       await refreshTree();
       bust++;
+      if (slug) bumpCoverBust(slug);
     } catch (e) {
       error = (e as Error).message;
     } finally {
@@ -60,6 +62,7 @@
       await deleteFileRel(post.coverPath);
       await refreshTree();
       bust++;
+      if (slug) bumpCoverBust(slug);
     } catch (e) {
       error = (e as Error).message;
     } finally {

@@ -33,3 +33,6 @@ pnpm-debug.log*
 editor/node_modules/
 editor/dist/
 editor/.vite/
+
+# dogfood / QA output (screenshots, videos, reports)
+dogfood-output/
