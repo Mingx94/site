@@ -36,6 +36,29 @@ Preview 端**不走** site 的 `Cover.svelte`（它依賴 `import.meta.glob`，
 Cover 檔名一律 `cover.jpg` —  site `Cover.svelte` 的 glob 也只認 `.jpg`，
 舊的 `cover.png` / `cover.webp` 不會被讀到。
 
+## 內文圖片（`<Figure>`）
+
+文章內需要圖片時用 `<Figure>`（`src/content/components/Figure.svelte`）。
+作法：
+
+1. 圖檔直接放在 `posts/<slug>/` 底下，跟 `article.svx` 同層（例：
+   `posts/why-astro/diagram.png`）
+2. 在 `.svx` 裡寫：
+   ```svelte
+   <Figure src="diagram.png" alt="架構圖" caption="Figure 1：系統架構" />
+   ```
+3. Production 走 `enhanced-img` — 自動產生 AVIF/WebP srcset 跟 LQIP 淡入
+4. Editor preview 走 dev content API（`/__editor/file?path=…`）— 圖剛丟進
+   資料夾就能看見，不用 rebuild
+
+檔名選擇：
+- Cover 一定是 `cover.jpg`（site Cover.svelte 的 glob 限制）
+- 內文圖任何常見副檔名都可以：`jpg|jpeg|png|webp|avif|gif`
+- 不要用 `cover.*` 當內文圖檔名 — Cover 元件的 glob 會撈到
+
+不做 markdown `![]()` 的自動轉換 — 那個走裸 `<img>` 沒 srcset。要響應式
+就用 `<Figure>`，要「單純示意」就維持 markdown。
+
 ## Keyboard shortcuts
 
 | key            | action                              |
