@@ -71,7 +71,7 @@
 <Seo
   title="{post.title} | Vartifact"
   description={post.description}
-  og="/og/{encodeURIComponent(data.id)}"
+  og="/og/{data.id}.png"
 />
 
 <svelte:window onscroll={handleScroll} />
