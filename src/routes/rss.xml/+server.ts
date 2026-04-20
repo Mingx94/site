@@ -42,7 +42,9 @@ export const GET: RequestHandler = async () => {
   return new Response(xml, {
     headers: {
       "Content-Type": "application/rss+xml; charset=utf-8",
-      "Cache-Control": "max-age=3600",
+      // Prerendered — see sitemap.xml for rationale. Short browser cache so
+      // feed readers pick up new posts promptly; longer edge cache.
+      "Cache-Control": "public, max-age=300, s-maxage=3600",
     },
   });
 };

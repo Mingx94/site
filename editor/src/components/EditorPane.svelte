@@ -14,7 +14,22 @@
   let hostEl: HTMLDivElement | null = $state(null);
   let view: EditorView | null = null;
   let currentPath: string | null = null;
+  // LRU cache of CodeMirror states keyed by file path. Kept after a tab
+  // is closed so "close tab → reopen → Ctrl-Z" still steps through the
+  // author's undo history. Oldest entry is evicted when we go over cap.
+  const STATE_CAP = 16;
   const stateMap = new Map<string, EditorState>();
+  function rememberState(path: string, state: EditorState): void {
+    // Delete-then-set makes `path` the most-recently-inserted key, which
+    // JS Map iteration order treats as most-recently-used.
+    stateMap.delete(path);
+    stateMap.set(path, state);
+    while (stateMap.size > STATE_CAP) {
+      const oldest = stateMap.keys().next().value;
+      if (oldest === undefined) break;
+      stateMap.delete(oldest);
+    }
+  }
   let dragOver = $state(false);
 
   let extensions: Extension[] = [];
@@ -68,7 +83,7 @@
     if (!f) return;
 
     if (path !== currentPath) {
-      if (currentPath) stateMap.set(currentPath, view.state);
+      if (currentPath) rememberState(currentPath, view.state);
       const next = stateMap.get(path) ?? freshState(f.content);
       view.setState(next);
       currentPath = path;
@@ -82,13 +97,9 @@
     }
   });
 
-  // Drop closed-tab states so history map doesn't leak.
-  $effect(() => {
-    const open = new Set(tabs.open);
-    for (const p of stateMap.keys()) {
-      if (!open.has(p)) stateMap.delete(p);
-    }
-  });
+  // Intentionally *don't* drop closed-tab states here — the LRU cap in
+  // `rememberState` bounds memory growth, and keeping the state lets a
+  // user close a tab by mistake, reopen it, and still press Ctrl-Z.
 </script>
 
 <section

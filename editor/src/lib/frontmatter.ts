@@ -1,3 +1,11 @@
+// YAML frontmatter parsing / serialization for the editor. Uses `js-yaml`
+// so the behaviour matches mdsvex (which uses gray-matter → js-yaml) —
+// that means list syntax, multiline strings, nested objects, comments,
+// and quoted dates all round-trip correctly instead of the previous
+// home-rolled regex parser which silently destroyed non-trivial YAML.
+
+import yaml from 'js-yaml';
+
 export type Frontmatter = Record<string, unknown>;
 
 const FM_RE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
@@ -5,48 +13,34 @@ const FM_RE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
 export function parseDoc(src: string): { fm: Frontmatter; body: string } {
   const m = src.match(FM_RE);
   if (!m) return { fm: {}, body: src };
-  const fm: Frontmatter = {};
-  for (const line of m[1].split(/\r?\n/)) {
-    const mm = line.match(/^(\w+):\s*(.*)$/);
-    if (!mm) continue;
-    let v: unknown = mm[2].trim();
-    if (typeof v === 'string') {
-      if (v.startsWith('[') && v.endsWith(']')) {
-        v = v
-          .slice(1, -1)
-          .split(',')
-          .map((x) => x.trim().replace(/^["']|["']$/g, ''))
-          .filter(Boolean);
-      } else if (v === 'true') v = true;
-      else if (v === 'false') v = false;
-      else if (/^-?\d+(?:\.\d+)?$/.test(v)) v = Number(v);
-      else v = (v as string).replace(/^["']|["']$/g, '');
-    }
-    fm[mm[1]] = v;
+  try {
+    const parsed = yaml.load(m[1]);
+    const fm =
+      parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+        ? (parsed as Frontmatter)
+        : {};
+    return { fm, body: m[2] };
+  } catch {
+    // Malformed YAML — return empty frontmatter rather than throwing so
+    // the editor can still open the file and let the user fix it.
+    return { fm: {}, body: m[2] };
   }
-  return { fm, body: m[2] };
 }
 
 export function serializeFrontmatter(fm: Frontmatter): string {
   const keys = Object.keys(fm);
   if (!keys.length) return '';
-  const lines = ['---'];
-  for (const k of keys) {
-    const v = fm[k];
-    if (Array.isArray(v)) {
-      lines.push(`${k}: [${(v as unknown[]).map(String).join(', ')}]`);
-    } else if (typeof v === 'boolean' || typeof v === 'number') {
-      lines.push(`${k}: ${v}`);
-    } else if (v === null || v === undefined) {
-      lines.push(`${k}: null`);
-    } else if (/^\d{4}-\d{2}-\d{2}$/.test(String(v))) {
-      lines.push(`${k}: ${v}`);
-    } else {
-      lines.push(`${k}: "${String(v).replace(/"/g, '\\"')}"`);
-    }
-  }
-  lines.push('---');
-  return lines.join('\n');
+  // `noCompatMode` avoids quoting ISO dates and other YAML-1.1 footguns;
+  // `lineWidth: -1` disables line folding (we want multi-paragraph strings
+  // to round-trip verbatim).
+  const dumped = yaml
+    .dump(fm, {
+      noCompatMode: true,
+      lineWidth: -1,
+      quotingType: '"',
+    })
+    .trimEnd();
+  return `---\n${dumped}\n---`;
 }
 
 export function composeDoc(fm: Frontmatter, body: string): string {

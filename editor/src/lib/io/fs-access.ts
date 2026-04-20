@@ -24,19 +24,57 @@ export async function readTree(): Promise<TreeNode[]> {
   return data.tree;
 }
 
+// Result of a text-file read. The `etag` is the disk mtime the server
+// saw when it answered; echo it on the next PUT via `If-Match` for
+// optimistic-locking / conflict detection.
+export type ReadResult = { content: string; etag: string | null };
+
 export async function readFileRel(path: string): Promise<string> {
-  const res = await fetch(`${BASE}/file?path=${encodeURIComponent(path)}`);
-  await checkOk(res, `readFile(${path})`);
-  return await res.text();
+  const { content } = await readFileRelWithEtag(path);
+  return content;
 }
 
-export async function writeFileRel(path: string, content: string): Promise<void> {
+export async function readFileRelWithEtag(path: string): Promise<ReadResult> {
+  const res = await fetch(`${BASE}/file?path=${encodeURIComponent(path)}`);
+  await checkOk(res, `readFile(${path})`);
+  const content = await res.text();
+  return { content, etag: res.headers.get('etag') };
+}
+
+// Thrown by writeFileRel / uploadFileRel when the server rejects the
+// write because the on-disk content was modified since the caller last
+// read it. Callers can catch this to surface a conflict dialog and, if
+// the user chooses to override, retry with `expectedEtag` unset.
+export class SaveConflictError extends Error {
+  readonly path: string;
+  readonly currentEtag: string | null;
+  constructor(path: string, currentEtag: string | null) {
+    super(`save conflict on ${path}`);
+    this.name = 'SaveConflictError';
+    this.path = path;
+    this.currentEtag = currentEtag;
+  }
+}
+
+export async function writeFileRel(
+  path: string,
+  content: string,
+  expectedEtag?: string | null,
+): Promise<string | null> {
+  const headers: Record<string, string> = {
+    'content-type': 'text/plain; charset=utf-8',
+  };
+  if (expectedEtag) headers['if-match'] = expectedEtag;
   const res = await fetch(`${BASE}/file?path=${encodeURIComponent(path)}`, {
     method: 'PUT',
-    headers: { 'content-type': 'text/plain; charset=utf-8' },
+    headers,
     body: content,
   });
+  if (res.status === 409) {
+    throw new SaveConflictError(path, res.headers.get('etag'));
+  }
   await checkOk(res, `writeFile(${path})`);
+  return res.headers.get('etag');
 }
 
 export async function createFileRel(path: string, body = ''): Promise<string> {

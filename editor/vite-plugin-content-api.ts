@@ -214,7 +214,12 @@ export function editorContentApi(opts: { root: string }): Plugin {
             // blob. MIME is dispatched off the file extension so <img src>
             // works for image assets without a separate endpoint.
             const buf = await fsp.readFile(abs);
+            const stat = await fsp.stat(abs);
             res.setHeader('content-type', mimeFor(rel));
+            // Quoted-mtime ETag — cheap and monotonic. Used by the client
+            // to send `If-Match` on PUT so a save racing an external edit
+            // gets a 409 instead of silently clobbering.
+            res.setHeader('etag', `"${stat.mtimeMs}"`);
             res.end(buf);
             return;
           }
@@ -227,11 +232,39 @@ export function editorContentApi(opts: { root: string }): Plugin {
               return;
             }
             const abs = safeResolve(ROOT, rel);
+            // If-Match: client echoes the etag it received on the last
+            // GET. When it doesn't match current disk mtime, disk has
+            // changed under us — abort with 409 so the client can show a
+            // conflict dialog rather than clobber the external edit.
+            const ifMatch = req.headers['if-match'];
+            if (ifMatch && typeof ifMatch === 'string' && ifMatch !== '*') {
+              try {
+                const stat = await fsp.stat(abs);
+                const current = `"${stat.mtimeMs}"`;
+                if (current !== ifMatch) {
+                  res.statusCode = 409;
+                  res.setHeader('etag', current);
+                  res.end('conflict: disk modified');
+                  return;
+                }
+              } catch (e) {
+                // File didn't exist at client's etag time — treat as
+                // conflict rather than creating a new one.
+                if ((e as NodeJS.ErrnoException).code === 'ENOENT') {
+                  res.statusCode = 409;
+                  res.end('conflict: file missing');
+                  return;
+                }
+                throw e;
+              }
+            }
             const buf = await readBodyBuffer(req);
             await fsp.mkdir(dirname(abs), { recursive: true });
             // No encoding → raw bytes. UTF-8 text passed through as bytes
             // round-trips identically; binary uploads (images) work too.
             await writeFileResilient(abs, buf);
+            const stat = await fsp.stat(abs).catch(() => null);
+            if (stat) res.setHeader('etag', `"${stat.mtimeMs}"`);
             res.statusCode = 204;
             res.end();
             return;

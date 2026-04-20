@@ -139,7 +139,27 @@ export async function compileSvxToComponent(source: string): Promise<CompileResu
       `"use strict";\nlet __default__;\n${js}\nreturn __default__;`,
     );
 
-    const Component = fn({ ...baseModules });
+    // Proxy the module map so a typo'd spec (`<Unknown />` when there's no
+    // `Unknown` in the registry) yields an empty object instead of
+    // `undefined`. Without this the rewriter emits
+    // `__m_preview_Unknown.default ?? __m_preview_Unknown` → TypeError on
+    // undefined, which poisons subsequent renders (previous valid instance
+    // remains mounted). Returning `{}` makes the render "silently wrong"
+    // rather than "permanently broken" while the user fixes the source.
+    const modules = new Proxy(
+      { ...baseModules } as Record<string, unknown>,
+      {
+        get(target, prop: string) {
+          if (prop in target) return target[prop];
+          if (typeof prop === 'string') {
+            console.warn(`[preview] unknown module '${prop}' — returning {}`);
+          }
+          return {};
+        },
+      },
+    );
+
+    const Component = fn(modules);
     if (!Component) return { ok: false, error: 'No default export from compiled source' };
     return { ok: true, Component };
   } catch (e) {

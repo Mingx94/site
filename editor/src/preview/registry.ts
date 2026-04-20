@@ -10,6 +10,7 @@ import Cover from '$content/components/Cover.svelte';
 import Video from '$content/components/Video.svelte';
 import Accordion from '$content/components/Accordion.svelte';
 import Button from '$content/components/Button.svelte';
+import Figure from '$content/components/Figure.svelte';
 
 export const registry = {
   Notice,
@@ -19,6 +20,7 @@ export const registry = {
   Video,
   Accordion,
   Button,
+  Figure,
 } as const;
 
 export type RegistryKey = keyof typeof registry;

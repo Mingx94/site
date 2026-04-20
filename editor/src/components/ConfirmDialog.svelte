@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
+  import { focusTrap } from '$lib/actions/focusTrap';
 
   type Props = {
     title: string;
@@ -54,11 +55,14 @@
     class="dlg-box"
     role="alertdialog"
     aria-modal="true"
+    aria-labelledby="confirm-dialog-title"
+    aria-describedby="confirm-dialog-message"
     tabindex="-1"
     onclick={(e) => e.stopPropagation()}
+    use:focusTrap
   >
-    <h2 class="dlg-title">{title}</h2>
-    <p class="dlg-sub">{message}</p>
+    <h2 class="dlg-title" id="confirm-dialog-title">{title}</h2>
+    <p class="dlg-sub" id="confirm-dialog-message">{message}</p>
     <div class="dlg-actions">
       <button
         type="button"

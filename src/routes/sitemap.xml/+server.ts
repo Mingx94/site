@@ -28,7 +28,10 @@ export const GET: RequestHandler = () => {
   return new Response(xml, {
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
-      "Cache-Control": "max-age=3600",
+      // Prerendered at build time — the CDN serves the static file and no
+      // redeploy means no update. A short cache makes new posts visible to
+      // crawlers faster; `s-maxage` keeps it cached at the edge longer.
+      "Cache-Control": "public, max-age=300, s-maxage=3600",
     },
   });
 };
