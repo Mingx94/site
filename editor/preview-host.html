@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Preview Host</title>
+    <!-- Fonts — the registry components reference some of these classes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Huninn&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+      }
+      #mount {
+        padding: 24px 32px;
+      }
+      .pv-error {
+        color: #b2462d;
+        font-family: ui-monospace, monospace;
+        font-size: 12px;
+        white-space: pre-wrap;
+        padding: 16px;
+        border-left: 3px solid #b2462d;
+        background: rgba(178, 70, 45, 0.06);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- The compile pipeline mounts into this node via postMessage from parent. -->
+    <div id="mount" class="content"></div>
+    <script type="module" src="/src/preview/iframe-entry.ts"></script>
+  </body>
+</html>
