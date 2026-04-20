@@ -8,6 +8,8 @@
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check",
     "check:watch": "svelte-kit sync && svelte-check --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "format": "prettier -w .",
     "cf-typegen": "wrangler types ./src/worker-configuration.d.ts"
   },
@@ -27,6 +29,7 @@
     "@types/sanitize-html": "^2.16.1",
     "@vercel/og": "^0.11.1",
     "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/ui": "^4.1.4",
     "bits-ui": "^2.17.3",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -55,6 +58,7 @@
     "unified": "^11.0.5",
     "unplugin-icons": "^23.0.1",
     "vite": "^8.0.8",
+    "vitest": "^4.1.4",
     "wrangler": "^4.82.2",
     "zod": "^4.3.6"
   },

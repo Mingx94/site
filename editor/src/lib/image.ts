@@ -38,7 +38,12 @@ export async function toJpegBlob(
   }
 }
 
-function scaleToFit(w: number, h: number, max: number): { width: number; height: number } {
+// Exported for unit testing — pure function, no browser APIs.
+export function scaleToFit(
+  w: number,
+  h: number,
+  max: number,
+): { width: number; height: number } {
   const longest = Math.max(w, h);
   if (longest <= max) return { width: w, height: h };
   const ratio = max / longest;
