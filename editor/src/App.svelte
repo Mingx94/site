@@ -28,6 +28,21 @@
     path: string;
   };
 
+  // Returns true when focus is in an editable element — used to suppress
+  // non-modifier shortcuts (F2) that would otherwise eat normal typing.
+  // Mod-prefixed shortcuts (Ctrl/⌘+K/S/W/\) intentionally fire everywhere.
+  function isEditableTarget(ev: KeyboardEvent): boolean {
+    const t = ev.target as HTMLElement | null;
+    if (!t) return false;
+    const tag = t.tagName;
+    return (
+      tag === 'INPUT' ||
+      tag === 'TEXTAREA' ||
+      tag === 'SELECT' ||
+      t.isContentEditable
+    );
+  }
+
   // Coalesce bursts of chokidar events (e.g. an editor saving via temp+rename
   // emits unlink+add in quick succession) so we don't refreshTree twice.
   let pendingTreeRefresh: ReturnType<typeof setTimeout> | null = null;
@@ -74,10 +89,12 @@
       } else if (mod && ev.key === '\\') {
         ev.preventDefault();
         toggleRail();
-      } else if (ev.key === 'F2' && !edits.renaming) {
+      } else if (ev.key === 'F2' && !edits.renaming && !isEditableTarget(ev)) {
         // Rename the currently active post from anywhere — matches the
         // hint shown in PostList's right-click menu so the shortcut isn't
-        // tied to focus being inside the sidebar listbox.
+        // tied to focus being inside the sidebar listbox. But skip when
+        // the user is typing inside an input (PromptDialog, search, etc.)
+        // so F2 in those fields types a normal character.
         const slug = slugFromArticlePath(tabs.active);
         if (slug) {
           ev.preventDefault();

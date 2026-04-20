@@ -1,7 +1,11 @@
 <script lang="ts">
   import { workspace } from '$state/workspace.svelte';
   import { openTab } from '$state/tabs.svelte';
-  import { postLabelFor, slugFromArticlePath } from '$state/posts.svelte';
+  import {
+    postLabelFor,
+    slugFromArticlePath,
+    ensurePostMeta,
+  } from '$state/posts.svelte';
   import type { TreeNode } from '$lib/io/fs-access';
 
   type Props = { onClose: () => void };
@@ -71,6 +75,13 @@
   $effect(() => {
     void q;
     index = 0;
+  });
+
+  // Warm the frontmatter cache for the currently visible subset so the
+  // label helper has something to read. Runs outside the derived render
+  // pass to keep $state mutations off the hot path.
+  $effect(() => {
+    for (const item of filtered) ensurePostMeta(item.path);
   });
 </script>
 

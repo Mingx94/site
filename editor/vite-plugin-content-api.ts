@@ -74,6 +74,22 @@ function safeResolve(root: string, rel: string): string {
   return abs;
 }
 
+// Only allow requests originating from the local machine. Without this,
+// running `vite --host` (for phone testing) or sitting on a shared network
+// would let any LAN device `curl -XPUT` against the content API. The socket
+// peer address is authoritative — Host / Origin headers are client-controlled.
+function isLocalRequest(req: import('node:http').IncomingMessage): boolean {
+  const addr = req.socket.remoteAddress ?? '';
+  return (
+    addr === '127.0.0.1' ||
+    addr === '::1' ||
+    addr === '::ffff:127.0.0.1' ||
+    // Unix-socket connections have no remote address; those only happen on
+    // the local machine.
+    addr === ''
+  );
+}
+
 async function readBodyBuffer(req: import('node:http').IncomingMessage): Promise<Buffer> {
   const chunks: Buffer[] = [];
   for await (const chunk of req) chunks.push(chunk as Buffer);
@@ -166,6 +182,14 @@ export function editorContentApi(opts: { root: string }): Plugin {
 
       server.middlewares.use(async (req, res, next) => {
         if (!req.url?.startsWith('/__editor/')) return next();
+
+        // Localhost-only: anyone on the LAN could otherwise read or overwrite
+        // site content when the dev server is exposed with `--host`.
+        if (!isLocalRequest(req)) {
+          res.statusCode = 403;
+          res.end('forbidden: editor API is localhost-only');
+          return;
+        }
 
         try {
           const url = new URL(req.url, 'http://x');

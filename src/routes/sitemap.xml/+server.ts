@@ -15,7 +15,7 @@ export const GET: RequestHandler = () => {
       (post) => `
     <url>
       <loc>${baseUrl}/blog/${escapeXml(post.id)}/</loc>
-      <lastmod>${format(post.date, "yyyy-MM-dd")}</lastmod>
+      <lastmod>${format(post.updated ?? post.date, "yyyy-MM-dd")}</lastmod>
     </url>`,
     )
     .join("");

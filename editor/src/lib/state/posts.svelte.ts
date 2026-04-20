@@ -115,12 +115,21 @@ export function slugFromArticlePath(path: string | null | undefined): string | n
 // Display label for a post article — title from frontmatter cache when
 // available, slug as fallback. Used by TabBar and Command Palette so users
 // can tell posts apart at a glance instead of seeing a wall of "article.svx".
-// Triggers a cache load as a side-effect so the title shows up once read.
+// PURE read: does not trigger loads. Callers that render a list of posts
+// should drive `ensurePostMeta(path)` from a `$effect` so the cache fills
+// without mutating $state during a derived/render pass.
 export function postLabelFor(articlePath: string): string {
   const slug = slugFromArticlePath(articlePath);
   if (!slug) return articlePath.split('/').pop() ?? articlePath;
-  void loadPostMeta(articlePath);
   return metaCache[articlePath]?.title || slug;
+}
+
+// Kick off a metadata load for a post article if the cache is empty.
+// Safe to call every render — `loadPostMeta` short-circuits when cached.
+export function ensurePostMeta(articlePath: string): void {
+  if (!slugFromArticlePath(articlePath)) return;
+  if (metaCache[articlePath]) return;
+  void loadPostMeta(articlePath);
 }
 
 // ---------- post-level CRUD wrappers ----------

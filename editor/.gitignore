@@ -1,8 +1,26 @@
-node_modules
-out
-dist
-.vite
-.electron-vite
+# Build output
+dist/
+.vite/
+
+# Dependencies
+node_modules/
+
+# Logs
 *.log
-.DS_Store
+npm-debug.log*
+
+# Environment variables
 .env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.idea/
+.vscode/
+
+# TypeScript incremental build info
+*.tsbuildinfo
