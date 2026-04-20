@@ -1,6 +1,7 @@
 <script lang="ts">
   import { workspace } from '$state/workspace.svelte';
   import { openTab } from '$state/tabs.svelte';
+  import { postLabelFor, slugFromArticlePath } from '$state/posts.svelte';
   import type { TreeNode } from '$lib/io/fs-access';
 
   type Props = { onClose: () => void };
@@ -8,7 +9,7 @@
 
   const EDIT_EXT = new Set(['svx', 'md', 'mdx', 'txt', 'json', 'yaml', 'yml']);
 
-  type Item = { path: string; name: string; rel: string };
+  type Item = { path: string; label: string; rel: string };
 
   const allFiles = $derived.by(() => {
     const out: Item[] = [];
@@ -16,10 +17,14 @@
       for (const n of nodes) {
         if (n.type === 'dir') walk(n.children);
         else if (EDIT_EXT.has(n.ext)) {
+          // For post articles, the display label is the title (or slug);
+          // for any other file, fall back to the file name. This keeps
+          // the palette useful — every post otherwise has the literal
+          // name "article.svx".
+          const slug = slugFromArticlePath(n.path);
           out.push({
             path: n.path,
-            name: n.name,
-            // n.path is already workspace-relative — no further resolve needed.
+            label: slug ? postLabelFor(n.path) : n.name,
             rel: n.path,
           });
         }
@@ -38,7 +43,7 @@
       ? allFiles
       : allFiles.filter(
           (f) =>
-            f.name.toLowerCase().includes(lower) ||
+            f.label.toLowerCase().includes(lower) ||
             f.rel.toLowerCase().includes(lower),
         );
     return list.slice(0, 12);
@@ -94,7 +99,7 @@
           onkeydown={(e) => e.key === 'Enter' && choose(item)}
         >
           <span class="cmd-ico">✎</span>
-          <span class="cmd-name">{item.name}</span>
+          <span class="cmd-name">{item.label}</span>
           <span class="cmd-title">{item.rel}</span>
         </div>
       {/each}

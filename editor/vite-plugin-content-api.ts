@@ -80,6 +80,40 @@ async function readBodyBuffer(req: import('node:http').IncomingMessage): Promise
   return Buffer.concat(chunks);
 }
 
+// Windows holds a shared-read but exclusive-write lock on files that the
+// dev server's `enhanced-img` plugin has cached (notably `cover.jpg`),
+// which makes in-place overwrites race the cache and fail with EBUSY /
+// EPERM / UNKNOWN. The unlink-then-write workaround is robust because:
+//   1. `unlink` succeeds even while the file is read-locked — Windows
+//      retains the open handles against the now-orphaned inode.
+//   2. The fresh `writeFile` creates a new inode that isn't locked.
+// We still retry transient errors before falling back to the unlink path
+// so a normal text-edit save (which doesn't conflict with enhanced-img)
+// completes in one syscall.
+async function writeFileResilient(abs: string, buf: Buffer): Promise<void> {
+  const transientCodes = new Set(['EBUSY', 'EPERM', 'UNKNOWN', 'EACCES']);
+  const delays = [25, 60, 120];
+  for (let i = 0; i <= delays.length; i++) {
+    try {
+      await fsp.writeFile(abs, buf);
+      return;
+    } catch (e) {
+      const code = (e as NodeJS.ErrnoException).code ?? '';
+      if (!transientCodes.has(code)) throw e;
+      if (i === delays.length) break;
+      await new Promise((r) => setTimeout(r, delays[i]));
+    }
+  }
+  // In-place overwrite kept failing — fall back to unlink + write fresh.
+  try {
+    await fsp.unlink(abs);
+  } catch (e) {
+    const code = (e as NodeJS.ErrnoException).code ?? '';
+    if (code !== 'ENOENT') throw e;
+  }
+  await fsp.writeFile(abs, buf);
+}
+
 const MIME_BY_EXT: Record<string, string> = {
   jpg: 'image/jpeg',
   jpeg: 'image/jpeg',
@@ -105,6 +139,31 @@ export function editorContentApi(opts: { root: string }): Plugin {
     name: 'editor-content-api',
     apply: 'serve', // dev + preview only; never in production builds
     configureServer(server) {
+      // Push out-of-band file change events to the renderer so that an edit
+      // made in another editor (VS Code, etc.) is reflected without the user
+      // hitting "重新整理". Reads chokidar events from Vite's own watcher and
+      // forwards anything under our content root over the HMR channel.
+      server.watcher.add(ROOT);
+      const events = ['add', 'change', 'unlink', 'addDir', 'unlinkDir'] as const;
+      for (const evt of events) {
+        server.watcher.on(evt, (filePath: string) => {
+          if (typeof filePath !== 'string') return;
+          const rel = filePath
+            .replace(/\\/g, '/')
+            .startsWith(ROOT.replace(/\\/g, '/') + '/')
+            ? filePath.replace(/\\/g, '/').slice(ROOT.replace(/\\/g, '/').length + 1)
+            : null;
+          if (rel === null) return;
+          // Filter out anything inside an IGNORED segment.
+          if (rel.split('/').some((s) => IGNORED.has(s))) return;
+          server.ws.send({
+            type: 'custom',
+            event: 'editor:fs',
+            data: { type: evt, path: rel },
+          });
+        });
+      }
+
       server.middlewares.use(async (req, res, next) => {
         if (!req.url?.startsWith('/__editor/')) return next();
 
@@ -148,7 +207,7 @@ export function editorContentApi(opts: { root: string }): Plugin {
             await fsp.mkdir(dirname(abs), { recursive: true });
             // No encoding → raw bytes. UTF-8 text passed through as bytes
             // round-trips identically; binary uploads (images) work too.
-            await fsp.writeFile(abs, buf);
+            await writeFileResilient(abs, buf);
             res.statusCode = 204;
             res.end();
             return;
@@ -173,7 +232,7 @@ export function editorContentApi(opts: { root: string }): Plugin {
               /* not found = ok to create */
             }
             await fsp.mkdir(dirname(abs), { recursive: true });
-            await fsp.writeFile(abs, buf);
+            await writeFileResilient(abs, buf);
             res.statusCode = 201;
             res.end();
             return;
