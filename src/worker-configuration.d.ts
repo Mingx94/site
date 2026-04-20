@@ -8,7 +8,14 @@ declare namespace Cloudflare {
 	interface Env {
 		BLOG_KV: KVNamespace;
 		ASSETS: Fetcher;
+		BLOG_RATE: RateLimit;
 		TURNSTILE_SITE_KEY: "0x4AAAAAAC9uFe71dDNfqvcZ";
+	}
+	// Rate-limit binding (still surfaced under unsafe.bindings in wrangler
+	// at the time of writing). Runtime returns { success: boolean } from
+	// `limit({ key })`.
+	interface RateLimit {
+		limit(options: { key: string }): Promise<{ success: boolean }>;
 	}
 }
 interface Env extends Cloudflare.Env {}
