@@ -1,0 +1,24 @@
+# Cloudflare `_headers` file. Picked up by `@sveltejs/adapter-cloudflare`
+# from the project root and merged into `.svelte-kit/cloudflare/_headers`
+# at build time (the adapter appends its own immutable-asset caching
+# block below these rules).
+#
+# These headers are applied by the ASSETS binding (see wrangler.jsonc)
+# *before* the SvelteKit worker runs — this is the only way to attach
+# response headers to prerendered static pages, because the `handle`
+# hook in src/hooks.server.ts cannot reach them.
+
+# Agent discovery: Link header on the homepage (RFC 8288) pointing at the
+# sitemap, the RSS feed as a feed alternate, and the RFC 9727 API
+# catalog. Agents that fetch `/` can follow these relations without
+# guessing well-known URLs.
+/
+  Link: </sitemap.xml>; rel="sitemap", </rss.xml>; rel="alternate"; type="application/rss+xml"; title="RSS feed", </.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json"
+
+# Per-post markdown alternate. `:slug` is substituted by Workers Assets
+# into both the match path and the header value, so each blog post
+# advertises its matching /blog/<slug>/article.md representation.
+/blog/:slug/
+  Link: </blog/:slug/article.md>; rel="alternate"; type="text/markdown"
+/blog/:slug
+  Link: </blog/:slug/article.md>; rel="alternate"; type="text/markdown"
