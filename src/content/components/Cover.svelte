@@ -1,29 +1,41 @@
-<script module>
+<script module lang="ts">
   // Eagerly pick up every post's cover image at two resolutions:
   // the main srcset (served responsively) and a pre-blurred 32px LQIP.
   // Module-level so glob evaluates once per build, not per instance.
   // Path is relative to this component so it resolves the same in both
   // the SvelteKit site (Vite root = site/) and the editor sub-app
   // (Vite root = site/editor/).
-  const covers = import.meta.glob("../posts/*/cover.jpg", {
-    eager: true,
-    query: { enhanced: true, w: "1280;640;400" },
-  });
+  const covers = import.meta.glob<{ default: string }>(
+    "../posts/*/cover.jpg",
+    {
+      eager: true,
+      query: { enhanced: true, w: "1280;640;400" },
+    },
+  );
 
-  const placeholders = import.meta.glob("../posts/*/cover.jpg", {
-    eager: true,
-    query: { enhanced: true, w: "32", blur: "10" },
-  });
+  const placeholders = import.meta.glob<{ default: string }>(
+    "../posts/*/cover.jpg",
+    {
+      eager: true,
+      query: { enhanced: true, w: "32", blur: "10" },
+    },
+  );
 </script>
 
-<script>
+<script lang="ts">
   import { page } from "$app/state";
   import { staggerIn } from "@/lib/domEvent";
 
-  // `slug` is optional — when omitted we fall back to the route param so the
-  // post page keeps working untouched. Pass it explicitly from any caller
-  // that isn't `/blog/[slug]` (list views, editor preview, embeds…).
-  let { title, slug: slugProp = undefined } = $props();
+  interface Props {
+    title: string;
+    // `slug` is optional — when omitted we fall back to the route param
+    // so the post page keeps working untouched. Pass it explicitly from
+    // any caller that isn't `/blog/[slug]` (list views, editor preview,
+    // embeds…).
+    slug?: string;
+  }
+
+  let { title, slug: slugProp = undefined }: Props = $props();
   let loaded = $state(false);
 
   const slug = $derived(slugProp ?? page.params.slug);
