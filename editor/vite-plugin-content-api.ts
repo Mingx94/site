@@ -3,8 +3,10 @@
 // instead of File System Access API, so the workspace opens automatically
 // with no permission grant and no browser picker dance.
 //
-// Lives only inside `vite dev` (and `vite preview` for local sanity);
-// production builds never run it. Endpoints rooted at `/__editor`.
+// Lives only inside `vite dev`. `configureServer` does not run in `vite
+// preview`, and the `apply(env)` gate below refuses to attach during build
+// or preview even if the plugin list changes later. Production Workers
+// bundles never include this file. Endpoints rooted at `/__editor`.
 
 import type { Plugin } from 'vite';
 import { promises as fsp } from 'node:fs';
@@ -64,7 +66,7 @@ async function readTree(absRoot: string, relBase = ''): Promise<TreeNode[]> {
   return out;
 }
 
-function safeResolve(root: string, rel: string): string {
+export function safeResolve(root: string, rel: string): string {
   // Reject any attempt to escape the root with .. segments.
   const abs = normalize(join(root, rel));
   const rootWithSep = root.endsWith(sep) ? root : root + sep;
@@ -78,7 +80,7 @@ function safeResolve(root: string, rel: string): string {
 // running `vite --host` (for phone testing) or sitting on a shared network
 // would let any LAN device `curl -XPUT` against the content API. The socket
 // peer address is authoritative — Host / Origin headers are client-controlled.
-function isLocalRequest(req: import('node:http').IncomingMessage): boolean {
+export function isLocalRequest(req: import('node:http').IncomingMessage): boolean {
   const addr = req.socket.remoteAddress ?? '';
   return (
     addr === '127.0.0.1' ||
@@ -153,7 +155,12 @@ export function editorContentApi(opts: { root: string }): Plugin {
 
   return {
     name: 'editor-content-api',
-    apply: 'serve', // dev + preview only; never in production builds
+    // Dev server only. `vite build` runs with command === 'build'; `vite
+    // preview` sets `env.isPreview`. Both are refused so the middleware
+    // cannot be attached by accident when a built editor bundle is served.
+    apply(_, env) {
+      return env.command === 'serve' && !env.isPreview;
+    },
     configureServer(server) {
       // Push out-of-band file change events to the renderer so that an edit
       // made in another editor (VS Code, etc.) is reflected without the user

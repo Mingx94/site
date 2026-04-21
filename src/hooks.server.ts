@@ -1,8 +1,9 @@
 import type { Handle } from "@sveltejs/kit";
 
 // Security headers applied to every response. Values chosen to match the
-// site's actual external dependencies (Google Fonts, Cloudflare Insights)
-// without breaking Svelte's inline hydration scripts.
+// site's actual external dependencies (Google Fonts, Cloudflare Insights,
+// Cloudflare Turnstile on the contact form) without breaking Svelte's
+// inline hydration scripts.
 //
 // Notes:
 //   - `'unsafe-inline'` in script-src is necessary for SvelteKit's hydration
@@ -10,16 +11,21 @@ import type { Handle } from "@sveltejs/kit";
 //     supports via `csp.mode: 'nonce'` in svelte.config — a larger change.
 //   - `'unsafe-inline'` in style-src is necessary for Shiki's inline styled
 //     code blocks and Tailwind's per-component inline styles.
+//   - `challenges.cloudflare.com` is whitelisted in `script-src` / `frame-src`
+//     / `connect-src` because the contact form loads the Turnstile widget
+//     from there. Without `frame-src`, `default-src 'self'` would block the
+//     widget's iframe.
 //   - HSTS is intentionally long-lived (1 year) with `includeSubDomains`.
 //     Cloudflare Workers always serve over HTTPS; if you ever need to serve
 //     http for staging, drop the header in that environment.
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com",
+  "script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com https://challenges.cloudflare.com",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com data:",
   "img-src 'self' data: blob:",
-  "connect-src 'self' https://static.cloudflareinsights.com",
+  "connect-src 'self' https://static.cloudflareinsights.com https://challenges.cloudflare.com",
+  "frame-src 'self' https://challenges.cloudflare.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

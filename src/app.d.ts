@@ -6,7 +6,8 @@ declare global {
       render: (
         element: HTMLElement,
         options: { sitekey: string; "response-field-name"?: string },
-      ) => void;
+      ) => string;
+      remove: (widgetId: string) => void;
     };
   }
 

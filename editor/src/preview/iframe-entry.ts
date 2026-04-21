@@ -26,8 +26,11 @@ function tearDown() {
   if (instance) {
     try {
       unmount(instance);
-    } catch {
-      /* noop */
+    } catch (e) {
+      // Surface unmount failures instead of swallowing them — otherwise
+      // a leaking effect can grow the iframe's memory across many edits
+      // without any visible signal.
+      console.error('[preview] unmount failed', e);
     }
     instance = null;
   }
@@ -39,9 +42,15 @@ function post(msg: Record<string, unknown>) {
 }
 
 let lastReportedHeight = -1;
+// Tolerance (px) — sub-pixel rounding and font-swap reflow can oscillate
+// height by ±1px, which otherwise feeds back through the parent's iframe
+// resize → our ResizeObserver → another report, without the content
+// actually changing. 2px is enough to break the loop without missing
+// genuine layout shifts.
+const HEIGHT_REPORT_TOLERANCE = 2;
 function reportHeight() {
   const h = document.documentElement.scrollHeight;
-  if (h === lastReportedHeight) return;
+  if (Math.abs(h - lastReportedHeight) <= HEIGHT_REPORT_TOLERANCE) return;
   lastReportedHeight = h;
   post({ type: 'preview-resize', height: h });
 }
@@ -90,10 +99,13 @@ window.addEventListener('message', (ev: MessageEvent) => {
   void handleCompile(data.source, data.frontmatter ?? {});
 });
 
-// Watch body for size changes (image loads, font swaps, late layout) and
-// keep the parent in sync so the iframe never gets a scroll bar of its own.
+// Watch the mount host for size changes (image loads, font swaps, late
+// layout) and keep the parent in sync so the iframe never gets a scroll
+// bar of its own. Observing `#mount` (rather than `documentElement`)
+// avoids feedback from the iframe's own viewport growing to match the
+// parent's just-resized height.
 const ro = new ResizeObserver(() => reportHeight());
-ro.observe(document.documentElement);
+if (host) ro.observe(host);
 
 // Tell the parent we're ready; it may have queued messages before load.
 post({ type: 'preview-ready' });

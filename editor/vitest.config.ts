@@ -18,7 +18,10 @@ export default defineConfig({
     },
   },
   test: {
-    include: ["src/**/*.test.ts"],
+    // Root-level `*.test.ts` picks up tests for the vite plugin sitting
+    // alongside it (vite-plugin-content-api.test.ts). Everything else
+    // goes under src/.
+    include: ["src/**/*.test.ts", "*.test.ts"],
     environment: "node",
   },
 });

@@ -7,12 +7,9 @@
   import config from "@/config";
   import { staggerIn } from "@/lib/domEvent";
   import RiArrowRightUpLine from "~icons/ri/arrow-right-up-line";
+  import type { PageProps } from "./$types";
 
-  interface Props {
-    data: import("./$types").PageServerData;
-  }
-
-  let { data }: Props = $props();
+  let { data }: PageProps = $props();
 
   const year = new Date().getFullYear();
 
