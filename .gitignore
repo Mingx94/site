@@ -35,8 +35,5 @@ dogfood-output/
 # playwright-cli session artefacts (snapshots, console/network logs)
 .playwright-cli/
 
-# Claude Code per-project skills cache — machine-local, not checked in
-.claude/skills/
-
 # OG images generated at build time (scripts/gen-og.ts → static/og/)
 static/og/*.png
