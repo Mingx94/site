@@ -44,3 +44,8 @@
 # which applies its own extension-based MIME map.
 /blog/:slug.md
   Content-Type: text/markdown; charset=utf-8
+
+# llms.txt — emerging convention (https://llmstxt.org). Body is
+# markdown; override the default text/plain from the asset server.
+/llms.txt
+  Content-Type: text/markdown; charset=utf-8
