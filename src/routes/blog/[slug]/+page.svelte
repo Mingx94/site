@@ -74,6 +74,10 @@
   og="/og/{data.id}.png"
 />
 
+<svelte:head>
+  <link rel="alternate" type="text/markdown" href="/blog/{data.id}.md" />
+</svelte:head>
+
 <svelte:window onscroll={handleScroll} />
 
 <!-- Reading progress bar -->
