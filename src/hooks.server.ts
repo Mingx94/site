@@ -1,4 +1,5 @@
 import type { Handle } from "@sveltejs/kit";
+import { dev } from "$app/environment";
 
 // Security headers applied to every response. Values chosen to match the
 // site's actual external dependencies (Google Fonts, Cloudflare Insights,
@@ -42,7 +43,43 @@ const SECURITY_HEADERS: Record<string, string> = {
 };
 
 export const handle: Handle = async ({ event, resolve }) => {
+  // The (editor) route group at `/editor/*` and the `/__editor/*`
+  // content-API middleware are local-only dev tools. `+layout.server.ts`
+  // already throws 404 for the route group in production, and
+  // `editorContentApi` refuses to attach outside `vite dev` — this early
+  // return is a belt-and-suspenders check that covers direct requests to
+  // either surface (`/editor`, `/__editor/file?…`, …) which could
+  // otherwise fall through SvelteKit's routing.
+  if (
+    !dev &&
+    (event.url.pathname === "/editor" ||
+      event.url.pathname.startsWith("/editor/") ||
+      event.url.pathname.startsWith("/__editor"))
+  ) {
+    return new Response(null, { status: 404 });
+  }
+
   const response = await resolve(event);
+
+  // Skip every site-wide security header for the dev-only editor surfaces.
+  // The editor chrome (/editor) mounts a sandboxed iframe at /editor/preview;
+  // X-Frame-Options: DENY and CSP `frame-ancestors 'none'` would otherwise
+  // block the iframe. Both routes only ever serve in dev (see guard above
+  // + `+layout.server.ts`), so there's nothing worth hardening here — the
+  // iframe sandbox attribute is the real boundary.
+  //
+  // Also send `Cache-Control: no-store` on editor routes: otherwise the
+  // browser may pin the FIRST response's security-header set to the URL
+  // and keep enforcing it on future iframe loads even after the server
+  // starts returning clean headers.
+  const isEditor =
+    event.url.pathname === "/editor" ||
+    event.url.pathname.startsWith("/editor/");
+  if (isEditor) {
+    response.headers.set("Cache-Control", "no-store");
+    return response;
+  }
+
   for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
     // Preserve existing headers if a route explicitly set them (e.g. RSS /
     // sitemap have their own Cache-Control); we're only filling in security
