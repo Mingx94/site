@@ -4,6 +4,7 @@
   import "@/styles/global.css";
   import config from "@/config";
   import { onMount } from "svelte";
+  import { page } from "$app/state";
   import { onScroll } from "@/lib/domEvent";
   import { initFont } from "@/lib/font";
   import { initTheme } from "@/lib/theme";
@@ -14,6 +15,12 @@
   }
 
   let { children }: Props = $props();
+
+  // The local-only editor (and its preview iframe) under `/editor/*` are
+  // a full-bleed dev tool and must not inherit the site's header, footer,
+  // fonts init, or scroll handling. Detect from the URL so client-side
+  // nav between site and editor shows the right chrome without a reload.
+  const isEditorRoute = $derived(page.url.pathname.startsWith("/editor"));
 
   onMount(() => {
     initTheme();
@@ -78,17 +85,21 @@
   <link rel="sitemap" href="/sitemap.xml" />
 </svelte:head>
 
-<!-- Skip link: first focusable element on the page. Visually hidden until
-     focus so keyboard users can jump past the header / nav directly to
-     the main content. Pairs with id="main" on the <main> landmark below. -->
-<a href="#main" class="skip-link">跳到主要內容</a>
-
-<Header />
-<TwSizeIndicator />
-<main id="main" tabindex="-1">
+{#if isEditorRoute}
   {@render children()}
-</main>
-<Footer />
+{:else}
+  <!-- Skip link: first focusable element on the page. Visually hidden until
+       focus so keyboard users can jump past the header / nav directly to
+       the main content. Pairs with id="main" on the <main> landmark below. -->
+  <a href="#main" class="skip-link">跳到主要內容</a>
+
+  <Header />
+  <TwSizeIndicator />
+  <main id="main" tabindex="-1">
+    {@render children()}
+  </main>
+  <Footer />
+{/if}
 
 <style>
   .skip-link {

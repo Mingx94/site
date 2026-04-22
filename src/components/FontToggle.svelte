@@ -32,9 +32,12 @@
     <span class="text-border">/</span>
     <span class={["font-huninn", selected !== "huninn" && "opacity-40"]}>粉</span>
   </button>
-  <!-- Styled tooltip -->
+  <!-- Styled tooltip. Positioned BELOW the button because the header
+       is `position: fixed; top: 0` (see src/styles/global.css `header`
+       base rule), so rendering it above the button pushes it off the
+       top of the viewport. -->
   <div
-    class="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-foreground px-2.5 py-1 text-xs text-background opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+    class="pointer-events-none absolute top-full left-1/2 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-foreground px-2.5 py-1 text-xs text-background opacity-0 transition-opacity duration-150 group-hover:opacity-100"
     aria-hidden="true"
   >
     切換字型：<span class="font-iansui">芫荽</span> / <span class="font-huninn">粉圓</span>

@@ -17,9 +17,9 @@
 
   const viewsQuery = $derived(getViews(data.id));
 
-  let counted = false;
-  let visibleSeconds = 0;
-  let maxScroll = 0;
+  let counted = $state(false);
+  let visibleSeconds = $state(0);
+  let maxScroll = $state(0);
   let readingProgress = $state(0);
 
   const minSeconds = $derived(Math.max(10, (data.readingTime ?? 1) * 60 * 0.3));
