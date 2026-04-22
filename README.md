@@ -27,6 +27,7 @@
 | `/about` | 關於 |
 | `/contact` | 聯絡表單（Turnstile 保護） |
 | `/rss.xml`、`/sitemap.xml` | 訂閱與 SEO |
+| `/llms.txt` | LLM 爬蟲用的 markdown 索引（[llmstxt.org](https://llmstxt.org)） |
 | `/.well-known/api-catalog`、`/.well-known/agent-skills` | agent discovery |
 | `/editor` | **只在 dev 環境可用**的本地 CMS |
 
@@ -47,6 +48,14 @@ npm run dev       # vite dev，預設 http://localhost:4321
 | `npm run test` | vitest |
 | `npm run gen-og` | 重跑 OG 圖產生 |
 | `npm run cf-typegen` | 從 `wrangler.jsonc` 產生 Cloudflare 綁定型別 |
+
+## 對 agent 友善
+
+- 每篇文章都有 markdown 版本：`/blog/<slug>.md`
+- 文章 HTML 同時宣告 `<link rel="alternate" type="text/markdown">` 與 HTTP `Link` header（RFC 8288）
+- 對 `/blog/<slug>` 送 `Accept: text/markdown` 會直接回 markdown（[hooks.server.ts](src/hooks.server.ts) 做 content negotiation，帶 `Vary: Accept`）
+- `/llms.txt` 提供全站 markdown 索引
+- `/.well-known/api-catalog`（RFC 9727）、`/.well-known/agent-skills`（Cloudflare discovery RFC）
 
 ## 內建編輯器
 
