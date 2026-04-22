@@ -23,7 +23,7 @@
 | `/` | 首頁 |
 | `/blog` | 文章列表 |
 | `/blog/[slug]` | 文章內頁（含 reactions、reading time） |
-| `/blog/[slug]/article.md` | 原始 markdown（供 agent / reader 讀取） |
+| `/blog/[slug].md` | 原始 markdown（供 agent / reader 讀取） |
 | `/about` | 關於 |
 | `/contact` | 聯絡表單（Turnstile 保護） |
 | `/rss.xml`、`/sitemap.xml` | 訂閱與 SEO |
