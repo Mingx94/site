@@ -31,8 +31,16 @@
 
 # Per-post markdown alternate. `:slug` is substituted by Workers Assets
 # into both the match path and the header value, so each blog post
-# advertises its matching /blog/<slug>/article.md representation.
+# advertises its matching /blog/<slug>.md representation.
 /blog/:slug/
-  Link: </blog/:slug/article.md>; rel="alternate"; type="text/markdown"
+  Link: </blog/:slug.md>; rel="alternate"; type="text/markdown"
 /blog/:slug
-  Link: </blog/:slug/article.md>; rel="alternate"; type="text/markdown"
+  Link: </blog/:slug.md>; rel="alternate"; type="text/markdown"
+
+# Workers Assets serves .md with `Content-Type: text/markdown` (no
+# charset), so browsers fall back to Latin-1 and mangle UTF-8 CJK.
+# Override with an explicit charset. The +server.ts handler already
+# sets this, but the prerendered file is served by the ASSETS binding
+# which applies its own extension-based MIME map.
+/blog/:slug.md
+  Content-Type: text/markdown; charset=utf-8
