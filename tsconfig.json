@@ -2,10 +2,12 @@
   "extends": "./.svelte-kit/tsconfig.json",
   "include": [
     "src/**/*.ts",
+    "src/**/*.tsx",
     "src/**/*.js",
     "src/**/*.svelte",
 
-    "vite.config.ts"
+    "vite.config.ts",
+    "scripts/**/*.ts"
   ],
   "exclude": ["dist"],
   "compilerOptions": {

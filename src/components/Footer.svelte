@@ -3,8 +3,10 @@
   import ThemeSettings from "@/components/ThemeSettings.svelte";
   import config from "@/config";
   import { staggerIn } from "@/lib/domEvent";
+  import { dev } from "$app/environment";
   import Link from "./Link.svelte";
   import RiRssLine from "~icons/ri/rss-line";
+  import RiQuillPenLine from "~icons/ri/quill-pen-line";
 </script>
 
 <footer {@attach staggerIn} class="animate pb-6">
@@ -42,6 +44,23 @@
           {config.params.copyright}
         </span>
         <div class="flex items-center gap-2">
+          {#if dev}
+            <!-- Dev-only entry to the local-CMS editor. `dev` comes from
+                 `$app/environment`; in production builds the `{#if}` is
+                 statically false, so this block is dead-code-eliminated
+                 and ships nothing. Opens in a new tab so the site stays
+                 open for side-by-side comparison while editing. -->
+            <Link
+              aria-label="編輯器（dev）"
+              title="編輯器"
+              href="/editor"
+              external={true}
+              underline={false}
+              class="inline-flex size-8 items-center justify-center rounded-md !text-muted-foreground transition-colors hover:!text-primary"
+            >
+              <RiQuillPenLine class="size-4" />
+            </Link>
+          {/if}
           <Link
             aria-label="RSS 訂閱"
             title="RSS"

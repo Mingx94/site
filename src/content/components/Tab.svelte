@@ -1,4 +1,5 @@
 <script lang="ts">
+  import * as Tabs from "@/components/ui/tabs";
   import type { Snippet } from "svelte";
 
   interface Props {
@@ -9,6 +10,6 @@
   let { name, children }: Props = $props();
 </script>
 
-<div data-name={name} class="border border-border px-4">
+<Tabs.Content value={name} class="border border-border px-4">
   {@render children()}
-</div>
+</Tabs.Content>

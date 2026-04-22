@@ -1,0 +1,65 @@
+/* Stylesheet loaded inside the preview iframe. Pulls in Tailwind with
+   the typography plugin + the site's article CSS so the rendered .svx
+   body looks exactly like /blog/<slug>/.
+
+   This is its own file (separate from editor/app.css) so the iframe
+   doesn't inherit editor chrome styles — it's a preview surface, not
+   an editor surface. */
+
+@import "tailwindcss";
+@import "../../../content/styles/article.css";
+
+@plugin "@tailwindcss/typography";
+
+/* Same content-components utility opt-in the editor uses so classes
+   referenced inside Cover / Figure / Notice etc. resolve. */
+@source "../../../content/components/**/*.svelte";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent-tw);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+/* Site design tokens — copied from editor/src/app.css. The iframe can't
+   inherit them from the parent because it's a separate document. */
+:root {
+  --background: oklch(0.9711 0.0074 80.7211);
+  --foreground: oklch(0.3 0.0358 30.2042);
+  --primary: oklch(0.5234 0.1347 144.1672);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.9571 0.021 147.636);
+  --secondary-foreground: oklch(0.4254 0.1159 144.3078);
+  --muted: oklch(0.937 0.0142 74.4218);
+  --muted-foreground: oklch(0.4495 0.0486 39.211);
+  --accent-tw: oklch(0.8952 0.0504 146.0366);
+  --accent-foreground: oklch(0.4254 0.1159 144.3078);
+  --destructive: oklch(0.5386 0.1937 26.7249);
+  --border: oklch(0.8805 0.0208 74.6428);
+  --input: oklch(0.8805 0.0208 74.6428);
+  --ring: oklch(0.5234 0.1347 144.1672);
+  --notice-note: oklch(0.5 0.18 240);
+  --notice-tip: oklch(0.52 0.17 160);
+  --notice-info: oklch(0.56 0.14 75);
+  --notice-warning: oklch(0.52 0.2 25);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}

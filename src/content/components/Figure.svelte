@@ -1,4 +1,4 @@
-<script module>
+<script module lang="ts">
   // Inline article image that goes through `@sveltejs/enhanced-img` for
   // responsive srcset + AVIF/WebP generation — same treatment Cover.svelte
   // gives the post cover, but for arbitrary images dropped next to the
@@ -9,24 +9,31 @@
   // a post directory that isn't `cover.jpg` (covered by Cover.svelte).
   // Path is relative to this component so it resolves under both the site
   // and editor Vite roots.
-  const images = import.meta.glob(
+  const images = import.meta.glob<{ default: string }>(
     "../posts/*/*.{jpg,jpeg,png,webp,avif,gif}",
     { eager: true, query: { enhanced: true, w: "1280;800;400" } },
   );
 
-  const placeholders = import.meta.glob(
+  const placeholders = import.meta.glob<{ default: string }>(
     "../posts/*/*.{jpg,jpeg,png,webp,avif,gif}",
     { eager: true, query: { enhanced: true, w: "32", blur: "10" } },
   );
 </script>
 
-<script>
+<script lang="ts">
   import { page } from "$app/state";
+
+  interface Props {
+    src: string;
+    alt: string;
+    caption?: string;
+    slug?: string;
+  }
 
   // `src` is the filename relative to the post directory, e.g. "diagram.png".
   // `slug` is optional — falls back to the current route param so articles
   // on /blog/[slug] don't need to pass it; list/embed views should.
-  let { src, alt, caption, slug: slugProp = undefined } = $props();
+  let { src, alt, caption, slug: slugProp = undefined }: Props = $props();
   let loaded = $state(false);
 
   const slug = $derived(slugProp ?? page.params.slug);

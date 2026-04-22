@@ -29,13 +29,14 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# editor sub-app (Vite build artefacts)
-editor/node_modules/
-editor/dist/
-editor/.vite/
-
 # dogfood / QA output (screenshots, videos, reports)
 dogfood-output/
+
+# playwright-cli session artefacts (snapshots, console/network logs)
+.playwright-cli/
+
+# Claude Code per-project skills cache — machine-local, not checked in
+.claude/skills/
 
 # OG images generated at build time (scripts/gen-og.ts → static/og/)
 static/og/*.png

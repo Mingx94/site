@@ -12,20 +12,49 @@
   let sent = $state(false);
   let errorMsg = $state("");
 
+  // The Turnstile script is idempotent and cached once loaded, so we
+  // reuse it across SPA remounts. The widget, on the other hand, holds
+  // its own DOM + iframe inside the host container; if we don't call
+  // `turnstile.remove(widgetId)` on unmount, navigating back to /contact
+  // stacks a fresh widget next to the stale one.
+  const TURNSTILE_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js";
   const loadTurnstile: Attachment = (node) => {
-    const script = document.createElement("script");
-    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-    script.async = true;
-    script.onload = () => {
-      if (window.turnstile) {
-        window.turnstile.render(node as HTMLElement, {
-          sitekey: data.turnstileSiteKey,
-          "response-field-name": "turnstileToken",
-        });
+    let widgetId: string | undefined;
+
+    const render = () => {
+      if (!window.turnstile) return;
+      widgetId = window.turnstile.render(node as HTMLElement, {
+        sitekey: data.turnstileSiteKey,
+        "response-field-name": "turnstileToken",
+      });
+    };
+
+    if (window.turnstile) {
+      render();
+    } else {
+      const existing = document.querySelector<HTMLScriptElement>(
+        `script[src^="${TURNSTILE_SRC}"]`,
+      );
+      if (existing) {
+        existing.addEventListener("load", render, { once: true });
+      } else {
+        const script = document.createElement("script");
+        script.src = TURNSTILE_SRC;
+        script.async = true;
+        script.addEventListener("load", render, { once: true });
+        document.head.appendChild(script);
+      }
+    }
+
+    return () => {
+      if (widgetId && window.turnstile) {
+        try {
+          window.turnstile.remove(widgetId);
+        } catch {
+          // Already removed by Turnstile internals.
+        }
       }
     };
-    document.head.appendChild(script);
-    return () => script.remove();
   };
 </script>
 

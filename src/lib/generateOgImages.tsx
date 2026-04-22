@@ -1,8 +1,4 @@
 import { ImageResponse } from "@vercel/og";
-import React from "react";
-
-// prevent editor from remove import
-React.version;
 
 async function loadGoogleFont(
   family: string,
