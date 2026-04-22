@@ -42,6 +42,34 @@ const SECURITY_HEADERS: Record<string, string> = {
     "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
 };
 
+// Parse an Accept header and decide whether the client explicitly
+// prefers `text/markdown` over `text/html`. Browsers send
+// `text/html,…,*/*;q=0.8` — htmlQ=1, mdQ=0 → returns false. Agents that
+// opt in with `Accept: text/markdown` (or weight it above html) get
+// true. `text/*` / `*/*` count toward html so browsers with permissive
+// Accept headers keep getting the HTML page.
+function prefersMarkdown(accept: string | null): boolean {
+  if (!accept) return false;
+  let mdQ = 0;
+  let htmlQ = 0;
+  for (const part of accept.split(",")) {
+    const [type, ...params] = part.trim().split(";").map((s) => s.trim());
+    let q = 1;
+    for (const p of params) {
+      if (p.startsWith("q=")) q = parseFloat(p.slice(2)) || 0;
+    }
+    if (type === "text/markdown") mdQ = Math.max(mdQ, q);
+    else if (type === "text/html" || type === "text/*" || type === "*/*") {
+      htmlQ = Math.max(htmlQ, q);
+    }
+  }
+  return mdQ > 0 && mdQ > htmlQ;
+}
+
+// Matches `/blog/<slug>` and `/blog/<slug>/` but not `/blog/`,
+// `/blog/<slug>.md`, or deeper paths.
+const BLOG_POST_PATH = /^\/blog\/([^/]+?)\/?$/;
+
 export const handle: Handle = async ({ event, resolve }) => {
   // The (editor) route group at `/editor/*` and the `/__editor/*`
   // content-API middleware are local-only dev tools. `+layout.server.ts`
@@ -59,7 +87,34 @@ export const handle: Handle = async ({ event, resolve }) => {
     return new Response(null, { status: 404 });
   }
 
+  // Content negotiation for blog posts: agents sending
+  // `Accept: text/markdown` get the .md representation served at the
+  // original URL. See Cloudflare's "Markdown for Agents" doc:
+  // https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/
+  const blogMatch = BLOG_POST_PATH.exec(event.url.pathname);
+  const slug = blogMatch?.[1];
+  if (slug && !slug.endsWith(".md")) {
+    if (prefersMarkdown(event.request.headers.get("accept"))) {
+      const mdUrl = new URL(`/blog/${slug}.md`, event.url);
+      const res = await event.fetch(mdUrl);
+      const headers = new Headers(res.headers);
+      headers.set("Vary", "Accept");
+      return new Response(res.body, {
+        status: res.status,
+        statusText: res.statusText,
+        headers,
+      });
+    }
+  }
+
   const response = await resolve(event);
+
+  // Tell caches that blog post HTML depends on Accept so the markdown
+  // variant above isn't served to a browser (and vice versa).
+  if (slug && !slug.endsWith(".md")) {
+    const existing = response.headers.get("Vary");
+    response.headers.set("Vary", existing ? `${existing}, Accept` : "Accept");
+  }
 
   // Skip every site-wide security header for the dev-only editor surfaces.
   // The editor chrome (/editor) mounts a sandboxed iframe at /editor/preview;
