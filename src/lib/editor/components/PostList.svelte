@@ -127,6 +127,10 @@
 
   function openMenu(ev: MouseEvent, p: PostSummary) {
     ev.preventDefault();
+    // Stop the event reaching window — Svelte 5 flushes the `menu` state
+    // synchronously, so ContextMenu mounts mid-event and its
+    // `svelte:window` oncontextmenu handler would otherwise close it.
+    ev.stopPropagation();
     focused = p.slug;
     menu = { x: ev.clientX, y: ev.clientY, post: p };
   }
