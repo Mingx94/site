@@ -582,6 +582,7 @@ body {
   min-width: 0;
 }
 .ed-empty {
+  flex: 1;
   display: grid;
   place-items: center;
   font-family: var(--hand);
