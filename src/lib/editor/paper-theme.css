@@ -593,6 +593,7 @@ body {
 /* ---------- Preview ---------- */
 .pane-preview {
   overflow: auto;
+  container-type: inline-size;
 }
 /* ---------- Preview document
    Article wrapper styling (.article-preview / .pv-masthead / .pv-h1 / .pv-byline)
@@ -600,9 +601,16 @@ body {
    body inherits typography from `.content` (defined in shared article.css). */
 
 .article-preview {
+  width: 100%;
   max-width: 760px;
   margin: 0 auto;
-  padding: 32px 48px 96px;
+  padding: 32px 24px 96px;
+}
+
+@container (min-width: 640px) {
+  .article-preview {
+    padding: 32px 48px 96px;
+  }
 }
 
 /* Preview error */
