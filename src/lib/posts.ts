@@ -49,3 +49,12 @@ export const filterDrafts = (posts: Post[]): Post[] => {
   if (import.meta.env.DEV) return posts;
   return posts.filter((p) => !p.draft);
 };
+
+// Self-accepting HMR boundary. Without this, adding a file that matches the
+// globs above (e.g. creating a post from the editor) invalidates this module
+// and Vite's default fallback is a broadcast `full-reload` — which blows away
+// the editor's in-memory tab state. Accepting here stops the propagation at
+// this module: Vite re-evaluates it in place, ES module live bindings hand
+// the fresh `allPosts` to importers on next access, and the editor (which
+// doesn't import this file) never sees the reload.
+if (import.meta.hot) import.meta.hot.accept();
