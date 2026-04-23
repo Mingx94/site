@@ -98,6 +98,28 @@ Registry 取自 `src/content/components/`（單一來源），預覽與線上文
 - 加新 dependency 時注意 worker-size 守門員：任何會被 SvelteKit 視為伺服器端
   共用的 module 都可能漏進 `_worker.js`，先確認是不是該放在 dynamic import 後面
 
+## Persistence
+
+localStorage keys owned by editor：
+
+| Key | 內容 | 寫入點 |
+|-----|------|-------|
+| `svx-editor.tweaks` | 使用者 tweaks（density 等） | `state/tweaks.svelte.ts` |
+| `svx-editor.tabs` | `{ open: string[], active: string \| null }` | 每次 tab mutation |
+| `svx-editor.dirty:<path>` | 未存檔的 buffer snapshot | 輸入後 debounce |
+
+Tab snapshot 在 `+page.svelte` onMount 時還原，用來在任何原因的 reload 後讓
+使用者回到原本的 tab。
+
+## Cross-module dependencies
+
+- `src/lib/posts.ts` 有 `if (import.meta.hot) import.meta.hot.accept()`
+  — **load-bearing for the editor**。那個 module 用 eager `import.meta.glob`
+  掃所有 `article.svx`，當 editor 建新文章時 glob invalidate 會觸發 Vite
+  的 `full-reload` 廣播，連沒 import 它的 `/editor` 也會被迫 reload。
+  self-accept 讓 propagation 停在 posts.ts，editor 的 in-memory state
+  不會被炸掉。別把那行刪掉，除非你也改掉 eager glob。
+
 ## Non-features (intentional)
 
 - 不做 git 整合。Dirty state 是 file-buffer vs disk，不是 VCS
