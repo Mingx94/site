@@ -24,7 +24,9 @@
     closeTab,
     toggleRail,
     openTab,
+    setActive,
   } from '$lib/editor/state/tabs.svelte';
+  import { loadTabsSnapshot } from '$lib/editor/io/persist';
   import {
     saveFile,
     dirtyCount,
@@ -175,6 +177,22 @@
           await openTab(p);
         } catch {
           /* file may have been deleted externally — skip silently */
+        }
+      }
+      // Restore tabs from the last session so a reload (incl. Vite's
+      // auto-reload after creating a post) lands on the same tab.
+      // Runs after dirty restore so dirty files are already in `open`.
+      const snap = loadTabsSnapshot();
+      if (snap) {
+        for (const p of snap.open) {
+          try {
+            await openTab(p);
+          } catch {
+            /* file missing — skip */
+          }
+        }
+        if (snap.active && tabs.open.includes(snap.active)) {
+          setActive(snap.active);
         }
       }
     })();

@@ -3,6 +3,26 @@
 
 const LS_TWEAKS = 'svx-editor.tweaks';
 const LS_DIRTY_PREFIX = 'svx-editor.dirty:';
+const LS_TABS = 'svx-editor.tabs';
+
+export type TabsSnapshot = { open: string[]; active: string | null };
+
+export function loadTabsSnapshot(): TabsSnapshot | null {
+  try {
+    const raw = localStorage.getItem(LS_TABS);
+    return raw ? (JSON.parse(raw) as TabsSnapshot) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function saveTabsSnapshot(snap: TabsSnapshot): void {
+  try {
+    localStorage.setItem(LS_TABS, JSON.stringify(snap));
+  } catch {
+    /* quota / disabled — tabs will still work in-session */
+  }
+}
 
 export function loadTweaks<T>(): T | null {
   try {
