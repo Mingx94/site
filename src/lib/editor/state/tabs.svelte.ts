@@ -1,4 +1,5 @@
 import { loadFile } from './files.svelte';
+import { saveTabsSnapshot } from '$lib/editor/io/persist';
 
 type TabsState = {
   open: string[];
@@ -16,10 +17,18 @@ export const tabs = $state<TabsState>({
   railTab: 'fm',
 });
 
+// Mirror `open` / `active` to localStorage so a page reload (incl. Vite's
+// auto-reload when `import.meta.glob` sees a new article file) lands the
+// user back on the same tab. Called from every mutation site below.
+function persist() {
+  saveTabsSnapshot({ open: tabs.open, active: tabs.active });
+}
+
 export async function openTab(path: string): Promise<void> {
   await loadFile(path);
   if (!tabs.open.includes(path)) tabs.open = [...tabs.open, path];
   tabs.active = path;
+  persist();
 }
 
 export function closeTab(path: string) {
@@ -30,10 +39,14 @@ export function closeTab(path: string) {
   if (tabs.active === path) {
     tabs.active = next[Math.max(0, idx - 1)] ?? null;
   }
+  persist();
 }
 
 export function setActive(path: string) {
-  if (tabs.open.includes(path)) tabs.active = path;
+  if (tabs.open.includes(path)) {
+    tabs.active = path;
+    persist();
+  }
 }
 
 export function setPreviewMode(mode: TabsState['previewMode']) {
@@ -62,6 +75,7 @@ export function renamePathInTabs(oldPrefix: string, newPrefix: string): void {
   if (tabs.active && pathMatchesPrefix(tabs.active, oldPrefix)) {
     tabs.active = newPrefix + tabs.active.slice(oldPrefix.length);
   }
+  persist();
 }
 
 // After a delete, close any open tab matching the prefix.
@@ -71,4 +85,5 @@ export function closeTabsUnder(prefixPath: string): void {
   if (tabs.active && pathMatchesPrefix(tabs.active, prefixPath)) {
     tabs.active = next[0] ?? null;
   }
+  persist();
 }
