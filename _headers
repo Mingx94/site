@@ -49,3 +49,8 @@
 # markdown; override the default text/plain from the asset server.
 /llms.txt
   Content-Type: text/markdown; charset=utf-8
+
+# Security contact metadata for vulnerability disclosure.
+/.well-known/security.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=300, s-maxage=3600
