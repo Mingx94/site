@@ -47,7 +47,12 @@ export default {
   kit: {
     // `adapter` is `null` only when the dep isn't installed in this
     // workspace (see top-of-file note). `vite build` will have it.
-    adapter: adapter?.(),
+    adapter: adapter?.({
+      // Keep build/prerender emulation local. The deployed Worker still uses
+      // wrangler.jsonc; this only prevents local builds from requiring a
+      // Cloudflare login for remote dev bindings.
+      platformProxy: { remoteBindings: false },
+    }),
     alias: {
       "@": "./src",
     },
