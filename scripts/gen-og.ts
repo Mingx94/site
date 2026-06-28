@@ -10,7 +10,7 @@
 
 import { readdir, readFile, writeFile, mkdir, stat, unlink } from "node:fs/promises";
 import { join } from "node:path";
-import matter from "gray-matter";
+import yaml from "js-yaml";
 import { generateOgImageForPost } from "../src/lib/generateOgImages";
 
 const POSTS_DIR = "src/content/posts";
@@ -23,6 +23,17 @@ type PostMeta = {
   draft: boolean;
 };
 
+const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/;
+
+function readFrontmatter(src: string): Record<string, unknown> {
+  const match = src.match(FRONTMATTER_RE);
+  if (!match) return {};
+  const parsed = yaml.load(match[1]);
+  return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+    ? (parsed as Record<string, unknown>)
+    : {};
+}
+
 async function readPosts(): Promise<PostMeta[]> {
   const entries = await readdir(POSTS_DIR, { withFileTypes: true });
   const posts: PostMeta[] = [];
@@ -31,7 +42,7 @@ async function readPosts(): Promise<PostMeta[]> {
     const articlePath = join(POSTS_DIR, entry.name, "article.svx");
     try {
       const src = await readFile(articlePath, "utf8");
-      const { data } = matter(src);
+      const data = readFrontmatter(src);
       const title = typeof data.title === "string" ? data.title : entry.name;
       const description =
         typeof data.description === "string" ? data.description : undefined;
