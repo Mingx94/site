@@ -23,9 +23,9 @@ src/
 │   ├── +layout.svelte          根 layout；對 /editor/* 路徑跳過 Header/Footer/skip-link
 │   └── (editor)/
 │       ├── +layout.server.ts   prerender=false, ssr=false, !dev→error(404)
-│       ├── +layout@.svelte     只放 Google Fonts + <slot/>（layout reset）
+│       ├── +layout@.svelte     只放 Google Fonts + {@render children()}（layout reset）
 │       └── editor/
-│           ├── +page.svelte    editor 主介面（原 editor/src/App.svelte）
+│           ├── +page.svelte    editor 主介面
 │           │                   import global.css + paper-theme.css
 │           └── preview/+page.svelte
 │                                sandboxed iframe 的內容；在 onMount 動態 import compile.ts
@@ -44,7 +44,7 @@ src/
     ├── paper-theme.css          editor chrome 專用 CSS vars + 規則
     └── editor.d.ts              ambient：svelte/internal/* 私有模組宣告
 
-vite-plugin-content-api.ts       dev-only middleware；詳見 agents/content-api.md
+vite-plugin-content-api.ts       dev-only middleware
 vite-plugin-content-api.test.ts  security 測試（safeResolve + isLocalRequest）
 scripts/check-worker-size.ts     post-build 守門員：防止 svelte/compiler 漏進 _worker.js
 ```

@@ -15,7 +15,7 @@ export const prerender = true;
 export const GET: RequestHandler = () => {
   const body = {
     $schema:
-      "https://raw.githubusercontent.com/cloudflare/agent-skills-discovery-rfc/main/schema.json",
+      "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
     skills: [],
   };
 

@@ -1,7 +1,7 @@
 /*
  * Shared article typography — used by:
  *   - site (src/styles/global.css imports this)
- *   - editor preview pane (editor/src/app.css imports this)
+ *   - editor preview pane (src/lib/editor/preview/iframe-host.css imports this)
  *
  * Requires Tailwind 4 with @plugin "@tailwindcss/typography" available
  * in the consuming stylesheet (the @apply rules below resolve against it).

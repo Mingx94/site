@@ -48,21 +48,17 @@
 	],
 	/**
 	 * Rate limit binding used by blog.remote.ts to cap per-IP abuse on
-	 * trackView / addReaction / removeReaction. Cloudflare's rate-limit
-	 * API is still surfaced via `unsafe.bindings` at the time of writing.
+	 * trackView / addReaction / removeReaction.
 	 * limit=30/period=60s chosen conservatively — a real reader won't
 	 * hit 30 counter-writes in a minute; a script will.
 	 */
-	"unsafe": {
-		"bindings": [
-			{
-				"name": "BLOG_RATE",
-				"type": "ratelimit",
-				"namespace_id": "1001",
-				"simple": { "limit": 30, "period": 60 }
-			}
-		]
-	},
+	"ratelimits": [
+		{
+			"name": "BLOG_RATE",
+			"namespace_id": "1001",
+			"simple": { "limit": 30, "period": 60 }
+		}
+	],
 	"send_email": [
 		{
 			"name": "SEND_EMAIL",
