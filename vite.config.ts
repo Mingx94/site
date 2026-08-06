@@ -3,7 +3,7 @@ import { sveltekit } from "@sveltejs/kit/vite";
 import Icons from "unplugin-icons/vite";
 import { enhancedImages } from "@sveltejs/enhanced-img";
 import { resolve } from "node:path";
-import { editorContentApi } from "./vite-plugin-content-api";
+import { editorContentApi } from "./vite-plugin-content-api.ts";
 
 export default {
   plugins: [
