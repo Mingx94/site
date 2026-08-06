@@ -1,15 +1,11 @@
 <script lang="ts">
-  // The preview iframe that DynamicSvx.svelte mounts at `/__editor/preview`.
-  // Originally `editor/preview-host.html` + `editor/src/preview/iframe-entry.ts`
-  // — now a SvelteKit route so the whole editor lives inside the same
-  // SvelteKit project.
-  //
+  // The preview iframe that DynamicSvx.svelte mounts at `/editor/preview`.
   // `compile.ts` eagerly imports `mdsvex` + `svelte/compiler` (~500KB).
   // Dynamic-importing it inside `onMount` forces Rollup to emit a separate
   // chunk, so this code path never inflates the main Worker bundle that
   // ships to Cloudflare.
   //
-  // Protocol (unchanged from iframe-entry.ts):
+  // Protocol:
   //   parent → iframe: { type:'compile', source, frontmatter }
   //   iframe → parent: { type:'preview-ready' } once on load
   //   iframe → parent: { type:'preview-rendered' } on mount

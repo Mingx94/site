@@ -56,7 +56,7 @@ try {
       console.error(
         `[check-worker-size] FAIL: Worker bundle references ${pattern}. ` +
           `svelte/compiler or mdsvex must only be reachable through the ` +
-          `dynamic import in src/routes/(editor)/__editor/preview/+page.svelte.`,
+          `dynamic import in src/routes/(editor)/editor/preview/+page.svelte.`,
       );
       process.exit(1);
     }

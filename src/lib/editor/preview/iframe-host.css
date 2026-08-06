@@ -34,8 +34,8 @@
   --color-ring: var(--ring);
 }
 
-/* Site design tokens — copied from editor/src/app.css. The iframe can't
-   inherit them from the parent because it's a separate document. */
+/* Site design tokens for the isolated iframe. It cannot inherit them from
+   the parent because it is a separate document. */
 :root {
   --background: oklch(0.9711 0.0074 80.7211);
   --foreground: oklch(0.3 0.0358 30.2042);

@@ -22,12 +22,11 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   Access-Control-Expose-Headers: Link
 
-# Agent discovery: Link header on the homepage (RFC 8288) pointing at the
-# sitemap, the RSS feed as a feed alternate, and the RFC 9727 API
-# catalog. Agents that fetch `/` can follow these relations without
-# guessing well-known URLs.
+# Machine-readable discovery: Link header on the homepage (RFC 8288)
+# pointing at the sitemap and the RSS feed. Clients that fetch `/` can
+# follow these relations without guessing URLs.
 /
-  Link: </sitemap.xml>; rel="sitemap", </rss.xml>; rel="alternate"; type="application/rss+xml"; title="RSS feed", </.well-known/api-catalog>; rel="api-catalog"; type="application/linkset+json"
+  Link: </sitemap.xml>; rel="sitemap", </rss.xml>; rel="alternate"; type="application/rss+xml"; title="RSS feed"
 
 # Per-post markdown alternate. `:slug` is substituted by Workers Assets
 # into both the match path and the header value, so each blog post

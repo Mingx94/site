@@ -1,9 +1,7 @@
 {
-  "$schema": "https://ui.shadcn.com/schema.json",
+  "$schema": "https://shadcn-svelte.com/schema.json",
   "registry": "https://shadcn-svelte.com/registry",
   "style": "default",
-  "rsc": false,
-  "tsx": false,
   "typescript": true,
   "tailwind": {
     "config": "",
