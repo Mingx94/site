@@ -13,6 +13,7 @@
   "compilerOptions": {
     "strictNullChecks": true,
     "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "jsxImportSource": "react"
   }
