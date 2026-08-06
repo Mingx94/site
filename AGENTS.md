@@ -1,10 +1,20 @@
-# Agent Instructions
+- Delete obsolete paths. Ship only current code.
+- Use simplest code that meets needs now.
+- Build in layers. Ship smallest working version first. Add on top of working product.
+- Keep modules separate with clear concerns.
+- Prefer mature libraries that simplify or stabilize.
+- Check existing deps, docs, and types first.
+- Design for the long term.
+- Study proven products. Adopt their patterns.
 
-Modular instruction files organized by topic. Load the relevant section based on your current task.
+---
 
-| Topic | File | When to use |
-|-------|------|-------------|
-| Svelte | `agents/svelte.md` | Svelte/SvelteKit 開發、MCP server 使用 |
-| Coding Rules | `agents/rules.md` | 所有程式碼變更前必讀 |
-| Design Context | `.impeccable.md` | UI/UX、樣式、設計決策 |
-| Editor | `agents/editor.md` | 內建本地 CMS（SvelteKit 路由 `/editor` + dev-only `/__editor/*` middleware）— 固定 workspace 為 `src/content/`，article-centric 側邊欄 + Cover 上傳，preview iframe 共用 site 文章樣式與元件 |
+File changes:
+
+1. `git status`. Preserve existing work.
+2. Change and stage task work only.
+3. Review the diff. Run fitting checks.
+4. Commit on `main`. Short message. Report hash.
+
+Push/amend/rewrite need explicit request.
+Read-only work: report.
