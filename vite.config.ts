@@ -2,7 +2,6 @@ import adapter from "@sveltejs/adapter-cloudflare";
 import { enhancedImages } from "@sveltejs/enhanced-img";
 import { sveltekit } from "@sveltejs/kit/vite";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
-import tailwindcss from "@tailwindcss/vite";
 import { escapeSvelte, mdsvex } from "mdsvex";
 import remarkToc from "remark-toc";
 import { createHighlighter } from "shiki";
@@ -15,7 +14,6 @@ const highlighterPromise = createHighlighter({
 
 export default {
   plugins: [
-    tailwindcss(),
     enhancedImages(), // must come before the SvelteKit plugin
     sveltekit({
       extensions: [".svelte", ".md", ".svx"],

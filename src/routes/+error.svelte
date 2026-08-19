@@ -9,11 +9,11 @@
 <Seo title="{page.status} | Vartifact" noindex />
 
 <Container>
-  <div {@attach staggerIn} class="space-y-4 my-20 animate">
-    <h1 class="text-3xl font-bold tracking-tight text-foreground">
+  <div {@attach staggerIn} class="error animate">
+    <h1>
       {page.status}
     </h1>
-    <p class="text-muted-foreground">
+    <p>
       {#if page.status === 404}
         找不到這個頁面，它可能已被移動或刪除。
       {:else if page.status >= 500}
@@ -22,9 +22,31 @@
         發生了一些問題，請稍後再試。
       {/if}
     </p>
-    <div class="flex gap-3">
+    <div class="links">
       <Link href="/">回到首頁</Link>
       <Link href="/blog">瀏覽文章</Link>
     </div>
   </div>
 </Container>
+
+<style>
+  .error {
+    margin-block: 5rem;
+  }
+  .error > * + * {
+    margin-top: 1rem;
+  }
+  h1 {
+    color: var(--foreground);
+    font-size: 1.875rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+  p {
+    color: var(--muted-foreground);
+  }
+  .links {
+    display: flex;
+    gap: 0.75rem;
+  }
+</style>

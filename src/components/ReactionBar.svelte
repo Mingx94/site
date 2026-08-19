@@ -62,23 +62,63 @@
   }
 </script>
 
-<div class="flex flex-wrap gap-2 mt-12 pt-8 border-t border-border">
+<div class="reactions">
   {#each Object.entries(EMOJI_MAP) as [key, { emoji, label }] (key)}
     <button
       onclick={() => react(key)}
       disabled={reactionsQuery.loading}
-      aria-label="{label}{reactionsQuery.current?.[key] ? `，${reactionsQuery.current[key]} 個` : ''}"
+      aria-label="{label}{reactionsQuery.current?.[key]
+        ? `，${reactionsQuery.current[key]} 個`
+        : ''}"
       title={label}
-      class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-colors duration-200
-        {reacted.has(key)
-        ? 'border-primary/30 bg-primary/10 cursor-pointer'
-        : 'border-border hover:border-primary/30 hover:bg-muted cursor-pointer'}
-        {reactionsQuery.loading ? 'opacity-50' : ''}"
+      class:reacted={reacted.has(key)}
+      class:loading={reactionsQuery.loading}
     >
-      <span class="text-lg" aria-hidden="true">{emoji}</span>
+      <span class="emoji" aria-hidden="true">{emoji}</span>
       {#if reactionsQuery.current?.[key]}
-        <span class="text-sm text-muted-foreground">{reactionsQuery.current[key]}</span>
+        <span class="count">{reactionsQuery.current[key]}</span>
       {/if}
     </button>
   {/each}
 </div>
+
+<style>
+  .reactions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      background 200ms,
+      border-color 200ms;
+  }
+  button:hover {
+    border-color: color-mix(in oklch, var(--primary) 30%, transparent);
+    background: var(--muted);
+  }
+  button.reacted {
+    border-color: color-mix(in oklch, var(--primary) 30%, transparent);
+    background: color-mix(in oklch, var(--primary) 10%, transparent);
+  }
+  button.loading {
+    opacity: 0.5;
+  }
+  .emoji {
+    font-size: 1.125rem;
+  }
+  .count {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+  }
+</style>

@@ -7,48 +7,37 @@
   import RiRssLine from "~icons/ri/rss-line";
 </script>
 
-<footer {@attach staggerIn} class="animate pb-6">
+<footer {@attach staggerIn} class="animate">
   <Container>
-    <div class="border-t border-border pt-5">
+    <div class="footer-inner">
       <!-- Top row: masthead + service links -->
-      <div
-        class="mb-4 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-3 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
-      >
+      <div class="top-row">
         <span>— Vartifact / Personal Site</span>
-        <div class="flex items-baseline gap-5">
-          <Link
-            href="/blog"
-            underline={false}
-            class="!text-muted-foreground hover:!text-foreground">Writing</Link
+        <div class="links">
+          <Link href="/blog" underline={false} class="footer-link">Writing</Link
           >
-          <Link
-            href="/about"
-            underline={false}
-            class="!text-muted-foreground hover:!text-foreground">About</Link
-          >
-          <Link
-            href="/contact"
-            underline={false}
-            class="!text-muted-foreground hover:!text-foreground">Contact</Link
+          <Link href="/about" underline={false} class="footer-link">About</Link>
+          <Link href="/contact" underline={false} class="footer-link"
+            >Contact</Link
           >
         </div>
       </div>
 
       <!-- Bottom row: copyright + controls -->
-      <div class="flex flex-wrap items-center justify-between gap-y-2 text-sm">
-        <span class="text-muted-foreground">
+      <div class="bottom-row">
+        <span class="copyright">
           {config.params.copyright}
         </span>
-        <div class="flex items-center gap-2">
+        <div class="controls">
           <Link
             aria-label="RSS 訂閱"
             title="RSS"
             href="/rss.xml"
             external={true}
             underline={false}
-            class="inline-flex size-8 items-center justify-center rounded-md !text-muted-foreground transition-colors hover:!text-primary"
+            class="rss"
           >
-            <RiRssLine class="size-4" />
+            <RiRssLine />
           </Link>
           <ThemeSettings />
         </div>
@@ -56,3 +45,70 @@
     </div>
   </Container>
 </footer>
+
+<style>
+  footer {
+    padding-bottom: 1.5rem;
+  }
+  .footer-inner {
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  .top-row,
+  .bottom-row,
+  .links,
+  .controls {
+    display: flex;
+  }
+  .top-row {
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--muted-foreground);
+    font: 10px var(--font-mono);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .links {
+    align-items: baseline;
+    gap: 1.25rem;
+  }
+  :global(.footer-link) {
+    color: var(--muted-foreground) !important;
+  }
+  :global(.footer-link:hover) {
+    color: var(--foreground) !important;
+  }
+  .bottom-row {
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    row-gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+  .copyright {
+    color: var(--muted-foreground);
+  }
+  .controls {
+    align-items: center;
+    gap: 0.5rem;
+  }
+  :global(.rss) {
+    display: inline-flex !important;
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    color: var(--muted-foreground) !important;
+  }
+  :global(.rss:hover) {
+    color: var(--primary) !important;
+  }
+  :global(.rss svg) {
+    width: 1rem;
+    height: 1rem;
+  }
+</style>

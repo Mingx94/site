@@ -42,14 +42,14 @@
 </script>
 
 {#if image}
-  <figure class="my-6">
-    <div class="relative overflow-hidden rounded-md">
+  <figure>
+    <div class="frame">
       {#if placeholder}
         <enhanced:img
           src={placeholder}
           alt=""
           aria-hidden="true"
-          class="absolute inset-0 h-full w-full object-cover"
+          class="placeholder"
         />
       {/if}
       <enhanced:img
@@ -57,15 +57,46 @@
         sizes="(min-width: 1080px) 800px, 100vw"
         {alt}
         onload={() => (loaded = true)}
-        class="relative h-full w-full object-cover transition-opacity duration-500 ease-out"
+        class="image"
         style:opacity={loaded ? 1 : 0}
         loading="lazy"
       />
     </div>
     {#if caption}
-      <figcaption class="mt-2 text-sm text-muted-foreground text-center">
+      <figcaption>
         {caption}
       </figcaption>
     {/if}
   </figure>
 {/if}
+
+<style>
+  figure {
+    margin-block: 1.5rem;
+  }
+  .frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+  }
+  .placeholder {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .image {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 500ms ease-out;
+  }
+  figcaption {
+    margin-top: 0.5rem;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    text-align: center;
+  }
+</style>

@@ -12,26 +12,51 @@
 <Button
   variant="outline"
   id="back-to-top"
-  class="group ml-auto py-1.5 pr-3 pl-8"
+  class="back-button"
   onclick={scrollTop}
 >
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     aria-hidden="true"
-    class="size-4 rotate-90 fill-none stroke-current stroke-2"
+    class="arrow"
   >
-    <line
-      x1="5"
-      y1="12"
-      x2="19"
-      y2="12"
-      class="translate-x-2 scale-x-0 transition-transform duration-300 ease-in-out group-hover:translate-x-0 group-hover:scale-x-100"
-    />
-    <polyline
-      points="12 5 5 12 12 19"
-      class="translate-x-1 transition-transform duration-300 ease-in-out group-hover:translate-x-0"
-    />
+    <line x1="5" y1="12" x2="19" y2="12" class="shaft" />
+    <polyline points="12 5 5 12 12 19" class="head" />
   </svg>
-  <div class="text-sm">回到頂端</div>
+  <div>回到頂端</div>
 </Button>
+
+<style>
+  :global(.back-button) {
+    margin-left: auto;
+    padding: 0.375rem 0.75rem 0.375rem 2rem;
+  }
+  .arrow {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    transform: rotate(90deg);
+  }
+  .shaft,
+  .head {
+    transition: transform 300ms ease-in-out;
+  }
+  .shaft {
+    transform: translateX(0.5rem) scaleX(0);
+  }
+  .head {
+    transform: translateX(0.25rem);
+  }
+  :global(.back-button:hover) .shaft {
+    transform: none;
+  }
+  :global(.back-button:hover) .head {
+    transform: none;
+  }
+  div {
+    font-size: 0.875rem;
+  }
+</style>

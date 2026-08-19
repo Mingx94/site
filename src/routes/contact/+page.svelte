@@ -64,31 +64,25 @@
 />
 
 <Container>
-  <div class="pt-4 md:pt-8 pb-8 space-y-12 md:space-y-16">
+  <div class="contact">
     <!-- Masthead strip -->
-    <div
-      {@attach staggerIn}
-      class="animate flex items-baseline justify-between gap-4 border-t border-border pt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground"
-    >
+    <div {@attach staggerIn} class="animate strip">
       <span>· Correspondence · Contact</span>
       <span>N°03</span>
     </div>
 
     <!-- Title block -->
-    <div class="space-y-6 -mt-6 md:-mt-10">
+    <div class="title-block">
       <h1
         {@attach staggerIn}
-        class="animate font-bold leading-[0.95] tracking-tighter text-foreground"
+        class="animate page-title"
         style="font-size: clamp(3rem, 10vw, 6rem);"
       >
-        聯絡<span class="text-primary">.</span>
+        聯絡<span class="accent">.</span>
       </h1>
 
-      <p
-        {@attach staggerIn}
-        class="animate max-w-2xl text-lg md:text-xl leading-relaxed text-muted-foreground"
-      >
-        合作、提問、或單純想打個招呼——<br class="hidden md:inline" />
+      <p {@attach staggerIn} class="animate introduction">
+        合作、提問、或單純想打個招呼——<br class="desktop-break" />
         請留下訊息，我會回覆。
       </p>
     </div>
@@ -96,18 +90,12 @@
     <!-- Form or success -->
     <section {@attach staggerIn} class="animate">
       {#if sent}
-        <div
-          class="border-y border-primary/40 py-10 text-center space-y-3"
-        >
-          <p
-            class="font-mono text-[11px] uppercase tracking-[0.2em] text-primary"
-          >
-            · Message Sent
+        <div class="success">
+          <p class="success-label">· Message Sent</p>
+          <p class="success-title">
+            感謝你的訊息<span class="accent">.</span>
           </p>
-          <p class="text-xl md:text-2xl text-foreground">
-            感謝你的訊息<span class="text-primary">.</span>
-          </p>
-          <p class="text-muted-foreground">我會盡快回覆。</p>
+          <p class="muted">我會盡快回覆。</p>
         </div>
       {:else}
         <form
@@ -123,75 +111,53 @@
               errorMsg = "送出失敗，請再試一次。";
             }
           })}
-          class="max-w-xl space-y-6"
+          class="form"
         >
-          <div class="space-y-2 border-t border-border pt-4">
-            <label
-              for="name"
-              class="block font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
-            >
-              · Name · 名稱
-            </label>
+          <div class="field">
+            <label for="name" class="label"> · Name · 名稱 </label>
             <input
               {...submitContact.fields.name.as("text")}
               id="name"
               required
               autocomplete="name"
               maxlength={100}
-              class="w-full border-b border-border bg-transparent py-2 text-lg text-foreground placeholder:text-muted-foreground/40 transition-colors focus:border-primary focus:outline-none"
+              class="input"
             />
           </div>
 
-          <div class="space-y-2 border-t border-border pt-4">
-            <label
-              for="email"
-              class="block font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
-            >
-              · Email
-            </label>
+          <div class="field">
+            <label for="email" class="label"> · Email </label>
             <input
               {...submitContact.fields.email.as("email")}
               id="email"
               required
               autocomplete="email"
               maxlength={200}
-              class="w-full border-b border-border bg-transparent py-2 text-lg text-foreground placeholder:text-muted-foreground/40 transition-colors focus:border-primary focus:outline-none"
+              class="input"
             />
           </div>
 
-          <div class="space-y-2 border-t border-border pt-4">
-            <label
-              for="message"
-              class="block font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
-            >
-              · Message · 訊息
-            </label>
+          <div class="field">
+            <label for="message" class="label"> · Message · 訊息 </label>
             <textarea
               {...submitContact.fields.message.as("text")}
               id="message"
               required
               maxlength={2000}
               rows={6}
-              class="w-full border-b border-border bg-transparent py-2 text-base text-foreground placeholder:text-muted-foreground/40 transition-colors focus:border-primary focus:outline-none resize-y"
-            ></textarea>
+              class="input message"></textarea>
           </div>
 
-          <div {@attach loadTurnstile} class="pt-2"></div>
+          <div {@attach loadTurnstile} class="turnstile"></div>
 
           {#if errorMsg}
-            <div
-              class="font-mono text-[11px] uppercase tracking-[0.2em] text-destructive"
-            >
+            <div class="error">
               · Error · {errorMsg}
             </div>
           {/if}
 
-          <div class="flex items-center justify-between border-t border-border pt-4">
-            <span
-              class="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
-            >
-              · Ready to send
-            </span>
+          <div class="submit-row">
+            <span class="label"> · Ready to send </span>
             <Button type="submit" disabled={!!submitContact.pending}>
               {submitContact.pending ? "送出中..." : "送出 →"}
             </Button>
@@ -201,7 +167,153 @@
     </section>
   </div>
 
-  <div {@attach staggerIn} class="animate mt-8 flex">
+  <div {@attach staggerIn} class="animate back-link">
     <BackToPrev />
   </div>
 </Container>
+
+<style>
+  .contact {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    padding-block: 1rem 2rem;
+  }
+  .strip,
+  .submit-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .strip {
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted-foreground);
+    font: 11px var(--font-mono);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .title-block {
+    margin-top: -1.5rem;
+  }
+  .title-block > * + * {
+    margin-top: 1.5rem;
+  }
+  .page-title {
+    color: var(--foreground);
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+  }
+  .accent {
+    color: var(--primary);
+  }
+  .introduction {
+    max-width: 42rem;
+    color: var(--muted-foreground);
+    font-size: 1.125rem;
+    line-height: 1.625;
+  }
+  .desktop-break {
+    display: none;
+  }
+  .success {
+    padding-block: 2.5rem;
+    border-block: 1px solid color-mix(in oklch, var(--primary) 40%, transparent);
+    text-align: center;
+  }
+  .success > * + * {
+    margin-top: 0.75rem;
+  }
+  .success-label,
+  .label,
+  .error {
+    font-family: var(--font-mono);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .success-label {
+    color: var(--primary);
+    font-size: 11px;
+  }
+  .success-title {
+    color: var(--foreground);
+    font-size: 1.25rem;
+  }
+  .muted {
+    color: var(--muted-foreground);
+  }
+  .form {
+    max-width: 36rem;
+  }
+  .form > * + * {
+    margin-top: 1.5rem;
+  }
+  .field {
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .field > * + * {
+    margin-top: 0.5rem;
+  }
+  .label {
+    display: block;
+    color: var(--muted-foreground);
+    font-size: 10px;
+  }
+  .input {
+    width: 100%;
+    padding-block: 0.5rem;
+    color: var(--foreground);
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+    font-size: 1.125rem;
+    transition: border-color 200ms;
+  }
+  .input::placeholder {
+    color: color-mix(in oklch, var(--muted-foreground) 40%, transparent);
+  }
+  .input:focus {
+    border-color: var(--primary);
+    outline: none;
+  }
+  .message {
+    font-size: 1rem;
+    resize: vertical;
+  }
+  .turnstile {
+    padding-top: 0.5rem;
+  }
+  .error {
+    color: var(--destructive);
+    font-size: 11px;
+  }
+  .submit-row {
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .back-link {
+    display: flex;
+    margin-top: 2rem;
+  }
+  @media (width >= 48rem) {
+    .contact {
+      gap: 4rem;
+      padding-top: 2rem;
+    }
+    .title-block {
+      margin-top: -2.5rem;
+    }
+    .introduction {
+      font-size: 1.25rem;
+    }
+    .desktop-break {
+      display: inline;
+    }
+    .success-title {
+      font-size: 1.5rem;
+    }
+  }
+</style>

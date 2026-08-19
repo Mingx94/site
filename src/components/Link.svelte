@@ -26,13 +26,29 @@
   target={external ? "_blank" : undefined}
   rel={external ? "noopener noreferrer" : undefined}
   data-underline={underline}
-  class={cn(
-    "inline-block decoration-primary/30 hover:decoration-primary/60 text-accent-foreground hover:text-primary transition-colors duration-300 ease-in-out data-underline:underline data-underline:underline-offset-2",
-    className,
-  )}
+  class={cn("link", className)}
   {...rest}
 >
   {#if children}
     {@render children()}
   {/if}
 </a>
+
+<style>
+  .link {
+    display: inline-block;
+    color: var(--accent-foreground);
+    text-decoration-color: color-mix(in oklch, var(--primary) 30%, transparent);
+    transition:
+      color 300ms ease-in-out,
+      text-decoration-color 300ms ease-in-out;
+  }
+  .link[data-underline="true"] {
+    text-decoration-line: underline;
+    text-underline-offset: 2px;
+  }
+  .link:hover {
+    color: var(--primary);
+    text-decoration-color: color-mix(in oklch, var(--primary) 60%, transparent);
+  }
+</style>

@@ -10,7 +10,14 @@
   let { title, width = 500, height = "auto", src, ...rest }: Props = $props();
 </script>
 
-<video class="overflow-hidden rounded-lg" {width} {height} controls {...rest}>
+<video {width} {height} controls {...rest}>
   <source src={src.match(/^http/) ? src : `/videos/${src}`} type="video/mp4" />
   {title}
 </video>
+
+<style>
+  video {
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+  }
+</style>

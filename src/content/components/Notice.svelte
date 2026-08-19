@@ -83,7 +83,7 @@
         />
       </svg>
     {/if}
-    <p class="my-0 ml-1.5">{humanize(type)}</p>
+    <p>{humanize(type)}</p>
   </div>
   <div class="notice-body">
     {@render children()}

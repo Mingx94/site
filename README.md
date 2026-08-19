@@ -8,7 +8,7 @@
 
 - **SvelteKit 2 + Svelte 5**（runes）
 - **mdsvex** 寫文章（`.svx`），Shiki 語法高亮（catppuccin-mocha）
-- **Tailwind 4** + 自訂 article.css
+- **Native CSS** with scoped Svelte styles and custom article.css
 - **Cloudflare Workers** 部署（`@sveltejs/adapter-cloudflare`）
   - `BLOG_KV`：文章 view count / reactions
   - `BLOG_RATE`：per-IP rate limit

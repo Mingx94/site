@@ -14,7 +14,7 @@
 </script>
 
 <ButtonUI
-  class="no-underline"
+  class="article-button"
   {variant}
   {href}
   target="_blank"
@@ -22,3 +22,9 @@
 >
   {@render children()}
 </ButtonUI>
+
+<style>
+  :global(.article-button) {
+    text-decoration: none;
+  }
+</style>
