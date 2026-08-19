@@ -116,4 +116,17 @@
     width: 1rem;
     height: 1rem;
   }
+  @media (width < 64rem), (pointer: coarse) {
+    :global(.footer-link) {
+      display: inline-flex !important;
+      min-width: 2.75rem;
+      min-height: 2.75rem;
+      align-items: center;
+      justify-content: center;
+    }
+    :global(.rss) {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+  }
 </style>

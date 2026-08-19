@@ -92,9 +92,22 @@
     margin-inline: 0.25rem;
     background: var(--border);
   }
-  @media (width >= 48rem) {
+  @media (width >= 64rem) {
     nav {
       gap: 1rem;
+    }
+  }
+  @media (width < 64rem), (pointer: coarse) {
+    :global(.home-link),
+    :global(.nav-link) {
+      display: inline-flex !important;
+      min-width: 2.75rem;
+      min-height: 2.75rem;
+      align-items: center;
+      justify-content: center;
+    }
+    :global(.font-toggle .toggle) {
+      min-height: 2.75rem;
     }
   }
   @media (width < 30rem) {

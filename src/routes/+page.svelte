@@ -102,7 +102,8 @@
                   {#if post.description}<p>{post.description}</p>{/if}
                   <span>
                     <FormattedDate date={post.date} />
-                    {#if post.readingTime} · {post.readingTime} min{/if}
+                    {#if post.readingTime}
+                      · {post.readingTime} min{/if}
                   </span>
                 </div>
               {/if}
@@ -296,6 +297,28 @@
     min-width: min(72vw, 18rem);
     text-decoration: none;
   }
+  .frame.single-frame {
+    display: grid;
+    width: 100%;
+    min-width: 100%;
+    grid-template-areas:
+      "number number"
+      "cover copy";
+    grid-template-columns: minmax(0, 3fr) minmax(6.75rem, 2fr);
+    column-gap: clamp(0.75rem, 3vw, 1.25rem);
+    align-items: center;
+  }
+  .single-frame .frame-number {
+    grid-area: number;
+  }
+  .single-frame .frame-cover {
+    grid-area: cover;
+  }
+  .single-frame .frame-copy {
+    grid-area: copy;
+    min-width: 0;
+    padding-block: 0.5rem;
+  }
   .frame-number {
     display: block;
     padding: 0.15rem 0.25rem 0.4rem;
@@ -318,6 +341,7 @@
     font-size: clamp(1.35rem, 3vw, 2.25rem);
     font-weight: 500;
     line-height: 1.15;
+    overflow-wrap: anywhere;
   }
   .frame-copy > span {
     font-size: 0.625rem;
@@ -380,6 +404,7 @@
   .post-copy h3 {
     font-size: clamp(1.4rem, 3vw, 2rem);
     line-height: 1.25;
+    overflow-wrap: anywhere;
   }
   .post-copy p {
     margin-top: 0.4rem;
@@ -421,6 +446,8 @@
     color: var(--muted-foreground);
     font-family: var(--font-sans);
     font-size: 0.8rem;
+    overflow-wrap: anywhere;
+    text-align: right;
   }
   .back-top {
     display: flex;
@@ -444,8 +471,6 @@
       min-width: 15rem;
     }
     .frame.single-frame {
-      display: grid;
-      width: 100%;
       grid-template-areas:
         "number copy"
         "cover copy";
@@ -463,6 +488,44 @@
       grid-area: copy;
       align-self: center;
       max-width: 28rem;
+    }
+  }
+  @media (width < 40rem) {
+    .contact-sheet + .writing,
+    .writing + .elsewhere {
+      margin-top: 3.5rem;
+    }
+    .feature-label {
+      margin-bottom: 1rem;
+    }
+    .feature-description {
+      margin-top: 1rem;
+    }
+    .single-frame .frame-copy {
+      gap: 0.45rem;
+    }
+    .single-frame .frame-copy strong {
+      font-size: 1rem;
+    }
+    .single-frame .frame-copy p {
+      display: none;
+    }
+    .roll-meta {
+      display: grid;
+      grid-template-columns: 1fr auto;
+    }
+    .roll-meta span:last-child {
+      grid-column: 1 / -1;
+    }
+    .section-head {
+      align-items: flex-end;
+    }
+    .post-link {
+      gap: 0.75rem;
+    }
+    :global(.elsewhere-link) {
+      min-height: 2.75rem;
+      align-items: center;
     }
   }
 </style>

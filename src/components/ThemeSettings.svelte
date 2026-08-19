@@ -58,6 +58,7 @@
       <Button
         {...props}
         variant="outline"
+        class="theme-trigger"
         aria-label="主題設定"
         title="主題設定"
       >
@@ -97,5 +98,10 @@
     color: var(--primary);
     border-color: color-mix(in oklch, var(--primary) 40%, transparent);
     background: color-mix(in oklch, var(--primary) 10%, transparent);
+  }
+  @media (width < 64rem), (pointer: coarse) {
+    :global(.theme-trigger) {
+      min-block-size: 2.75rem;
+    }
   }
 </style>

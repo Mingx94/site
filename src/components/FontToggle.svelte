@@ -95,10 +95,4 @@
     border-color: var(--ring);
     outline: none;
   }
-  @media (width >= 48rem) {
-    .tooltip {
-      inset: 100% auto auto 50%;
-      transform: translateX(-50%);
-    }
-  }
 </style>

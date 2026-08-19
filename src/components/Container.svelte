@@ -16,9 +16,18 @@
 
 <style>
   .container {
+    --container-gutter: clamp(1rem, 4vw, 3.25rem);
+
     inline-size: 100%;
     max-inline-size: 92rem;
     margin-inline: auto;
-    padding-inline: clamp(1rem, 4vw, 3.25rem);
+    padding-inline-start: max(
+      var(--container-gutter),
+      env(safe-area-inset-left)
+    );
+    padding-inline-end: max(
+      var(--container-gutter),
+      env(safe-area-inset-right)
+    );
   }
 </style>
