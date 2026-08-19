@@ -48,6 +48,8 @@ npm run dev       # vite dev，預設 http://localhost:5173
 | `npm run gen-og` | 重跑 OG 圖產生 |
 | `npm run cf-typegen` | 從 `wrangler.jsonc` 產生 Cloudflare 綁定型別 |
 
+Cloudflare 資源設定與正式部署步驟請見 [部署指南](docs/deployment.md)。
+
 ## 對 agent 友善
 
 - 每篇文章都有 markdown 版本：`/blog/<slug>.md`
