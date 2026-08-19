@@ -472,7 +472,7 @@
       },
       {
         "name": "The Two Families Rule",
-        "body": "Use Noto Serif TC for authored reading and Noto Sans TC for interface structure. Do not add a display or monospaced family.",
+        "body": "Use Iansui for authored reading and Huninn for interface structure. Do not add a display or monospaced family.",
         "section": "typography"
       },
       {
@@ -499,7 +499,7 @@
     "dos": [
       "Do lead with real article cover images and real writing.",
       "Do pair one selected frame with a supporting sequence.",
-      "Do use Noto Serif TC and Noto Sans TC as the complete type system.",
+      "Do use Iansui and Huninn as the complete type system.",
       "Do use hairlines, frame numbers, and registration marks to clarify structure.",
       "Do keep article prose near 65ch and preserve horizontal frame scrolling on mobile.",
       "Do preserve visible focus states, theme parity, and reduced-motion behavior."

@@ -21,7 +21,7 @@ Do not literalize invented comp details. Render only real articles, real dates, 
 - Corners: nearly square; 0-2px for frames and inputs, 4px only for compact controls.
 - Lines: 1px warm-black or oxide-red; black film borders are 10-14px.
 - Elevation: structurally flat; soft low offset only for popovers and focus.
-- Type: Noto Sans TC for navigation, metadata, controls; Noto Serif TC for titles and reading copy. No third family.
+- Type: Huninn for navigation, metadata, controls; Iansui for titles and reading copy. No third family.
 - Ramp: display `clamp(3rem, 7vw, 5.75rem)`, page title `clamp(2.5rem, 6vw, 5rem)`, section title `clamp(2rem, 4vw, 3rem)`, body `1rem-1.125rem` at `1.8`.
 
 ## Sampled colors

@@ -1,9 +1,9 @@
 :root {
-  --font-sans: "Noto Sans TC", sans-serif;
-  --font-serif: "Noto Serif TC", serif;
+  --font-sans: "Huninn", sans-serif;
+  --font-serif: "Iansui", serif;
   --font-mono: var(--font-sans);
-  --font-sans-iansui: var(--font-sans);
-  --font-sans-huninn: var(--font-sans);
+  --font-sans-iansui: "Iansui", serif;
+  --font-sans-huninn: "Huninn", sans-serif;
   --font-iansui: var(--font-serif);
   --font-huninn: var(--font-sans);
   --radius: 0.25rem;
