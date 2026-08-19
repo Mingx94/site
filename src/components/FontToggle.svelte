@@ -75,10 +75,9 @@
   }
   .tooltip {
     position: absolute;
-    inset: 100% auto auto 50%;
+    inset: 100% 0 auto auto;
     pointer-events: none;
     margin-block-start: 0.5rem;
-    transform: translateX(-50%);
     border-radius: var(--radius-md);
     padding: 0.25rem 0.625rem;
     background: var(--foreground);
@@ -95,5 +94,11 @@
   .toggle:focus-visible {
     border-color: var(--ring);
     outline: none;
+  }
+  @media (width >= 48rem) {
+    .tooltip {
+      inset: 100% auto auto 50%;
+      transform: translateX(-50%);
+    }
   }
 </style>

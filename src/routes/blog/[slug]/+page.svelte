@@ -88,69 +88,71 @@
   ></div>
 </div>
 
-<TableOfContents />
-
 <Container>
-  <article>
-    <!-- Masthead strip -->
-    <div {@attach staggerIn} class="animate strip">
-      <span>· Essay · {formatStamp(post.date)}</span>
-      {#if post.draft}
-        <span class="draft">Draft</span>
-      {/if}
-    </div>
-
-    <!-- Title block -->
-    <div class="title-block">
-      <h1 {@attach staggerIn} class="animate page-title">
-        {post.title}
-      </h1>
-
-      {#if post.description}
-        <p {@attach staggerIn} class="animate introduction">
-          {post.description}
-        </p>
-      {/if}
-    </div>
-
-    <!-- Byline ruler -->
-    <div {@attach staggerIn} class="animate byline">
-      <span>By Michael Tsai</span>
-      <div class="byline-meta">
-        <FormattedDate date={post.date} />
-        {#if data.readingTime}
-          <span aria-hidden="true">·</span>
-          <span>{data.readingTime} min read</span>
-        {/if}
-        {#if viewsQuery.current != null}
-          <span aria-hidden="true">·</span>
-          <span>{viewsQuery.current} views</span>
+  <div class="article-layout">
+    <article>
+      <!-- Masthead strip -->
+      <div {@attach staggerIn} class="animate strip">
+        <span>· Essay · {formatStamp(post.date)}</span>
+        {#if post.draft}
+          <span class="draft">Draft</span>
         {/if}
       </div>
-    </div>
 
-    <!-- Cover image (full article width — visual anchor) -->
-    <Cover title={post.title} />
+      <!-- Title block -->
+      <div class="title-block">
+        <h1 {@attach staggerIn} class="animate page-title">
+          {post.title}
+        </h1>
 
-    <!-- Content -->
-    <div
-      {@attach staggerIn}
-      class:no-drop-cap={post.dropCap === false}
-      class="animate content"
-    >
-      <Content />
-    </div>
+        {#if post.description}
+          <p {@attach staggerIn} class="animate introduction">
+            {post.description}
+          </p>
+        {/if}
+      </div>
 
-    <ReactionBar slug={data.id} />
+      <!-- Byline ruler -->
+      <div {@attach staggerIn} class="animate byline">
+        <span>By Michael Tsai</span>
+        <div class="byline-meta">
+          <FormattedDate date={post.date} />
+          {#if data.readingTime}
+            <span aria-hidden="true">·</span>
+            <span>{data.readingTime} min read</span>
+          {/if}
+          {#if viewsQuery.current != null}
+            <span aria-hidden="true">·</span>
+            <span>{viewsQuery.current} views</span>
+          {/if}
+        </div>
+      </div>
 
-    <!-- Colophon -->
-    <div class="colophon">
-      <span>Filed {formatStamp(post.date)}</span>
-      {#if post.updated}
-        <span>Revised {formatStamp(post.updated)}</span>
-      {/if}
-    </div>
-  </article>
+      <!-- Cover image (full article width — visual anchor) -->
+      <Cover title={post.title} />
+
+      <!-- Content -->
+      <div
+        {@attach staggerIn}
+        class:no-drop-cap={post.dropCap === false}
+        class="animate content"
+      >
+        <Content />
+      </div>
+
+      <ReactionBar slug={data.id} />
+
+      <!-- Colophon -->
+      <div class="colophon">
+        <span>Filed {formatStamp(post.date)}</span>
+        {#if post.updated}
+          <span>Revised {formatStamp(post.updated)}</span>
+        {/if}
+      </div>
+    </article>
+
+    <TableOfContents />
+  </div>
 
   <div {@attach staggerIn} class="animate back-links">
     <BackToPrev />
@@ -173,6 +175,7 @@
     transition: transform 75ms linear;
   }
   article {
+    min-width: 0;
     padding-top: 1rem;
   }
   .strip {
@@ -259,6 +262,14 @@
     }
     .byline {
       margin-bottom: 4rem;
+    }
+  }
+  @media (width >= 96rem) {
+    .article-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 14rem;
+      gap: 2rem;
+      align-items: start;
     }
   }
 </style>
