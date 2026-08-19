@@ -13,8 +13,22 @@
   bind:ref
   data-slot="tabs-list"
   class={cn(
-    "bg-muted text-muted-foreground inline-flex h-9 w-fit items-center justify-center rounded-lg p-[3px]",
+      "tabs-list",
     className,
   )}
   {...restProps}
 />
+
+<style>
+  :global(.tabs-list) {
+    display: inline-flex;
+    inline-size: fit-content;
+    block-size: 2.25rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-lg);
+    padding: 3px;
+    background: var(--muted);
+    color: var(--muted-foreground);
+  }
+</style>

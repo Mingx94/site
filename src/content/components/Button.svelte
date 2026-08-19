@@ -1,12 +1,11 @@
 <script lang="ts">
-  import type { buttonVariants } from "@/components/ui/button";
+  import type { ButtonVariant } from "@/components/ui/button";
   import { Button as ButtonUI } from "@/components/ui/button";
-  import type { VariantProps } from "tailwind-variants";
   import type { Snippet } from "svelte";
 
   interface Props {
     href: string;
-    variant?: VariantProps<typeof buttonVariants>["variant"];
+    variant?: ButtonVariant;
     children: Snippet;
     rel?: string;
   }

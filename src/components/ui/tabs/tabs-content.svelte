@@ -12,6 +12,10 @@
 <TabsPrimitive.Content
   bind:ref
   data-slot="tabs-content"
-  class={cn("flex-1 outline-none", className)}
+  class={cn("tabs-content", className)}
   {...restProps}
 />
+
+<style>
+  :global(.tabs-content) { flex: 1; outline: none; }
+</style>

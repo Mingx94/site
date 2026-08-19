@@ -14,6 +14,10 @@
   bind:ref
   bind:value
   data-slot="tabs"
-  class={cn("flex flex-col gap-2", className)}
+  class={cn("tabs", className)}
   {...restProps}
 />
+
+<style>
+  :global(.tabs) { display: flex; flex-direction: column; gap: 0.5rem; }
+</style>
