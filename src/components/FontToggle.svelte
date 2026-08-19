@@ -22,24 +22,36 @@
   }
 </script>
 
-<div class="group relative">
+<div class="font-toggle">
   <button
     onclick={toggle}
-    class="inline-flex items-center gap-0.5 rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors duration-200 hover:text-foreground"
+    class="toggle"
     aria-label="切換字體：{fonts.find((f) => f.value === selected)?.label}"
   >
-    <span class={["font-iansui", selected !== "iansui" && "opacity-40"]}>芫</span>
-    <span class="text-border">/</span>
-    <span class={["font-huninn", selected !== "huninn" && "opacity-40"]}>粉</span>
+    <span class:dimmed={selected !== "iansui"} class="iansui">芫</span>
+    <span class="divider">/</span>
+    <span class:dimmed={selected !== "huninn"} class="huninn">粉</span>
   </button>
   <!-- Styled tooltip. Positioned BELOW the button because the header
        is `position: fixed; top: 0` (see src/styles/global.css `header`
        base rule), so rendering it above the button pushes it off the
        top of the viewport. -->
   <div
-    class="pointer-events-none absolute top-full left-1/2 mt-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-foreground px-2.5 py-1 text-xs text-background opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+    class="tooltip"
     aria-hidden="true"
   >
-    切換字型：<span class="font-iansui">芫荽</span> / <span class="font-huninn">粉圓</span>
+    切換字型：<span class="iansui">芫荽</span> / <span class="huninn">粉圓</span>
   </div>
 </div>
+
+<style>
+  .font-toggle { position: relative; }
+  .toggle { display: inline-flex; align-items: center; gap: 0.125rem; border: 0; border-radius: var(--radius-md); padding: 0.25rem 0.5rem; background: transparent; color: var(--muted-foreground); font-size: 0.875rem; transition: color 200ms; }
+  .toggle:hover { color: var(--foreground); }
+  .iansui { font-family: var(--font-iansui); }
+  .huninn { font-family: var(--font-huninn); }
+  .dimmed { opacity: 0.4; }
+  .divider { color: var(--border); }
+  .tooltip { position: absolute; inset: 100% auto auto 50%; pointer-events: none; margin-block-start: 0.5rem; transform: translateX(-50%); border-radius: var(--radius-md); padding: 0.25rem 0.625rem; background: var(--foreground); color: var(--background); font-size: 0.75rem; white-space: nowrap; opacity: 0; transition: opacity 150ms; }
+  .font-toggle:hover .tooltip { opacity: 1; }
+</style>

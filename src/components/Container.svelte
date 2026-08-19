@@ -8,8 +8,12 @@
   let { children }: Props = $props();
 </script>
 
-<div class="mx-auto max-w-5xl px-5">
+<div class="container">
   {#if children}
     {@render children()}
   {/if}
 </div>
+
+<style>
+  .container { inline-size: min(100% - 2.5rem, 64rem); margin-inline: auto; }
+</style>
