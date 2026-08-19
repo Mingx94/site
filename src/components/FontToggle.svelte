@@ -21,8 +21,10 @@
   <button
     onclick={toggle}
     class="toggle"
-    aria-label="切換閱讀字體：{selected === 'serif' ? '襯線' : '黑體'}"
-    title="切換閱讀字體"
+    aria-label="切換閱讀字體，目前是 {selected === 'serif'
+      ? 'Iansui 襯體'
+      : 'Huninn 黑體'}"
+    title="切換黑體／襯體"
   >
     <span class:dimmed={selected !== "serif"} class="serif">襯</span>
     <span class="divider">/</span>
@@ -33,8 +35,8 @@
        base rule), so rendering it above the button pushes it off the
        top of the viewport. -->
   <div class="tooltip" aria-hidden="true">
-    閱讀字體：<span class="serif">襯線</span> /
-    <span class="sans">黑體</span>
+    閱讀字體：<span class="sans">Huninn 黑體</span> /
+    <span class="serif">Iansui 襯體</span>
   </div>
 </div>
 
@@ -81,7 +83,7 @@
     padding: 0.25rem 0.625rem;
     background: var(--foreground);
     color: var(--background);
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     line-height: 1rem;
     white-space: nowrap;
     opacity: 0;

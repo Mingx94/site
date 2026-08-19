@@ -24,34 +24,34 @@ colors:
   dark-hairline: "#5f5750"
 typography:
   display:
-    fontFamily: "Noto Serif TC, serif"
+    fontFamily: "Iansui, serif"
     fontSize: "clamp(3rem, 10vw, 6rem)"
     fontWeight: 500
     lineHeight: 0.95
     letterSpacing: "-0.035em"
   headline:
-    fontFamily: "Noto Serif TC, serif"
+    fontFamily: "Iansui, serif"
     fontSize: "clamp(2.25rem, 6vw, 4.5rem)"
     fontWeight: 500
     lineHeight: 1.05
     letterSpacing: "-0.025em"
   title:
-    fontFamily: "Noto Serif TC, serif"
+    fontFamily: "Iansui, serif"
     fontSize: "clamp(1.4rem, 3vw, 2rem)"
     fontWeight: 500
     lineHeight: 1.25
   body:
-    fontFamily: "Noto Serif TC, serif"
+    fontFamily: "Iansui, serif"
     fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.9
   interface:
-    fontFamily: "Noto Sans TC, sans-serif"
+    fontFamily: "Huninn, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 500
     lineHeight: 1.5
   label:
-    fontFamily: "Noto Sans TC, sans-serif"
+    fontFamily: "Huninn, sans-serif"
     fontSize: "0.6875rem"
     fontWeight: 600
     lineHeight: 1.25
@@ -167,13 +167,13 @@ The light theme resembles warm photographic proof paper; the dark theme becomes 
 
 ## Typography
 
-**Display Font:** Noto Serif TC
+**Display Font:** Iansui
 
-**Body Font:** Noto Serif TC
+**Body Font:** Iansui
 
-**Interface and Label Font:** Noto Sans TC
+**Interface and Label Font:** Huninn
 
-**Character:** The serif family gives titles and articles a deliberate printed voice. The sans family keeps controls, dates, indexes, and metadata direct and technical. Labels may use tabular numerals and wide tracking, but they remain Noto Sans TC rather than introducing a third family.
+**Character:** Iansui gives titles and articles a handwritten reading voice. Huninn keeps controls, dates, indexes, and metadata friendly and direct. Labels may use tabular numerals and wide tracking, but they remain Huninn rather than introducing a third family.
 
 ### Hierarchy
 
@@ -186,7 +186,7 @@ The light theme resembles warm photographic proof paper; the dark theme becomes 
 
 ### Named Rules
 
-**The Two Families Rule.** Use Noto Serif TC for authored reading and Noto Sans TC for interface structure. Do not add a display or monospaced family.
+**The Two Families Rule.** Use Iansui for authored reading and Huninn for interface structure. Do not add a display or monospaced family.
 
 **The Caption Discipline Rule.** Widely tracked uppercase labels stay small and brief; they support the reading hierarchy rather than becoming body copy.
 
@@ -245,7 +245,7 @@ Registration crosses, frame numbers, dashed metadata rows, and film captions are
 
 ### Navigation
 
-The sticky header sits on a lightly blurred page-colored surface. The wordmark is compact and bold. Route links use Noto Sans TC; the active route turns oxide red and gains a thin underline. The reading-font toggle shows the serif/sans choice directly.
+The sticky header sits on a lightly blurred page-colored surface. The wordmark is compact and bold. Route links use Huninn; the active route turns oxide red and gains a thin underline. The reading-font toggle shows the Iansui/Huninn choice directly.
 
 ### Reaction Chips
 
@@ -253,7 +253,7 @@ Reaction controls are the intentional pill exception. They use a hairline border
 
 ### Article Content
 
-Long-form content uses Noto Serif TC, a 65ch measure, open paragraph leading, numbered ruled sections, a large oxide drop cap, restrained pull quotes, square images, and explicit treatments for code, tables, notices, accordions, and media.
+Long-form content uses Iansui by default, with Huninn available from the reading-font toggle, a 65ch measure, open paragraph leading, numbered ruled sections, a large oxide drop cap, restrained pull quotes, square images, and explicit treatments for code, tables, notices, accordions, and media.
 
 ## Do's and Don'ts
 
@@ -261,7 +261,7 @@ Long-form content uses Noto Serif TC, a 65ch measure, open paragraph leading, nu
 
 - **Do** lead with real article cover images and real writing.
 - **Do** pair one selected frame with a supporting sequence.
-- **Do** use Noto Serif TC and Noto Sans TC as the complete type system.
+- **Do** use Iansui and Huninn as the complete type system.
 - **Do** use hairlines, frame numbers, and registration marks to clarify structure.
 - **Do** keep article prose near 65ch and preserve horizontal frame scrolling on mobile.
 - **Do** preserve visible focus states, theme parity, and reduced-motion behavior.
