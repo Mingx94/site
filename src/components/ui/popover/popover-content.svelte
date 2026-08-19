@@ -21,9 +21,38 @@
     {sideOffset}
     {align}
     class={cn(
-      "bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 origin-(--bits-popover-content-transform-origin) outline-hidden z-50 w-72 rounded-md border p-4 shadow-md",
+      "popover-content",
       className,
     )}
     {...restProps}
   />
 </PopoverPrimitive.Portal>
+
+<style>
+  :global(.popover-content) {
+    z-index: 50;
+    inline-size: 18rem;
+    transform-origin: var(--bits-popover-content-transform-origin);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    outline: none;
+    background: var(--popover);
+    color: var(--popover-foreground);
+    box-shadow: 0 4px 6px color-mix(in oklch, var(--foreground) 12%, transparent);
+  }
+
+  :global(.popover-content[data-state="open"]) { animation: popover-in 150ms ease-out; }
+  :global(.popover-content[data-state="closed"]) { animation: popover-out 150ms ease-in; }
+  :global(.popover-content[data-side="bottom"]) { --popover-slide: translateY(-0.5rem); }
+  :global(.popover-content[data-side="left"]) { --popover-slide: translateX(0.5rem); }
+  :global(.popover-content[data-side="right"]) { --popover-slide: translateX(-0.5rem); }
+  :global(.popover-content[data-side="top"]) { --popover-slide: translateY(0.5rem); }
+
+  @keyframes popover-in { from { opacity: 0; transform: var(--popover-slide, scale(0.95)); } to { opacity: 1; transform: none; } }
+  @keyframes popover-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: var(--popover-slide, scale(0.95)); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.popover-content[data-state]) { animation: none; }
+  }
+</style>
