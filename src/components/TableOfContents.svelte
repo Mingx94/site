@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onDestroy, onMount, tick } from "svelte";
   import { fade, fly } from "svelte/transition";
 
   interface Heading {
@@ -11,25 +11,122 @@
   let headings = $state<Heading[]>([]);
   let activeId = $state("");
   let open = $state(false);
+  let triggerButton = $state<HTMLButtonElement>();
+  let closeButton = $state<HTMLButtonElement>();
+  let panel = $state<HTMLDivElement>();
+  let previouslyFocused: HTMLElement | null = null;
+  let inertElements: HTMLElement[] = [];
+  let previousOverflow = "";
 
-  function close() {
+  function createHeadingId(text: string, index: number, usedIds: Set<string>) {
+    const base =
+      text
+        .normalize("NFKC")
+        .toLocaleLowerCase()
+        .replace(/[^\p{Letter}\p{Number}]+/gu, "-")
+        .replace(/^-|-$/g, "") || `section-${index + 1}`;
+    let id = base;
+    let suffix = 2;
+
+    while (usedIds.has(id)) id = `${base}-${suffix++}`;
+    usedIds.add(id);
+    return id;
+  }
+
+  function isolatePage() {
+    const candidates = [
+      document.querySelector<HTMLElement>("header"),
+      document.querySelector<HTMLElement>("article"),
+      document.querySelector<HTMLElement>(".back-links"),
+      document.querySelector<HTMLElement>("footer"),
+      triggerButton,
+    ];
+
+    inertElements = candidates.filter(
+      (element): element is HTMLElement =>
+        Boolean(element) && !element?.hasAttribute("inert"),
+    );
+    for (const element of inertElements) element.setAttribute("inert", "");
+
+    previousOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+  }
+
+  function restorePage() {
+    if (typeof document === "undefined") return;
+    for (const element of inertElements) element.removeAttribute("inert");
+    inertElements = [];
+    document.documentElement.style.overflow = previousOverflow;
+  }
+
+  async function show() {
+    if (open) return;
+    previouslyFocused = document.activeElement as HTMLElement | null;
+    open = true;
+    await tick();
+    isolatePage();
+    closeButton?.focus();
+  }
+
+  async function close(restoreFocus = true) {
+    if (!open) return;
     open = false;
+    restorePage();
+    await tick();
+    if (restoreFocus) (previouslyFocused ?? triggerButton)?.focus();
   }
 
   function handleKeydown(e: KeyboardEvent) {
-    if (e.key === "Escape") close();
+    if (e.key === "Escape") {
+      e.preventDefault();
+      void close();
+      return;
+    }
+
+    if (e.key !== "Tab" || !panel) return;
+
+    const focusable = Array.from(
+      panel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    );
+    if (focusable.length === 0) return;
+
+    const first = focusable[0];
+    const last = focusable.at(-1)!;
+    const active = document.activeElement;
+
+    if (e.shiftKey && (active === first || !panel.contains(active))) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && (active === last || !panel.contains(active))) {
+      e.preventDefault();
+      first.focus();
+    }
   }
+
+  onDestroy(restorePage);
 
   onMount(() => {
     const article = document.querySelector("article");
     if (!article) return;
 
-    const elements = article.querySelectorAll("h2, h3");
-    headings = Array.from(elements).map((el) => ({
-      id: el.id,
-      text: el.textContent ?? "",
-      level: parseInt(el.tagName[1]),
-    }));
+    const elements = article.querySelectorAll<HTMLElement>("h2, h3");
+    const usedIds = new Set(
+      Array.from(document.querySelectorAll<HTMLElement>("[id]"))
+        .map((element) => element.id)
+        .filter(Boolean),
+    );
+    headings = Array.from(elements).map((element, index) => {
+      const text = element.textContent?.trim() ?? "";
+      if (!element.id) element.id = createHeadingId(text, index, usedIds);
+
+      return {
+        id: element.id,
+        text,
+        level: parseInt(element.tagName[1]),
+      };
+    });
 
     if (headings.length === 0) return;
 
@@ -77,9 +174,13 @@
 
   <!-- Mobile floating button (below 2xl) -->
   <button
-    onclick={() => (open = true)}
+    bind:this={triggerButton}
+    onclick={show}
     class="toc-toggle"
     aria-label="開啟目錄"
+    aria-expanded={open}
+    aria-controls="article-toc-panel"
+    aria-haspopup="dialog"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -107,20 +208,28 @@
     <div
       class="backdrop"
       role="presentation"
-      onclick={close}
-      onkeydown={handleKeydown}
+      onclick={() => close()}
       transition:fade={{ duration: 200 }}
     ></div>
 
     <!-- Slide-up panel -->
-    <nav
+    <div
+      bind:this={panel}
+      id="article-toc-panel"
       class="mobile-toc"
-      aria-label="目錄"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="mobile-toc-title"
       transition:fly={{ y: 300, duration: 300 }}
     >
       <div class="mobile-head">
-        <span>目錄</span>
-        <button onclick={close} class="close" aria-label="關閉目錄">
+        <span id="mobile-toc-title">目錄</span>
+        <button
+          bind:this={closeButton}
+          onclick={() => close()}
+          class="close"
+          aria-label="關閉目錄"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="18"
@@ -137,22 +246,25 @@
           </svg>
         </button>
       </div>
-      <ul class="mobile-list">
-        {#each headings as heading (heading.id)}
-          <li>
-            <a
-              href={`#${heading.id}`}
-              onclick={close}
-              class="mobile-link"
-              class:subsection={heading.level === 3}
-              class:active={activeId === heading.id}
-            >
-              {heading.text}
-            </a>
-          </li>
-        {/each}
-      </ul>
-    </nav>
+      <nav aria-label="文章章節">
+        <ul class="mobile-list">
+          {#each headings as heading (heading.id)}
+            <li>
+              <a
+                href={`#${heading.id}`}
+                onclick={() => close(false)}
+                aria-current={activeId === heading.id ? "location" : undefined}
+                class="mobile-link"
+                class:subsection={heading.level === 3}
+                class:active={activeId === heading.id}
+              >
+                {heading.text}
+              </a>
+            </li>
+          {/each}
+        </ul>
+      </nav>
+    </div>
   {/if}
 {/if}
 
@@ -177,6 +289,7 @@
     display: block;
     padding: 0.125rem 0 0.125rem 0.75rem;
     color: var(--muted-foreground);
+    overflow-wrap: anywhere;
     transition: color 200ms;
   }
   .toc-link:hover,
@@ -246,8 +359,8 @@
   }
   .close {
     display: flex;
-    width: 2rem;
-    height: 2rem;
+    width: 2.75rem;
+    height: 2.75rem;
     align-items: center;
     justify-content: center;
     color: var(--muted-foreground);
@@ -272,6 +385,7 @@
     padding: 0.5rem 0.75rem;
     color: var(--muted-foreground);
     border-radius: var(--radius-md);
+    overflow-wrap: anywhere;
     transition:
       color 200ms,
       background 200ms;
