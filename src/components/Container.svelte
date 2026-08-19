@@ -15,5 +15,10 @@
 </div>
 
 <style>
-  .container { inline-size: min(100% - 2.5rem, 64rem); margin-inline: auto; }
+  .container {
+    inline-size: 100%;
+    max-inline-size: 64rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
 </style>

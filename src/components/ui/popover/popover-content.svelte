@@ -7,9 +7,11 @@
     class: className,
     sideOffset = 4,
     align = "center",
+    width = "default",
     portalProps,
     ...restProps
   }: PopoverPrimitive.ContentProps & {
+    width?: "default" | "fit";
     portalProps?: PopoverPrimitive.PortalProps;
   } = $props();
 </script>
@@ -20,10 +22,8 @@
     data-slot="popover-content"
     {sideOffset}
     {align}
-    class={cn(
-      "popover-content",
-      className,
-    )}
+    data-width={width}
+    class={cn("popover-content", className)}
     {...restProps}
   />
 </PopoverPrimitive.Portal>
@@ -39,20 +39,56 @@
     outline: none;
     background: var(--popover);
     color: var(--popover-foreground);
-    box-shadow: 0 4px 6px color-mix(in oklch, var(--foreground) 12%, transparent);
+    box-shadow: 0 4px 6px
+      color-mix(in oklch, var(--foreground) 12%, transparent);
   }
 
-  :global(.popover-content[data-state="open"]) { animation: popover-in 150ms ease-out; }
-  :global(.popover-content[data-state="closed"]) { animation: popover-out 150ms ease-in; }
-  :global(.popover-content[data-side="bottom"]) { --popover-slide: translateY(-0.5rem); }
-  :global(.popover-content[data-side="left"]) { --popover-slide: translateX(0.5rem); }
-  :global(.popover-content[data-side="right"]) { --popover-slide: translateX(-0.5rem); }
-  :global(.popover-content[data-side="top"]) { --popover-slide: translateY(0.5rem); }
+  :global(.popover-content[data-state="open"]) {
+    animation: popover-in 150ms ease-out;
+  }
+  :global(.popover-content[data-state="closed"]) {
+    animation: popover-out 150ms ease-in;
+  }
+  :global(.popover-content[data-side="bottom"]) {
+    --popover-slide: translateY(-0.5rem);
+  }
+  :global(.popover-content[data-side="left"]) {
+    --popover-slide: translateX(0.5rem);
+  }
+  :global(.popover-content[data-side="right"]) {
+    --popover-slide: translateX(-0.5rem);
+  }
+  :global(.popover-content[data-side="top"]) {
+    --popover-slide: translateY(0.5rem);
+  }
+  :global(.popover-content[data-width="fit"]) {
+    inline-size: fit-content;
+  }
 
-  @keyframes popover-in { from { opacity: 0; transform: var(--popover-slide, scale(0.95)); } to { opacity: 1; transform: none; } }
-  @keyframes popover-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: var(--popover-slide, scale(0.95)); } }
+  @keyframes popover-in {
+    from {
+      opacity: 0;
+      transform: var(--popover-slide, scale(0.95));
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes popover-out {
+    from {
+      opacity: 1;
+      transform: none;
+    }
+    to {
+      opacity: 0;
+      transform: var(--popover-slide, scale(0.95));
+    }
+  }
 
   @media (prefers-reduced-motion: reduce) {
-    :global(.popover-content[data-state]) { animation: none; }
+    :global(.popover-content[data-state]) {
+      animation: none;
+    }
   }
 </style>
