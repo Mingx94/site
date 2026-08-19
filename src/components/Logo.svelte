@@ -6,7 +6,12 @@
 </script>
 
 <span
-  class="inline-flex items-baseline font-bold text-lg tracking-tight text-foreground"
+  class="logo"
 >
-  vartifact<span class="text-primary">.</span>
+  vartifact<span class="mark">.</span>
 </span>
+
+<style>
+  .logo { display: inline-flex; align-items: baseline; color: var(--foreground); font-size: 1.125rem; font-weight: 700; letter-spacing: var(--tracking-tight); }
+  .mark { color: var(--primary); }
+</style>
