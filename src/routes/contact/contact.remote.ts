@@ -13,18 +13,23 @@ async function verifyTurnstile(
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({ secret, response: token }),
+      signal: AbortSignal.timeout(10_000),
     },
   );
-  const data: { success?: boolean } = await res.json();
-  return data.success === true;
+  if (!res.ok) return false;
+
+  const data = (await res.json().catch(() => null)) as {
+    success?: boolean;
+  } | null;
+  return data?.success === true;
 }
 
 export const submitContact = form(
   v.object({
-    name: v.pipe(v.string(), v.nonEmpty(), v.maxLength(100)),
-    email: v.pipe(v.string(), v.email(), v.maxLength(200)),
-    message: v.pipe(v.string(), v.nonEmpty(), v.maxLength(2000)),
-    turnstileToken: v.pipe(v.string(), v.nonEmpty()),
+    name: v.pipe(v.string(), v.trim(), v.nonEmpty(), v.maxLength(100)),
+    email: v.pipe(v.string(), v.trim(), v.email(), v.maxLength(200)),
+    message: v.pipe(v.string(), v.trim(), v.nonEmpty(), v.maxLength(2000)),
+    turnstileToken: v.pipe(v.string(), v.trim(), v.nonEmpty()),
   }),
   async (data) => {
     const kv = getKV();
@@ -34,10 +39,7 @@ export const submitContact = form(
       error(503, "Service unavailable");
     }
 
-    const valid = await verifyTurnstile(
-      data.turnstileToken,
-      secret,
-    );
+    const valid = await verifyTurnstile(data.turnstileToken, secret);
     if (!valid) {
       error(403, "Turnstile verification failed");
     }

@@ -5,12 +5,15 @@
   import { Button } from "@/components/ui/button";
   import { staggerIn } from "@/lib/domEvent";
   import { submitContact } from "./contact.remote";
+  import { tick } from "svelte";
   import type { Attachment } from "svelte/attachments";
 
   let { data } = $props();
 
   let sent = $state(false);
   let errorMsg = $state("");
+  let turnstileStatus = $state<"loading" | "ready" | "error">("loading");
+  let feedbackElement = $state<HTMLDivElement>();
 
   // The Turnstile script is idempotent and cached once loaded, so we
   // reuse it across SPA remounts. The widget, on the other hand, holds
@@ -21,7 +24,13 @@
   const loadTurnstile: Attachment = (node) => {
     let widgetId: string | undefined;
     let widgetSize: "flexible" | "compact" | undefined;
+    let scriptElement: HTMLScriptElement | undefined;
+    let resizeFrame: number | undefined;
     let disposed = false;
+
+    const showTurnstileError = () => {
+      if (!disposed) turnstileStatus = "error";
+    };
 
     const removeWidget = () => {
       if (!widgetId || !window.turnstile) return;
@@ -40,15 +49,30 @@
       if (widgetId && widgetSize === nextSize) return;
 
       removeWidget();
+      turnstileStatus = "loading";
       widgetSize = nextSize;
-      widgetId = window.turnstile.render(node as HTMLElement, {
-        sitekey: data.turnstileSiteKey,
-        size: nextSize,
-        "response-field-name": "turnstileToken",
-      });
+      try {
+        widgetId = window.turnstile.render(node as HTMLElement, {
+          sitekey: data.turnstileSiteKey,
+          size: nextSize,
+          "response-field-name": "turnstileToken",
+          callback: () => {
+            if (!disposed) turnstileStatus = "ready";
+          },
+          "error-callback": showTurnstileError,
+          "expired-callback": () => {
+            if (!disposed) turnstileStatus = "loading";
+          },
+        });
+      } catch {
+        showTurnstileError();
+      }
     };
 
-    const resizeObserver = new ResizeObserver(render);
+    const resizeObserver = new ResizeObserver(() => {
+      if (resizeFrame) cancelAnimationFrame(resizeFrame);
+      resizeFrame = requestAnimationFrame(render);
+    });
     resizeObserver.observe(node);
 
     if (window.turnstile) {
@@ -58,18 +82,24 @@
         `script[src^="${TURNSTILE_SRC}"]`,
       );
       if (existing) {
-        existing.addEventListener("load", render, { once: true });
+        scriptElement = existing;
       } else {
-        const script = document.createElement("script");
-        script.src = TURNSTILE_SRC;
-        script.async = true;
-        script.addEventListener("load", render, { once: true });
-        document.head.appendChild(script);
+        scriptElement = document.createElement("script");
+        scriptElement.src = TURNSTILE_SRC;
+        scriptElement.async = true;
       }
+      scriptElement.addEventListener("load", render, { once: true });
+      scriptElement.addEventListener("error", showTurnstileError, {
+        once: true,
+      });
+      if (!existing) document.head.appendChild(scriptElement);
     }
 
     return () => {
       disposed = true;
+      scriptElement?.removeEventListener("load", render);
+      scriptElement?.removeEventListener("error", showTurnstileError);
+      if (resizeFrame) cancelAnimationFrame(resizeFrame);
       resizeObserver.disconnect();
       removeWidget();
     };
@@ -104,7 +134,12 @@
     <!-- Form or success -->
     <section {@attach staggerIn} class="animate">
       {#if sent}
-        <div class="success">
+        <div
+          class="success"
+          role="status"
+          tabindex="-1"
+          bind:this={feedbackElement}
+        >
           <p class="success-label">· Message Sent</p>
           <p class="success-title">
             感謝你的訊息<span class="accent">.</span>
@@ -124,8 +159,11 @@
             } catch {
               errorMsg = "送出失敗，請再試一次。";
             }
+            await tick();
+            feedbackElement?.focus();
           })}
           class="form"
+          aria-busy={submitContact.pending ? "true" : "false"}
         >
           <div class="field">
             <label for="name" class="label"> · Name · 名稱 </label>
@@ -164,16 +202,48 @@
 
           <div {@attach loadTurnstile} class="turnstile"></div>
 
+          <p
+            id="turnstile-status"
+            class:verification-error={turnstileStatus === "error"}
+            class="verification-status"
+            aria-live="polite"
+          >
+            {#if turnstileStatus === "loading"}
+              正在準備安全驗證…
+            {:else if turnstileStatus === "ready"}
+              安全驗證完成，可以送出。
+            {:else}
+              安全驗證暫時無法使用，請重新整理頁面後再試。
+            {/if}
+          </p>
+
           {#if errorMsg}
-            <div class="error">
+            <div
+              class="error"
+              role="alert"
+              tabindex="-1"
+              bind:this={feedbackElement}
+            >
               · Error · {errorMsg}
             </div>
           {/if}
 
           <div class="submit-row">
             <span class="label"> · Ready to send </span>
-            <Button type="submit" disabled={!!submitContact.pending}>
-              {submitContact.pending ? "送出中..." : "送出 →"}
+            <Button
+              type="submit"
+              disabled={!!submitContact.pending || turnstileStatus !== "ready"}
+              aria-describedby="turnstile-status"
+            >
+              {#if submitContact.pending}
+                送出中…
+              {:else if turnstileStatus === "loading"}
+                等待驗證
+              {:else if turnstileStatus === "error"}
+                無法送出
+              {:else}
+                送出 →
+              {/if}
             </Button>
           </div>
         </form>
@@ -240,6 +310,10 @@
     border-block: 1px solid color-mix(in oklch, var(--primary) 40%, transparent);
     text-align: center;
   }
+  .success:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 0.5rem;
+  }
   .success > * + * {
     margin-top: 0.75rem;
   }
@@ -304,9 +378,23 @@
   .turnstile {
     padding-top: 0.5rem;
   }
+  .verification-status {
+    min-height: 1.25rem;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+  .verification-error {
+    color: var(--destructive);
+  }
   .error {
     color: var(--destructive);
     font-size: 11px;
+    overflow-wrap: anywhere;
+  }
+  .error:focus-visible {
+    outline: 2px solid var(--destructive);
+    outline-offset: 0.5rem;
   }
   .submit-row {
     padding-top: 1rem;
