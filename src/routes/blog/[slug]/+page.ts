@@ -26,7 +26,7 @@ export async function load({ params }) {
 
   return {
     content: post.default,
-    metadata: post.metadata,
+    metadata: { ...post.metadata, dropCap: postData?.dropCap },
     id: params.slug,
     readingTime: postData?.readingTime,
   };

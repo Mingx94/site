@@ -12,7 +12,7 @@
   .content p {
     line-height: 1.9;
   }
-  .content > p:first-of-type::first-letter {
+  .content:not(.no-drop-cap) > p:first-of-type::first-letter {
     float: left;
     margin-right: 0.5rem;
     padding-top: 0.25rem;
@@ -224,7 +224,7 @@
     color: var(--notice-warning);
   }
   @media (width >= 48rem) {
-    .content > p:first-of-type::first-letter {
+    .content:not(.no-drop-cap) > p:first-of-type::first-letter {
       font-size: 4.5rem;
     }
     .content h2 {

@@ -133,7 +133,11 @@
     <Cover title={post.title} />
 
     <!-- Content -->
-    <div {@attach staggerIn} class="animate content">
+    <div
+      {@attach staggerIn}
+      class:no-drop-cap={post.dropCap === false}
+      class="animate content"
+    >
       <Content />
     </div>
 
