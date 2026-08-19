@@ -50,10 +50,10 @@
   --radius: 0.5rem;
   --background: oklch(0.9711 0.0074 80.7211);
   /* Notice component semantic colors */
-  --notice-note: oklch(0.50 0.18 240);
+  --notice-note: oklch(0.5 0.18 240);
   --notice-tip: oklch(0.52 0.17 160);
   --notice-info: oklch(0.56 0.14 75);
-  --notice-warning: oklch(0.52 0.20 25);
+  --notice-warning: oklch(0.52 0.2 25);
   --foreground: oklch(0.3 0.0358 30.2042);
   --card: oklch(0.9711 0.0074 80.7211);
   --card-foreground: oklch(0.3 0.0358 30.2042);
@@ -177,6 +177,5 @@ html.scrolled #back-to-top {
     }
   }
 
-  /* article typography (.content / .accordion / .notice) lives in
-     ../content/styles/article.css so the editor can share it. */
+  /* Article typography lives in ../content/styles/article.css. */
 }

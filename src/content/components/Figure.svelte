@@ -7,8 +7,7 @@
   // Globs are eager + module-scope so the build pipeline can analyse them
   // statically; enhanced:img requires that. Pattern matches anything under
   // a post directory that isn't `cover.jpg` (covered by Cover.svelte).
-  // Path is relative to this component so it resolves under both the site
-  // and editor Vite roots.
+  // Paths are relative to this component so Vite can resolve them.
   const images = import.meta.glob<{ default: string }>(
     "../posts/*/*.{jpg,jpeg,png,webp,avif,gif}",
     { eager: true, query: { enhanced: true, w: "1280;800;400" } },
@@ -63,23 +62,6 @@
         loading="lazy"
       />
     </div>
-    {#if caption}
-      <figcaption class="mt-2 text-sm text-muted-foreground text-center">
-        {caption}
-      </figcaption>
-    {/if}
-  </figure>
-{:else}
-  <!-- Fallback for the editor preview where enhanced-img may not resolve
-       a freshly-added image: plain <img> via the content API so authors
-       see something immediately after dropping a file in. -->
-  <figure class="my-6">
-    <img
-      src="/__editor/file?path=posts/{slug}/{src}"
-      {alt}
-      class="w-full rounded-md"
-      loading="lazy"
-    />
     {#if caption}
       <figcaption class="mt-2 text-sm text-muted-foreground text-center">
         {caption}

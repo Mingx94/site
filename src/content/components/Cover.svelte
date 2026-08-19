@@ -2,16 +2,11 @@
   // Eagerly pick up every post's cover image at two resolutions:
   // the main srcset (served responsively) and a pre-blurred 32px LQIP.
   // Module-level so glob evaluates once per build, not per instance.
-  // Path is relative to this component so it resolves the same in both
-  // the SvelteKit site (Vite root = site/) and the editor sub-app
-  // (Vite root = site/editor/).
-  const covers = import.meta.glob<{ default: string }>(
-    "../posts/*/cover.jpg",
-    {
-      eager: true,
-      query: { enhanced: true, w: "1280;640;400" },
-    },
-  );
+  // Paths are relative to this component so Vite can resolve them.
+  const covers = import.meta.glob<{ default: string }>("../posts/*/cover.jpg", {
+    eager: true,
+    query: { enhanced: true, w: "1280;640;400" },
+  });
 
   const placeholders = import.meta.glob<{ default: string }>(
     "../posts/*/cover.jpg",
@@ -30,8 +25,7 @@
     title: string;
     // `slug` is optional — when omitted we fall back to the route param
     // so the post page keeps working untouched. Pass it explicitly from
-    // any caller that isn't `/blog/[slug]` (list views, editor preview,
-    // embeds…).
+    // any caller that isn't `/blog/[slug]` (list views or embeds).
     slug?: string;
   }
 
