@@ -39,17 +39,9 @@
 </script>
 
 {#if image && placeholder}
-  <div
-    {@attach staggerIn}
-    class="animate relative mx-auto mt-8 mb-2 aspect-3/2 overflow-hidden rounded-lg"
-  >
+  <div {@attach staggerIn} class="animate cover">
     <!-- LQIP: tiny pre-blurred placeholder -->
-    <enhanced:img
-      src={placeholder}
-      alt=""
-      aria-hidden="true"
-      class="absolute inset-0 h-full w-full object-cover"
-    />
+    <enhanced:img src={placeholder} alt="" aria-hidden="true" class="image" />
 
     <!-- Full image fades in on top -->
     <enhanced:img
@@ -58,9 +50,29 @@
       alt={title}
       fetchpriority="high"
       onload={() => (loaded = true)}
-      class="absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ease-out"
+      class="image full"
       style:opacity={loaded ? 1 : 0}
       loading="eager"
     />
   </div>
 {/if}
+
+<style>
+  .cover {
+    position: relative;
+    aspect-ratio: 3/2;
+    margin: 2rem auto 0.5rem;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+  }
+  .image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .full {
+    transition: opacity 700ms ease-out;
+  }
+</style>

@@ -45,34 +45,27 @@
 />
 
 <Container>
-  <div class="pt-4 md:pt-8 pb-8 space-y-16 md:space-y-20">
+  <div class="about">
     <!-- Masthead strip -->
-    <div
-      {@attach staggerIn}
-      class="animate flex items-baseline justify-between gap-4 border-t border-border pt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground"
-    >
+    <div {@attach staggerIn} class="animate strip">
       <span>· Colophon · About</span>
       <span>N°02</span>
     </div>
 
     <!-- Title block -->
-    <div class="space-y-6 -mt-10 md:-mt-14">
+    <div class="title-block">
       <h1
         {@attach staggerIn}
-        class="animate font-bold leading-[0.95] tracking-tighter text-foreground"
+        class="animate page-title"
         style="font-size: clamp(3rem, 10vw, 6rem);"
       >
-        關於<span class="text-primary">.</span>
+        關於<span class="accent">.</span>
       </h1>
 
-      <p
-        {@attach staggerIn}
-        class="animate max-w-2xl text-xl md:text-2xl leading-relaxed text-foreground"
-      >
-        我是 Michael Tsai<span class="text-primary">.</span>
-        <span class="text-muted-foreground">
-          前端工程師，在台灣工作。
-          對效能、無障礙設計與細節有持續的關注，
+      <p {@attach staggerIn} class="animate introduction">
+        我是 Michael Tsai<span class="accent">.</span>
+        <span class="muted">
+          前端工程師，在台灣工作。 對效能、無障礙設計與細節有持續的關注，
           也在用程式碼以外的方式觀察世界。
         </span>
       </p>
@@ -80,40 +73,29 @@
 
     <!-- Facts table -->
     <section {@attach staggerIn} class="animate">
-      <dl class="divide-y divide-border border-y border-border">
+      <dl class="facts">
         {#each facts as { label, value }}
-          <div
-            class="grid grid-cols-[7rem_1fr] items-baseline gap-6 py-4 md:grid-cols-[10rem_1fr]"
-          >
-            <dt
-              class="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground"
-            >
+          <div class="fact">
+            <dt class="eyebrow">
               {label}
             </dt>
-            <dd class="text-base md:text-lg text-foreground">{value}</dd>
+            <dd>{value}</dd>
           </div>
         {/each}
       </dl>
     </section>
 
     <!-- Narrative -->
-    <section {@attach staggerIn} class="animate space-y-10">
-      <div
-        class="flex items-baseline justify-between border-t border-border pt-4"
-      >
-        <h2
-          class="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground"
-        >
-          · Notes
-        </h2>
+    <section {@attach staggerIn} class="animate narrative">
+      <div class="section-head">
+        <h2 class="eyebrow">· Notes</h2>
       </div>
 
-      <div class="space-y-6 max-w-2xl text-base md:text-lg leading-[1.8] text-foreground">
+      <div class="prose">
         <p>
           工作上主要使用 React 與 Next.js 開發 Web 應用，
-          對效能優化、無障礙設計與使用者體驗有持續的關注。
-          這個部落格本身是用 SvelteKit 打造的——
-          邊探索邊實作，把新框架當作素材來思考。
+          對效能優化、無障礙設計與使用者體驗有持續的關注。 這個部落格本身是用
+          SvelteKit 打造的—— 邊探索邊實作，把新框架當作素材來思考。
         </p>
         <p>
           出門一定帶相機。部落格裡的圖片幾乎都是自己拍的。
@@ -126,35 +108,24 @@
     <!-- Elsewhere -->
     {#if elsewhere.length}
       <section {@attach staggerIn} class="animate">
-        <div class="border-t border-border pt-4 mb-4 md:mb-6">
-          <h2
-            class="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground"
-          >
-            · Elsewhere · 其他地方
-          </h2>
+        <div class="section-head elsewhere-head">
+          <h2 class="eyebrow">· Elsewhere · 其他地方</h2>
         </div>
-        <ul class="divide-y divide-border">
+        <ul class="elsewhere-list">
           {#each elsewhere as link}
             <li>
               <Link
                 href={link.href}
                 external
                 underline={false}
-                class="group flex items-baseline justify-between py-4 !text-foreground"
+                class="elsewhere-link"
               >
-                <span
-                  class="text-lg font-medium transition-colors group-hover:text-primary"
-                >
+                <span class="elsewhere-label">
                   {link.label}
                 </span>
-                <span class="flex items-center gap-3">
-                  <span
-                    class="hidden font-mono text-xs text-muted-foreground sm:inline"
-                    >/ {link.handle}</span
-                  >
-                  <RiArrowRightUpLine
-                    class="size-4 text-muted-foreground transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
-                  />
+                <span class="elsewhere-meta">
+                  <span class="handle">/ {link.handle}</span>
+                  <RiArrowRightUpLine class="arrow" />
                 </span>
               </Link>
             </li>
@@ -165,30 +136,204 @@
 
     <!-- Contact CTA -->
     <section {@attach staggerIn} class="animate">
-      <div
-        class="flex flex-wrap items-baseline justify-between gap-y-3 border-t border-border pt-4"
-      >
-        <span
-          class="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground"
-        >
-          · Say Hi
-        </span>
-        <Link
-          href="/contact"
-          underline={false}
-          class="group inline-flex items-baseline gap-2 text-lg font-medium !text-foreground hover:!text-primary"
-        >
+      <div class="contact-row">
+        <span class="eyebrow"> · Say Hi </span>
+        <Link href="/contact" underline={false} class="contact-link">
           寄封信給我
-          <RiArrowRightUpLine
-            class="size-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-          />
+          <RiArrowRightUpLine class="arrow" />
         </Link>
       </div>
     </section>
   </div>
 
-  <div {@attach staggerIn} class="animate mt-8 flex">
+  <div {@attach staggerIn} class="animate back-links">
     <BackToPrev />
     <BackToTop />
   </div>
 </Container>
+
+<style>
+  .about {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    padding-block: 1rem 2rem;
+  }
+  .strip,
+  .section-head,
+  .contact-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .strip {
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted-foreground);
+    font: 11px var(--font-mono);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .title-block {
+    margin-top: -2.5rem;
+  }
+  .title-block > * + * {
+    margin-top: 1.5rem;
+  }
+  .page-title {
+    color: var(--foreground);
+    font-size: clamp(3rem, 10vw, 6rem);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+  }
+  .accent {
+    color: var(--primary);
+  }
+  .introduction {
+    max-width: 42rem;
+    color: var(--foreground);
+    font-size: 1.25rem;
+    line-height: 1.625;
+  }
+  .muted {
+    color: var(--muted-foreground);
+  }
+  .facts {
+    border-block: 1px solid var(--border);
+  }
+  .fact {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding-block: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .fact:first-child {
+    border-top: 0;
+  }
+  .eyebrow {
+    color: var(--muted-foreground);
+    font: 11px var(--font-mono);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  dd {
+    color: var(--foreground);
+  }
+  .narrative {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+  .section-head,
+  .contact-row {
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .prose {
+    max-width: 42rem;
+    color: var(--foreground);
+    line-height: 1.8;
+  }
+  .prose > * + * {
+    margin-top: 1.5rem;
+  }
+  .elsewhere-head {
+    margin-bottom: 1rem;
+  }
+  .elsewhere-list li {
+    border-top: 1px solid var(--border);
+  }
+  .elsewhere-list li:first-child {
+    border-top: 0;
+  }
+  :global(.elsewhere-link) {
+    display: flex !important;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-block: 1rem;
+    color: var(--foreground) !important;
+  }
+  .elsewhere-label {
+    font-size: 1.125rem;
+    font-weight: 500;
+    transition: color 300ms;
+  }
+  :global(.elsewhere-link:hover) .elsewhere-label {
+    color: var(--primary);
+  }
+  .elsewhere-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .handle {
+    display: none;
+    color: var(--muted-foreground);
+    font: 12px var(--font-mono);
+  }
+  :global(.arrow) {
+    width: 1rem;
+    height: 1rem;
+    transition:
+      transform 300ms,
+      color 300ms;
+  }
+  :global(.elsewhere-link .arrow) {
+    color: var(--muted-foreground);
+  }
+  :global(.elsewhere-link:hover .arrow),
+  :global(.contact-link:hover .arrow) {
+    color: var(--primary);
+    transform: translate(0.125rem, -0.125rem);
+  }
+  .contact-row {
+    flex-wrap: wrap;
+    row-gap: 0.75rem;
+  }
+  :global(.contact-link) {
+    display: inline-flex !important;
+    align-items: baseline;
+    gap: 0.5rem;
+    color: var(--foreground) !important;
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+  :global(.contact-link:hover) {
+    color: var(--primary) !important;
+  }
+  .back-links {
+    display: flex;
+    margin-top: 2rem;
+  }
+  @media (width >= 40rem) {
+    .handle {
+      display: inline;
+    }
+  }
+  @media (width >= 48rem) {
+    .about {
+      gap: 5rem;
+      padding-top: 2rem;
+    }
+    .title-block {
+      margin-top: -3.5rem;
+    }
+    .introduction {
+      font-size: 1.5rem;
+    }
+    .fact {
+      grid-template-columns: 10rem 1fr;
+    }
+    dd,
+    .prose {
+      font-size: 1.125rem;
+    }
+    .elsewhere-head {
+      margin-bottom: 1.5rem;
+    }
+  }
+</style>

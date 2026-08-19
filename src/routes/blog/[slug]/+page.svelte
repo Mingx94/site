@@ -81,57 +81,39 @@
 <svelte:window onscroll={handleScroll} />
 
 <!-- Reading progress bar -->
-<div
-  class="fixed top-0 right-0 left-0 z-[51] h-0.5 bg-border/50"
-  aria-hidden="true"
->
-  <div
-    class="h-full bg-primary transition-[width] duration-75 ease-linear"
-    style:width="{readingProgress}%"
-  ></div>
+<div class="progress-track" aria-hidden="true">
+  <div class="progress" style:width="{readingProgress}%"></div>
 </div>
 
 <TableOfContents />
 
 <Container>
-  <article class="pt-4 md:pt-8">
+  <article>
     <!-- Masthead strip -->
-    <div
-      {@attach staggerIn}
-      class="animate flex items-baseline justify-between gap-4 border-t border-border pt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground"
-    >
+    <div {@attach staggerIn} class="animate strip">
       <span>· Essay · {formatStamp(post.date)}</span>
       {#if post.draft}
-        <span class="text-destructive">Draft</span>
+        <span class="draft">Draft</span>
       {/if}
     </div>
 
     <!-- Title block -->
-    <div class="mt-8 md:mt-12 mb-10 md:mb-14 space-y-6">
-      <h1
-        {@attach staggerIn}
-        class="animate text-balance font-bold leading-[1.05] tracking-tight text-foreground text-[clamp(2.25rem,6vw,4.5rem)]"
-      >
+    <div class="title-block">
+      <h1 {@attach staggerIn} class="animate page-title">
         {post.title}
       </h1>
 
       {#if post.description}
-        <p
-          {@attach staggerIn}
-          class="animate max-w-2xl text-lg md:text-xl leading-relaxed text-muted-foreground"
-        >
+        <p {@attach staggerIn} class="animate introduction">
           {post.description}
         </p>
       {/if}
     </div>
 
     <!-- Byline ruler -->
-    <div
-      {@attach staggerIn}
-      class="animate flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-y border-border py-3 font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-12 md:mb-16"
-    >
+    <div {@attach staggerIn} class="animate byline">
       <span>By Michael Tsai</span>
-      <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+      <div class="byline-meta">
         <FormattedDate date={post.date} />
         {#if data.readingTime}
           <span aria-hidden="true">·</span>
@@ -155,9 +137,7 @@
     <ReactionBar slug={data.id} />
 
     <!-- Colophon -->
-    <div
-      class="mt-16 flex flex-wrap items-baseline justify-between gap-y-2 border-t border-border pt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
-    >
+    <div class="colophon">
       <span>Filed {formatStamp(post.date)}</span>
       {#if post.updated}
         <span>Revised {formatStamp(post.updated)}</span>
@@ -165,8 +145,110 @@
     </div>
   </article>
 
-  <div {@attach staggerIn} class="animate mt-12 flex">
+  <div {@attach staggerIn} class="animate back-links">
     <BackToPrev />
     <BackToTop />
   </div>
 </Container>
+
+<style>
+  .progress-track {
+    position: fixed;
+    z-index: 51;
+    inset: 0 0 auto;
+    height: 0.125rem;
+    background: color-mix(in oklch, var(--border) 50%, transparent);
+  }
+  .progress {
+    height: 100%;
+    background: var(--primary);
+    transition: width 75ms linear;
+  }
+  article {
+    padding-top: 1rem;
+  }
+  .strip {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted-foreground);
+    font: 11px var(--font-mono);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .draft {
+    color: var(--destructive);
+  }
+  .title-block {
+    margin-block: 2rem 2.5rem;
+  }
+  .title-block > * + * {
+    margin-top: 1.5rem;
+  }
+  .page-title {
+    color: var(--foreground);
+    font-size: clamp(2.25rem, 6vw, 4.5rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+  .introduction {
+    max-width: 42rem;
+    color: var(--muted-foreground);
+    font-size: 1.125rem;
+    line-height: 1.625;
+  }
+  .byline,
+  .colophon {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    color: var(--muted-foreground);
+    font-family: var(--font-mono);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .byline {
+    gap: 0.5rem 1.5rem;
+    margin-bottom: 3rem;
+    padding-block: 0.75rem;
+    border-block: 1px solid var(--border);
+    font-size: 11px;
+  }
+  .byline-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1rem;
+  }
+  .colophon {
+    row-gap: 0.5rem;
+    margin-top: 4rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 10px;
+  }
+  .back-links {
+    display: flex;
+    margin-top: 3rem;
+  }
+  @media (width >= 48rem) {
+    article {
+      padding-top: 2rem;
+    }
+    .title-block {
+      margin-block: 3rem 3.5rem;
+    }
+    .introduction {
+      font-size: 1.25rem;
+    }
+    .byline {
+      margin-bottom: 4rem;
+    }
+  }
+</style>

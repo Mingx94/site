@@ -10,7 +10,7 @@
 
 import { readdir, readFile, writeFile, mkdir, stat, unlink } from "node:fs/promises";
 import { join } from "node:path";
-import yaml from "js-yaml";
+import { load as loadYaml } from "js-yaml";
 import { generateOgImageForPost } from "../src/lib/generateOgImages";
 
 const POSTS_DIR = "src/content/posts";
@@ -28,7 +28,7 @@ const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/;
 function readFrontmatter(src: string): Record<string, unknown> {
   const match = src.match(FRONTMATTER_RE);
   if (!match) return {};
-  const parsed = yaml.load(match[1]);
+  const parsed = loadYaml(match[1]);
   return parsed && typeof parsed === "object" && !Array.isArray(parsed)
     ? (parsed as Record<string, unknown>)
     : {};

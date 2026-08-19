@@ -15,7 +15,11 @@
 
   const elsewhere = [
     { label: "GitHub", href: config.social.github, handle: "Mingx94" },
-    { label: "LinkedIn", href: config.social.linkedin, handle: "ming-hsuan-tsai94" },
+    {
+      label: "LinkedIn",
+      href: config.social.linkedin,
+      handle: "ming-hsuan-tsai94",
+    },
     { label: "Bluesky", href: config.social.bluesky, handle: "vartifact.cc" },
     { label: "X", href: config.social.twitter, handle: "mingx94" },
   ].filter((i) => i.href);
@@ -24,44 +28,35 @@
 <Seo />
 
 <Container>
-  <div class="py-8 md:py-12 space-y-24 md:space-y-32">
+  <div class="home">
     <!-- Masthead -->
-    <section class="space-y-10 md:space-y-12">
-      <div
-        {@attach staggerIn}
-        class="animate flex items-baseline justify-between font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground"
-      >
+    <section class="masthead">
+      <div {@attach staggerIn} class="animate eyebrow split">
         <span aria-hidden="true">— Vartifact / N°01</span>
         <span>Anno {year}</span>
       </div>
 
       <h1
         {@attach staggerIn}
-        class="animate font-bold leading-[0.88] tracking-tighter text-foreground"
+        class="animate title"
         style="font-size: clamp(3.25rem, 13vw, 8.5rem);"
       >
-        Michael<br />Tsai<span class="text-primary">.</span>
+        Michael<br />Tsai<span class="accent">.</span>
       </h1>
 
-      <div
-        {@attach staggerIn}
-        class="animate flex flex-col gap-3 sm:flex-row sm:items-baseline sm:justify-between font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground"
-      >
+      <div {@attach staggerIn} class="animate eyebrow intro-meta">
         <span>前端工程師 &mdash; Taiwan</span>
         <span>Writing · Building · Photographing</span>
       </div>
     </section>
 
     <!-- Lead paragraph -->
-    <section
-      {@attach staggerIn}
-      class="animate border-t border-border pt-10 md:pt-14"
-    >
-      <p
-        class="max-w-2xl text-2xl md:text-3xl leading-[1.5] tracking-tight text-foreground"
-      >
-        在 Web 技術與使用者體驗之間來回，把細節磨到發亮。<br class="hidden md:inline" />
-        <span class="text-muted-foreground"
+    <section {@attach staggerIn} class="animate lead">
+      <p class="lead-copy">
+        在 Web 技術與使用者體驗之間來回，把細節磨到發亮。<br
+          class="desktop-break"
+        />
+        <span class="muted"
           >寫程式、拍照、記錄生活——都是同一種對於形式的追求。</span
         >
       </p>
@@ -69,54 +64,32 @@
 
     <!-- Recent writing -->
     <section aria-labelledby="writing" {@attach staggerIn} class="animate">
-      <div
-        class="flex items-baseline justify-between border-t border-border pt-4 mb-4 md:mb-6"
-      >
-        <h2
-          id="writing"
-          class="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground"
-        >
-          · Recent · 最近書寫
-        </h2>
+      <div class="section-head">
+        <h2 id="writing" class="eyebrow">· Recent · 最近書寫</h2>
         {#if data.showMoreLink}
-          <Link
-            href="/blog"
-            underline={false}
-            class="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground hover:text-primary"
-          >
+          <Link href="/blog" underline={false} class="index-link eyebrow">
             Index →
           </Link>
         {/if}
       </div>
 
-      <ol class="divide-y divide-border">
+      <ol class="post-list">
         {#each data.recentBlogs as post, i (post.id)}
           <li>
-            <a
-              href="/blog/{post.id}"
-              class="group grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-4 py-6 md:gap-8 md:py-8"
-            >
-              <span
-                class="font-mono text-xs text-muted-foreground tabular-nums"
-              >
+            <a href="/blog/{post.id}" class="post-link">
+              <span class="post-number">
                 N°{String(i + 1).padStart(2, "0")}
               </span>
-              <div class="min-w-0 space-y-2">
-                <h3
-                  class="text-xl font-semibold leading-snug text-foreground transition-colors group-hover:text-primary md:text-2xl"
-                >
+              <div class="post-copy">
+                <h3 class="post-title">
                   {post.title}
                 </h3>
                 {#if post.description}
-                  <p
-                    class="line-clamp-2 text-sm text-muted-foreground md:text-base"
-                  >
+                  <p class="post-description">
                     {post.description}
                   </p>
                 {/if}
-                <div
-                  class="flex flex-wrap items-center gap-x-3 gap-y-1 pt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
-                >
+                <div class="post-meta">
                   <FormattedDate date={post.date} />
                   {#if post.readingTime}
                     <span aria-hidden="true">·</span>
@@ -124,9 +97,7 @@
                   {/if}
                 </div>
               </div>
-              <RiArrowRightUpLine
-                class="size-4 shrink-0 text-muted-foreground/60 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary md:size-5"
-              />
+              <RiArrowRightUpLine class="post-arrow" />
             </a>
           </li>
         {/each}
@@ -136,36 +107,24 @@
     <!-- Elsewhere -->
     {#if elsewhere.length}
       <section aria-labelledby="elsewhere" {@attach staggerIn} class="animate">
-        <div class="border-t border-border pt-4 mb-4 md:mb-6">
-          <h2
-            id="elsewhere"
-            class="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground"
-          >
-            · Elsewhere · 其他地方
-          </h2>
+        <div class="section-head">
+          <h2 id="elsewhere" class="eyebrow">· Elsewhere · 其他地方</h2>
         </div>
-        <ul class="divide-y divide-border">
+        <ul class="elsewhere-list">
           {#each elsewhere as link}
             <li>
               <Link
                 href={link.href}
                 external
                 underline={false}
-                class="group flex items-baseline justify-between py-4 !text-foreground"
+                class="elsewhere-link"
               >
-                <span
-                  class="text-lg font-medium transition-colors group-hover:text-primary"
-                >
+                <span class="elsewhere-label">
                   {link.label}
                 </span>
-                <span class="flex items-center gap-3">
-                  <span
-                    class="hidden font-mono text-xs text-muted-foreground sm:inline"
-                    >/ {link.handle}</span
-                  >
-                  <RiArrowRightUpLine
-                    class="size-4 text-muted-foreground transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary"
-                  />
+                <span class="elsewhere-meta">
+                  <span class="handle">/ {link.handle}</span>
+                  <RiArrowRightUpLine class="elsewhere-arrow" />
                 </span>
               </Link>
             </li>
@@ -176,16 +135,242 @@
 
     <!-- Colophon -->
     <section {@attach staggerIn} class="animate">
-      <div
-        class="flex flex-wrap items-baseline justify-between gap-y-2 border-t border-border pt-4 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground"
-      >
+      <div class="colophon">
         <span>Set in Schibsted Grotesk &amp; Huninn</span>
         <span>Built with SvelteKit</span>
       </div>
     </section>
   </div>
 
-  <div {@attach staggerIn} class="animate mt-16 flex">
+  <div {@attach staggerIn} class="animate back-top">
     <BackToTop />
   </div>
 </Container>
+
+<style>
+  .home {
+    padding-block: 2rem;
+  }
+  .home,
+  .masthead {
+    display: flex;
+    flex-direction: column;
+  }
+  .home {
+    gap: 6rem;
+  }
+  .masthead {
+    gap: 2.5rem;
+  }
+  .eyebrow {
+    color: var(--muted-foreground);
+    font: 11px var(--font-mono);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .split {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .title {
+    color: var(--foreground);
+    font-size: clamp(3.25rem, 13vw, 8.5rem);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 0.88;
+  }
+  .accent {
+    color: var(--primary);
+  }
+  .intro-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .lead {
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .lead-copy {
+    max-width: 42rem;
+    color: var(--foreground);
+    font-size: 1.5rem;
+    letter-spacing: -0.025em;
+    line-height: 1.5;
+  }
+  .muted {
+    color: var(--muted-foreground);
+  }
+  .desktop-break {
+    display: none;
+  }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  :global(.index-link:hover) {
+    color: var(--primary) !important;
+  }
+  .post-list li,
+  .elsewhere-list li {
+    border-top: 1px solid var(--border);
+  }
+  .post-list li:first-child,
+  .elsewhere-list li:first-child {
+    border-top: 0;
+  }
+  .post-link {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr auto;
+    align-items: baseline;
+    gap: 1rem;
+    padding-block: 1.5rem;
+  }
+  .post-number {
+    color: var(--muted-foreground);
+    font: 12px var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  .post-copy {
+    min-width: 0;
+  }
+  .post-copy > * + * {
+    margin-top: 0.5rem;
+  }
+  .post-title {
+    color: var(--foreground);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.375;
+    transition: color 300ms;
+  }
+  .post-link:hover .post-title {
+    color: var(--primary);
+  }
+  .post-description {
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.75rem;
+    padding-top: 0.25rem;
+    color: var(--muted-foreground);
+    font: 10px var(--font-mono);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  :global(.post-arrow),
+  :global(.elsewhere-arrow) {
+    width: 1rem;
+    height: 1rem;
+    color: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
+    transition:
+      transform 300ms,
+      color 300ms;
+  }
+  .post-link:hover :global(.post-arrow),
+  :global(.elsewhere-link:hover .elsewhere-arrow) {
+    color: var(--primary);
+    transform: translate(0.125rem, -0.125rem);
+  }
+  :global(.elsewhere-link) {
+    display: flex !important;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-block: 1rem;
+    color: var(--foreground) !important;
+  }
+  .elsewhere-label {
+    font-size: 1.125rem;
+    font-weight: 500;
+    transition: color 300ms;
+  }
+  :global(.elsewhere-link:hover) .elsewhere-label {
+    color: var(--primary);
+  }
+  .elsewhere-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .handle {
+    display: none;
+    color: var(--muted-foreground);
+    font: 12px var(--font-mono);
+  }
+  .colophon {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    row-gap: 0.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted-foreground);
+    font: 10px var(--font-mono);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .back-top {
+    display: flex;
+    margin-top: 4rem;
+  }
+  @media (width >= 40rem) {
+    .intro-meta {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+    .handle {
+      display: inline;
+    }
+  }
+  @media (width >= 48rem) {
+    .home {
+      gap: 8rem;
+      padding-block: 3rem;
+    }
+    .masthead {
+      gap: 3rem;
+    }
+    .lead {
+      padding-top: 3.5rem;
+    }
+    .lead-copy {
+      font-size: 1.875rem;
+    }
+    .desktop-break {
+      display: inline;
+    }
+    .section-head {
+      margin-bottom: 1.5rem;
+    }
+    .post-link {
+      gap: 2rem;
+      padding-block: 2rem;
+    }
+    .post-title {
+      font-size: 1.5rem;
+    }
+    .post-description {
+      font-size: 1rem;
+    }
+    :global(.post-arrow) {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+</style>

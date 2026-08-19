@@ -18,40 +18,92 @@
   }
 </script>
 
-<header class="pt-5">
+<header>
   <Container>
-    <div class="flex items-center justify-between gap-4">
-      <Link href="/" underline={false} title="首頁" class="!text-foreground">
+    <div class="bar">
+      <Link href="/" underline={false} title="首頁" class="home-link">
         <Logo />
       </Link>
 
-      <nav class="flex items-center gap-1 md:gap-2">
+      <nav>
         {#each navItems as item (item.href)}
           <Link
             href={item.href}
             underline={false}
-            class="group relative px-1.5 py-1 text-sm transition-colors duration-200 {isActive(
-              item.href,
-            )
-              ? '!text-primary'
-              : '!text-muted-foreground hover:!text-foreground'}"
+            class="nav-link {isActive(item.href) ? 'active' : ''}"
           >
-            <span
-              class="mr-1 hidden font-mono text-[9px] uppercase tracking-widest opacity-60 md:inline"
-              aria-hidden="true">N°{item.index}</span
-            >
+            <span class="index" aria-hidden="true">N°{item.index}</span>
             {item.label}
             {#if isActive(item.href)}
-              <span
-                class="absolute -bottom-0.5 left-1.5 right-1.5 h-px bg-primary"
-                aria-hidden="true"
-              ></span>
+              <span class="active-line" aria-hidden="true"></span>
             {/if}
           </Link>
         {/each}
-        <span class="mx-1 h-3 w-px bg-border" aria-hidden="true"></span>
+        <span class="divider" aria-hidden="true"></span>
         <FontToggle />
       </nav>
     </div>
   </Container>
 </header>
+
+<style>
+  .bar,
+  nav {
+    display: flex;
+    align-items: center;
+  }
+  .bar {
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  nav {
+    gap: 0.25rem;
+  }
+  :global(.home-link) {
+    color: var(--foreground) !important;
+  }
+  :global(.nav-link) {
+    position: relative;
+    padding: 0.25rem 0.375rem;
+    color: var(--muted-foreground) !important;
+    font-size: 0.875rem;
+    transition: color 200ms;
+  }
+  :global(.nav-link:hover) {
+    color: var(--foreground) !important;
+  }
+  :global(.nav-link.active) {
+    color: var(--primary) !important;
+  }
+  .index {
+    display: none;
+    margin-right: 0.25rem;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+  .active-line {
+    position: absolute;
+    right: 0.375rem;
+    bottom: -0.125rem;
+    left: 0.375rem;
+    height: 1px;
+    background: var(--primary);
+  }
+  .divider {
+    width: 1px;
+    height: 0.75rem;
+    margin-inline: 0.25rem;
+    background: var(--border);
+  }
+  @media (width >= 48rem) {
+    nav {
+      gap: 0.5rem;
+    }
+    .index {
+      display: inline;
+    }
+  }
+</style>

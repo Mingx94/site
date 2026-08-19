@@ -56,18 +56,16 @@
 
 {#if headings.length > 0}
   <!-- Desktop sidebar (2xl+) — left-anchored to container right edge -->
-  <nav class="hidden 2xl:block fixed top-32 w-56 max-h-[calc(100vh-12rem)] overflow-y-auto" style="left: calc(50% + 32rem + 1.5rem)">
-    <div class="text-xs font-semibold text-muted-foreground mb-2">目錄</div>
-    <ul class="space-y-1 text-sm border-l border-border">
+  <nav class="desktop-toc">
+    <div class="toc-title">目錄</div>
+    <ul class="toc-list">
       {#each headings as heading (heading.id)}
         <li>
           <a
             href={`#${heading.id}`}
-            class="block py-0.5 transition-colors duration-200 hover:text-foreground {heading.level === 3
-              ? 'pl-6'
-              : 'pl-3'} {activeId === heading.id
-              ? 'text-foreground border-l-2 border-foreground -ml-px'
-              : 'text-muted-foreground'}"
+            class="toc-link"
+            class:subsection={heading.level === 3}
+            class:active={activeId === heading.id}
           >
             {heading.text}
           </a>
@@ -79,10 +77,20 @@
   <!-- Mobile floating button (below 2xl) -->
   <button
     onclick={() => (open = true)}
-    class="2xl:hidden fixed bottom-6 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform duration-200 hover:scale-105 active:scale-95"
+    class="toc-toggle"
     aria-label="開啟目錄"
   >
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
       <line x1="8" y1="6" x2="21" y2="6" />
       <line x1="8" y1="12" x2="21" y2="12" />
       <line x1="8" y1="18" x2="21" y2="18" />
@@ -96,7 +104,7 @@
   {#if open}
     <!-- Backdrop -->
     <div
-      class="2xl:hidden fixed inset-0 z-40 bg-foreground/40"
+      class="backdrop"
       role="presentation"
       onclick={close}
       onkeydown={handleKeydown}
@@ -105,34 +113,38 @@
 
     <!-- Slide-up panel -->
     <nav
-      class="2xl:hidden fixed bottom-0 left-0 right-0 z-50 max-h-[70vh] overflow-y-auto rounded-t-2xl border-t border-border bg-background shadow-2xl"
+      class="mobile-toc"
       aria-label="目錄"
       transition:fly={{ y: 300, duration: 300 }}
     >
-      <div class="sticky top-0 flex items-center justify-between border-b border-border bg-background px-5 py-3">
-        <span class="text-sm font-semibold text-foreground">目錄</span>
-        <button
-          onclick={close}
-          class="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-          aria-label="關閉目錄"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <div class="mobile-head">
+        <span>目錄</span>
+        <button onclick={close} class="close" aria-label="關閉目錄">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
             <line x1="18" y1="6" x2="6" y2="18" />
             <line x1="6" y1="6" x2="18" y2="18" />
           </svg>
         </button>
       </div>
-      <ul class="space-y-0.5 px-5 py-3 text-sm">
+      <ul class="mobile-list">
         {#each headings as heading (heading.id)}
           <li>
             <a
               href={`#${heading.id}`}
               onclick={close}
-              class="block rounded-md px-3 py-2 transition-colors duration-200 hover:bg-muted hover:text-foreground {heading.level === 3
-                ? 'pl-7'
-                : 'pl-3'} {activeId === heading.id
-                ? 'bg-muted text-foreground font-medium'
-                : 'text-muted-foreground'}"
+              class="mobile-link"
+              class:subsection={heading.level === 3}
+              class:active={activeId === heading.id}
             >
               {heading.text}
             </a>
@@ -142,3 +154,152 @@
     </nav>
   {/if}
 {/if}
+
+<style>
+  .desktop-toc {
+    display: none;
+    position: fixed;
+    top: 8rem;
+    left: calc(50% + 32rem + 1.5rem);
+    width: 14rem;
+    max-height: calc(100vh - 12rem);
+    overflow-y: auto;
+  }
+  .toc-title {
+    margin-bottom: 0.5rem;
+    color: var(--muted-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  .toc-list {
+    border-left: 1px solid var(--border);
+    font-size: 0.875rem;
+  }
+  .toc-list li + li {
+    margin-top: 0.25rem;
+  }
+  .toc-link {
+    display: block;
+    padding: 0.125rem 0 0.125rem 0.75rem;
+    color: var(--muted-foreground);
+    transition: color 200ms;
+  }
+  .toc-link:hover,
+  .toc-link.active {
+    color: var(--foreground);
+  }
+  .toc-link.subsection {
+    padding-left: 1.5rem;
+  }
+  .toc-link.active {
+    margin-left: -1px;
+    border-left: 2px solid var(--foreground);
+  }
+  .toc-toggle {
+    position: fixed;
+    z-index: 40;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    display: flex;
+    width: 3rem;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-foreground);
+    border-radius: 999px;
+    background: var(--primary);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0/0.1);
+    transition: transform 200ms;
+  }
+  .toc-toggle:hover {
+    transform: scale(1.05);
+  }
+  .toc-toggle:active {
+    transform: scale(0.95);
+  }
+  .backdrop {
+    position: fixed;
+    z-index: 40;
+    inset: 0;
+    background: color-mix(in oklch, var(--foreground) 40%, transparent);
+  }
+  .mobile-toc {
+    position: fixed;
+    z-index: 50;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    max-height: 70vh;
+    overflow-y: auto;
+    border-top: 1px solid var(--border);
+    border-radius: 1rem 1rem 0 0;
+    background: var(--background);
+    box-shadow: 0 25px 50px -12px rgb(0 0 0/0.25);
+  }
+  .mobile-head {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    color: var(--foreground);
+    border-bottom: 1px solid var(--border);
+    background: var(--background);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  .close {
+    display: flex;
+    width: 2rem;
+    height: 2rem;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-foreground);
+    border-radius: 999px;
+    transition:
+      color 200ms,
+      background 200ms;
+  }
+  .close:hover {
+    color: var(--foreground);
+    background: var(--muted);
+  }
+  .mobile-list {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+  }
+  .mobile-list li + li {
+    margin-top: 0.125rem;
+  }
+  .mobile-link {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    color: var(--muted-foreground);
+    border-radius: var(--radius-md);
+    transition:
+      color 200ms,
+      background 200ms;
+  }
+  .mobile-link:hover,
+  .mobile-link.active {
+    color: var(--foreground);
+    background: var(--muted);
+  }
+  .mobile-link.subsection {
+    padding-left: 1.75rem;
+  }
+  .mobile-link.active {
+    font-weight: 500;
+  }
+  @media (width >= 96rem) {
+    .desktop-toc {
+      display: block;
+    }
+    .toc-toggle,
+    .backdrop,
+    .mobile-toc {
+      display: none;
+    }
+  }
+</style>

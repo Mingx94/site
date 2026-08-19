@@ -44,11 +44,11 @@
 
 {#snippet themeIcon(theme: "light" | "dark" | "system")}
   {#if theme === "system"}
-    <LucideMonitor class="size-4" />
+    <LucideMonitor />
   {:else if theme === "dark"}
-    <LucideMoon class="size-4" />
+    <LucideMoon />
   {:else}
-    <LucideSun class="size-4" />
+    <LucideSun />
   {/if}
 {/snippet}
 
@@ -61,21 +61,19 @@
         aria-label="主題設定"
         title="主題設定"
       >
-        <RiPaletteLine class="size-4" />
+        <RiPaletteLine />
       </Button>
     {/snippet}
   </PopoverTrigger>
   <PopoverContent align="end" width="fit">
-    <div class="flex items-center gap-1">
+    <div class="themes">
       {#each themeList as theme (theme.value)}
         <Button
           variant="outline"
           onclick={() => onSelectTheme(theme.value)}
           aria-pressed={activeTheme === theme.value}
           title={theme.name}
-          class={activeTheme === theme.value
-            ? "bg-primary/10 border-primary/40 text-primary"
-            : ""}
+          class={activeTheme === theme.value ? "active" : ""}
         >
           {@render themeIcon(theme.value)}
         </Button>
@@ -83,3 +81,21 @@
     </div>
   </PopoverContent>
 </Popover>
+
+<style>
+  .themes {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  :global(.themes svg),
+  :global([aria-label="主題設定"] svg) {
+    width: 1rem;
+    height: 1rem;
+  }
+  :global(.themes .active) {
+    color: var(--primary);
+    border-color: color-mix(in oklch, var(--primary) 40%, transparent);
+    background: color-mix(in oklch, var(--primary) 10%, transparent);
+  }
+</style>
