@@ -3,6 +3,7 @@
   import Container from "@/components/Container.svelte";
   import FormattedDate from "@/components/FormattedDate.svelte";
   import Link from "@/components/Link.svelte";
+  import PostCover from "@/components/PostCover.svelte";
   import Seo from "@/components/Seo.svelte";
   import config from "@/config";
   import { staggerIn } from "@/lib/domEvent";
@@ -10,8 +11,7 @@
   import type { PageProps } from "./$types";
 
   let { data }: PageProps = $props();
-
-  const year = new Date().getFullYear();
+  const featured = $derived(data.recentBlogs[0]);
 
   const elsewhere = [
     { label: "GitHub", href: config.social.github, handle: "Mingx94" },
@@ -22,81 +22,117 @@
     },
     { label: "Bluesky", href: config.social.bluesky, handle: "vartifact.cc" },
     { label: "X", href: config.social.twitter, handle: "mingx94" },
-  ].filter((i) => i.href);
+  ].filter((item) => item.href);
 </script>
 
 <Seo />
 
 <Container>
   <div class="home">
-    <!-- Masthead -->
-    <section class="masthead">
-      <div {@attach staggerIn} class="animate eyebrow split">
-        <span aria-hidden="true">— Vartifact / N°01</span>
-        <span>Anno {year}</span>
-      </div>
+    {#if featured}
+      <section class="feature" aria-labelledby="feature-title">
+        <div {@attach staggerIn} class="animate feature-image">
+          <a href="/blog/{featured.id}" aria-label="閱讀：{featured.title}">
+            <PostCover
+              slug={featured.id}
+              title={featured.title}
+              frame="01"
+              priority
+            />
+          </a>
+        </div>
 
-      <h1
+        <div {@attach staggerIn} class="animate feature-copy">
+          <p class="feature-label">Latest writing</p>
+          <h1 id="feature-title">
+            <a href="/blog/{featured.id}">{featured.title}</a>
+          </h1>
+          <p class="author">Michael Tsai</p>
+          <dl class="feature-meta">
+            <div>
+              <dt>Frame</dt>
+              <dd>01 / {String(data.recentBlogs.length).padStart(2, "0")}</dd>
+            </div>
+            <div>
+              <dt>Date</dt>
+              <dd><FormattedDate date={featured.date} /></dd>
+            </div>
+            {#if featured.readingTime}
+              <div>
+                <dt>Read</dt>
+                <dd>{featured.readingTime} min</dd>
+              </div>
+            {/if}
+          </dl>
+          {#if featured.description}
+            <p class="feature-description">{featured.description}</p>
+          {/if}
+        </div>
+      </section>
+
+      <section
         {@attach staggerIn}
-        class="animate title"
-        style="font-size: clamp(3.25rem, 13vw, 8.5rem);"
+        class="animate contact-sheet"
+        aria-label="文章接觸表"
       >
-        Michael<br />Tsai<span class="accent">.</span>
-      </h1>
+        <div class="frames">
+          {#each data.recentBlogs as post, index (post.id)}
+            <a
+              href="/blog/{post.id}"
+              class="frame"
+              aria-label="閱讀：{post.title}"
+            >
+              <span class="frame-number"
+                >{String(index + 1).padStart(2, "0")}</span
+              >
+              <PostCover
+                slug={post.id}
+                title={post.title}
+                frame={String(index + 1).padStart(2, "0")}
+                compact
+                ratio="4 / 3"
+              />
+            </a>
+          {/each}
+        </div>
+        <div class="roll-meta">
+          <span>Roll Vartifact</span>
+          <span
+            >{data.recentBlogs.length} exposed frame{data.recentBlogs.length ===
+            1
+              ? ""
+              : "s"}</span
+          >
+          <span>Reading room</span>
+        </div>
+      </section>
+    {/if}
 
-      <div {@attach staggerIn} class="animate eyebrow intro-meta">
-        <span>前端工程師 &mdash; Taiwan</span>
-        <span>Writing · Building · Photographing</span>
-      </div>
-    </section>
-
-    <!-- Lead paragraph -->
-    <section {@attach staggerIn} class="animate lead">
-      <p class="lead-copy">
-        在 Web 技術與使用者體驗之間來回，把細節磨到發亮。<br
-          class="desktop-break"
-        />
-        <span class="muted"
-          >寫程式、拍照、記錄生活——都是同一種對於形式的追求。</span
-        >
-      </p>
-    </section>
-
-    <!-- Recent writing -->
-    <section aria-labelledby="writing" {@attach staggerIn} class="animate">
+    <section
+      aria-labelledby="writing"
+      {@attach staggerIn}
+      class="animate writing"
+    >
       <div class="section-head">
-        <h2 id="writing" class="eyebrow">· Recent · 最近書寫</h2>
+        <h2 id="writing">Recent Writing</h2>
         {#if data.showMoreLink}
-          <Link href="/blog" underline={false} class="index-link eyebrow">
-            Index →
-          </Link>
+          <Link href="/blog" underline={false} class="index-link"
+            >Full index →</Link
+          >
         {/if}
       </div>
-
       <ol class="post-list">
-        {#each data.recentBlogs as post, i (post.id)}
+        {#each data.recentBlogs as post, index (post.id)}
           <li>
             <a href="/blog/{post.id}" class="post-link">
-              <span class="post-number">
-                N°{String(i + 1).padStart(2, "0")}
-              </span>
+              <span class="post-number"
+                >{String(index + 1).padStart(2, "0")}</span
+              >
               <div class="post-copy">
-                <h3 class="post-title">
-                  {post.title}
-                </h3>
-                {#if post.description}
-                  <p class="post-description">
-                    {post.description}
-                  </p>
-                {/if}
-                <div class="post-meta">
-                  <FormattedDate date={post.date} />
-                  {#if post.readingTime}
-                    <span aria-hidden="true">·</span>
-                    <span>{post.readingTime} min read</span>
-                  {/if}
-                </div>
+                <h3>{post.title}</h3>
+                {#if post.description}<p>{post.description}</p>{/if}
               </div>
+              <div class="post-meta"><FormattedDate date={post.date} /></div>
               <RiArrowRightUpLine class="post-arrow" />
             </a>
           </li>
@@ -104,273 +140,256 @@
       </ol>
     </section>
 
-    <!-- Elsewhere -->
     {#if elsewhere.length}
-      <section aria-labelledby="elsewhere" {@attach staggerIn} class="animate">
-        <div class="section-head">
-          <h2 id="elsewhere" class="eyebrow">· Elsewhere · 其他地方</h2>
-        </div>
-        <ul class="elsewhere-list">
-          {#each elsewhere as link}
+      <section
+        aria-labelledby="elsewhere"
+        {@attach staggerIn}
+        class="animate elsewhere"
+      >
+        <div class="section-head"><h2 id="elsewhere">Elsewhere</h2></div>
+        <ul>
+          {#each elsewhere as item}
             <li>
               <Link
-                href={link.href}
+                href={item.href}
                 external
                 underline={false}
                 class="elsewhere-link"
               >
-                <span class="elsewhere-label">
-                  {link.label}
-                </span>
-                <span class="elsewhere-meta">
-                  <span class="handle">/ {link.handle}</span>
-                  <RiArrowRightUpLine class="elsewhere-arrow" />
-                </span>
+                <span>{item.label}</span><span class="handle"
+                  >{item.handle}</span
+                >
               </Link>
             </li>
           {/each}
         </ul>
       </section>
     {/if}
-
-    <!-- Colophon -->
-    <section {@attach staggerIn} class="animate">
-      <div class="colophon">
-        <span>Set in Schibsted Grotesk &amp; Huninn</span>
-        <span>Built with SvelteKit</span>
-      </div>
-    </section>
   </div>
 
-  <div {@attach staggerIn} class="animate back-top">
-    <BackToTop />
-  </div>
+  <div {@attach staggerIn} class="animate back-top"><BackToTop /></div>
 </Container>
 
 <style>
   .home {
-    padding-block: 2rem;
-  }
-  .home,
-  .masthead {
     display: flex;
     flex-direction: column;
+    gap: clamp(4.5rem, 9vw, 8rem);
+    padding-block: 1rem 2rem;
   }
-  .home {
-    gap: 6rem;
+  .feature {
+    display: grid;
+    align-items: stretch;
+    gap: clamp(1.5rem, 4vw, 3rem);
   }
-  .masthead {
-    gap: 2.5rem;
+  .feature-image a {
+    display: block;
   }
-  .eyebrow {
-    color: var(--muted-foreground);
-    font: 11px var(--font-mono);
-    letter-spacing: 0.2em;
+  .feature-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-block: 0.25rem;
+  }
+  .feature-label,
+  dt,
+  .frame-number,
+  .roll-meta,
+  .post-meta {
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
   }
-  .split {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-  }
-  .title {
-    color: var(--foreground);
-    font-size: clamp(3.25rem, 13vw, 8.5rem);
-    font-weight: 700;
-    letter-spacing: -0.05em;
-    line-height: 0.88;
-  }
-  .accent {
+  .feature-label {
+    margin-bottom: 1.25rem;
     color: var(--primary);
   }
-  .intro-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    font-weight: 500;
   }
-  .lead {
-    padding-top: 2.5rem;
+  h1 {
+    max-width: 10ch;
+    font-size: clamp(3rem, 7vw, 5.75rem);
+    line-height: 1.03;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  h1 a {
+    text-decoration: none;
+  }
+  h1 a:hover {
+    color: var(--primary);
+  }
+  .author {
+    margin-top: 1.5rem;
+    font-size: 1.05rem;
+    font-weight: 500;
+  }
+  .feature-meta {
+    width: 100%;
+    margin-top: 1.5rem;
     border-top: 1px solid var(--border);
   }
-  .lead-copy {
-    max-width: 42rem;
-    color: var(--foreground);
-    font-size: 1.5rem;
-    letter-spacing: -0.025em;
-    line-height: 1.5;
+  .feature-meta div {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: 1rem;
+    padding-block: 0.65rem;
+    border-bottom: 1px dashed color-mix(in srgb, var(--border) 70%, transparent);
   }
-  .muted {
+  dt {
     color: var(--muted-foreground);
   }
-  .desktop-break {
-    display: none;
+  dd {
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .feature-description {
+    max-width: 34rem;
+    margin-top: 1.25rem;
+    color: var(--muted-foreground);
+    font-family: var(--font-serif);
+    line-height: 1.75;
+  }
+  .contact-sheet {
+    overflow: hidden;
+    padding: 0.7rem;
+    background: var(--film);
+    color: var(--film-foreground);
+  }
+  .frames {
+    display: flex;
+    gap: 0.7rem;
+    overflow-x: auto;
+    padding-bottom: 0.4rem;
+    scrollbar-color: var(--primary) var(--film);
+  }
+  .frame {
+    position: relative;
+    display: block;
+    min-width: min(72vw, 18rem);
+    text-decoration: none;
+  }
+  .frame-number {
+    display: block;
+    padding: 0.15rem 0.25rem 0.4rem;
+    color: var(--film-accent);
+  }
+  .frame:hover {
+    color: var(--film-accent);
+  }
+  .roll-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding: 0.7rem 0.25rem 0.1rem;
+    color: color-mix(in srgb, var(--film-foreground) 75%, transparent);
   }
   .section-head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    margin-bottom: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--foreground);
+  }
+  .section-head h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.025em;
+  }
+  :global(.index-link) {
+    color: var(--muted-foreground) !important;
+    font-size: 0.8rem;
   }
   :global(.index-link:hover) {
     color: var(--primary) !important;
   }
   .post-list li,
-  .elsewhere-list li {
+  .elsewhere li {
     border-top: 1px solid var(--border);
-  }
-  .post-list li:first-child,
-  .elsewhere-list li:first-child {
-    border-top: 0;
   }
   .post-link {
     display: grid;
-    grid-template-columns: 2.5rem 1fr auto;
-    align-items: baseline;
+    grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+    align-items: center;
     gap: 1rem;
     padding-block: 1.5rem;
+    text-decoration: none;
   }
   .post-number {
-    color: var(--muted-foreground);
-    font: 12px var(--font-mono);
+    color: var(--primary);
     font-variant-numeric: tabular-nums;
   }
-  .post-copy {
-    min-width: 0;
+  .post-copy h3 {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    line-height: 1.25;
   }
-  .post-copy > * + * {
-    margin-top: 0.5rem;
-  }
-  .post-title {
-    color: var(--foreground);
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 1.375;
-    transition: color 300ms;
-  }
-  .post-link:hover .post-title {
-    color: var(--primary);
-  }
-  .post-description {
-    display: -webkit-box;
-    overflow: hidden;
+  .post-copy p {
+    margin-top: 0.4rem;
     color: var(--muted-foreground);
-    font-size: 0.875rem;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
+    font-family: var(--font-serif);
+    line-height: 1.6;
   }
   .post-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.25rem 0.75rem;
-    padding-top: 0.25rem;
+    display: none;
     color: var(--muted-foreground);
-    font: 10px var(--font-mono);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
   }
-  :global(.post-arrow),
-  :global(.elsewhere-arrow) {
-    width: 1rem;
-    height: 1rem;
-    color: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
+  :global(.post-arrow) {
+    width: 1.1rem;
+    height: 1.1rem;
     transition:
-      transform 300ms,
-      color 300ms;
+      transform 220ms ease-out,
+      color 220ms ease-out;
   }
-  .post-link:hover :global(.post-arrow),
-  :global(.elsewhere-link:hover .elsewhere-arrow) {
+  .post-link:hover h3,
+  .post-link:hover :global(.post-arrow) {
     color: var(--primary);
-    transform: translate(0.125rem, -0.125rem);
+  }
+  .post-link:hover :global(.post-arrow) {
+    transform: translate(0.15rem, -0.15rem);
   }
   :global(.elsewhere-link) {
     display: flex !important;
-    align-items: baseline;
     justify-content: space-between;
+    gap: 1rem;
     padding-block: 1rem;
     color: var(--foreground) !important;
+    font-family: var(--font-serif);
+    text-decoration: none !important;
   }
-  .elsewhere-label {
-    font-size: 1.125rem;
-    font-weight: 500;
-    transition: color 300ms;
-  }
-  :global(.elsewhere-link:hover) .elsewhere-label {
-    color: var(--primary);
-  }
-  .elsewhere-meta {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+  :global(.elsewhere-link:hover) {
+    color: var(--primary) !important;
   }
   .handle {
-    display: none;
     color: var(--muted-foreground);
-    font: 12px var(--font-mono);
-  }
-  .colophon {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    row-gap: 0.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-    color: var(--muted-foreground);
-    font: 10px var(--font-mono);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
   }
   .back-top {
     display: flex;
-    margin-top: 4rem;
+    margin-top: 3rem;
   }
-  @media (width >= 40rem) {
-    .intro-meta {
-      flex-direction: row;
-      align-items: baseline;
-      justify-content: space-between;
-    }
-    .handle {
-      display: inline;
-    }
-  }
-  @media (width >= 48rem) {
-    .home {
-      gap: 8rem;
-      padding-block: 3rem;
-    }
-    .masthead {
-      gap: 3rem;
-    }
-    .lead {
-      padding-top: 3.5rem;
-    }
-    .lead-copy {
-      font-size: 1.875rem;
-    }
-    .desktop-break {
-      display: inline;
-    }
-    .section-head {
-      margin-bottom: 1.5rem;
+  @media (width >= 52rem) {
+    .feature {
+      grid-template-columns: minmax(0, 1.65fr) minmax(19rem, 0.8fr);
     }
     .post-link {
+      grid-template-columns: 3rem minmax(0, 1fr) auto auto;
       gap: 2rem;
-      padding-block: 2rem;
     }
-    .post-title {
-      font-size: 1.5rem;
+    .post-meta {
+      display: block;
     }
-    .post-description {
-      font-size: 1rem;
-    }
-    :global(.post-arrow) {
-      width: 1.25rem;
-      height: 1.25rem;
+    .frame {
+      min-width: 15rem;
     }
   }
 </style>

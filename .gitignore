@@ -34,6 +34,7 @@ dogfood-output/
 
 # playwright-cli session artefacts (snapshots, console/network logs)
 .playwright-cli/
+.impeccable/questions/
 
 # OG images generated at build time (scripts/gen-og.ts → static/og/)
 static/og/*.png

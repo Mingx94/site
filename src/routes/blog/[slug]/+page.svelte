@@ -82,7 +82,10 @@
 
 <!-- Reading progress bar -->
 <div class="progress-track" aria-hidden="true">
-  <div class="progress" style:width="{readingProgress}%"></div>
+  <div
+    class="progress"
+    style:transform={`scaleX(${readingProgress / 100})`}
+  ></div>
 </div>
 
 <TableOfContents />
@@ -162,7 +165,8 @@
   .progress {
     height: 100%;
     background: var(--primary);
-    transition: width 75ms linear;
+    transform-origin: left;
+    transition: transform 75ms linear;
   }
   article {
     padding-top: 1rem;
@@ -191,7 +195,8 @@
   .page-title {
     color: var(--foreground);
     font-size: clamp(2.25rem, 6vw, 4.5rem);
-    font-weight: 700;
+    font-family: var(--font-serif);
+    font-weight: 500;
     letter-spacing: -0.025em;
     line-height: 1.05;
     text-wrap: balance;
@@ -201,6 +206,7 @@
     color: var(--muted-foreground);
     font-size: 1.125rem;
     line-height: 1.625;
+    font-family: var(--font-serif);
   }
   .byline,
   .colophon {

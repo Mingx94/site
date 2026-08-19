@@ -64,7 +64,7 @@
   />
   <link
     rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Huninn&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=Noto+Serif+TC:wght@400;500;600;700&display=swap"
   />
 
   <!-- RSS + Sitemap -->
@@ -76,6 +76,8 @@
   />
   <link rel="sitemap" href="/sitemap.xml" />
 </svelte:head>
+
+<!-- THESIS: Vartifact is a photographic reading room where each article is a selected frame. OWN-WORLD: Warm proof paper, near-black film edges, oxide-red crop marks, and a sans/serif editorial pairing make the site recognizably Vartifact. STORY: Visitors meet the latest article, browse its real contact strip, then move into the archive and long-form reading. FIRST VIEWPORT: A balanced selected cover and serif article title share the opening; the contact strip begins before the fold. FORM: Square frames, hairline rules, sparse registration marks, flat controls, real photographs, and responsive semantic layouts. FINISH: Preserve every route and feature, use only real content, keep body measure near 68ch, theme browser surfaces, and translate the strip into horizontal scrolling on mobile. SEED: fd9fb789. -->
 
 <!-- Skip link: first focusable element on the page. Visually hidden until
      focus so keyboard users can jump past the header / nav directly to
@@ -98,8 +100,8 @@
     background: var(--background, #fff);
     color: var(--foreground, #000);
     border: 2px solid currentColor;
-    border-radius: 4px;
-    font-family: var(--font-mono, monospace);
+    border-radius: var(--radius-md);
+    font-family: var(--font-sans);
     font-size: 0.875rem;
     text-decoration: none;
     transform: translateY(-200%);

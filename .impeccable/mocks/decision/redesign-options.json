@@ -1,0 +1,144 @@
+{
+  "title": "Choose Vartifact's new visual world",
+  "question": "Choose one complete direction for the whole website, or re-roll for a new set.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "The Redline Atlas",
+      "kicker": "THE ROLL",
+      "lineage": "architectural drawing sets, redline reviews, and translucent tracing overlays",
+      "thesis": "Vartifact becomes a living drawing set where every article is a numbered detail in one authored body of work.",
+      "palette": ["#ecebe5", "#1e2425", "#d94b3d", "#6b9fa0"],
+      "materials": ["translucent vellum", "graphite linework", "red pencil annotations"],
+      "viewport": "A full drawing sheet opens with an oversized Vartifact section mark, a strict title block, and recent articles plotted as numbered details across the grid.",
+      "risk": "It can feel like an architecture portfolio if the article language and personal voice are not kept dominant.",
+      "raised": [
+        {
+          "from": "Miura Sheet",
+          "raise": "Linked geometry: navigation, article indexes, and reading notes share one coordinate system instead of becoming separate widgets."
+        },
+        {
+          "from": "Cutting Bench",
+          "raise": "Persistent place: the last-read article and current reading position return as a clear physical mark."
+        },
+        {
+          "from": "Monochrome Proof",
+          "raise": "Claim-proof discipline: every article teaser pairs its title with a concrete description or visible artifact."
+        }
+      ],
+      "comp": ".impeccable/mocks/decision/assigned.png"
+    },
+    {
+      "id": "model-pick",
+      "label": "The Contact Sheet Reading Room",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "darkroom contact sheets, grease-pencil selects, and photographic proof tables",
+      "thesis": "Articles become frames in a personal proof sheet, with one chosen thought enlarged for close reading.",
+      "palette": ["#151515", "#f1eee6", "#ef6a32", "#8ea7a0"],
+      "materials": ["photographic proof paper", "film-edge numbering", "grease-pencil marks"],
+      "viewport": "A near-black proof table fills the screen; recent articles sit as numbered frames while one selected story expands into a bright reading window.",
+      "risk": "This familiar photography language needs enough real cover imagery to avoid becoming decorative empty frames.",
+      "comp": ".impeccable/mocks/decision/model-pick.png"
+    },
+    {
+      "id": "challenger-daylight",
+      "label": "The Daylight Section",
+      "verdict": "competitive",
+      "lineage": "inhabited architectural daylight sections",
+      "thesis": "Reading unfolds as a daylit section, with each article occupying a room along a moving band of light.",
+      "palette": ["#f2efe5", "#25282a", "#e2b646", "#70839a"],
+      "materials": ["limewashed planes", "charcoal section cuts", "moving sunlight"],
+      "viewport": "The first screen is one continuous building section; the newest article sits in the brightest room while older writing recedes into cooler shadow.",
+      "case": "It gives the archive a memorable reading journey, but the spatial metaphor is less direct for developers than a drawing set.",
+      "risk": "The atmosphere can overpower article scanning if light and annotation are not kept functional.",
+      "comp": ".impeccable/mocks/decision/challenger-daylight.png",
+      "hero": "https://impeccable.style/worlds/cards/architecture-inhabitable-space-daylight-section-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/architecture-inhabitable-space-daylight-section.webp"
+    },
+    {
+      "id": "challenger-zine",
+      "label": "The Friend's Technical Zine",
+      "verdict": "competitive",
+      "lineage": "hand-drawn explainer zines and annotated code sketches",
+      "thesis": "Hard ideas are taught like a friend sketching them beside you, with clear body text surrounded by authored marks and diagrams.",
+      "palette": ["#f4eddc", "#171717", "#f0c83e", "#ef6c84", "#43a5a0"],
+      "materials": ["cream stock", "black marker", "flat highlighter swipes"],
+      "viewport": "A bold hand-lettered Vartifact opens above three numbered article panels, with a small guide character pointing to the latest idea.",
+      "case": "It is personal and welcoming for difficult technical topics, but playful marks may weaken long-form calm if used everywhere.",
+      "risk": "Without real hand-authored diagrams, the style can look artificial or childish.",
+      "comp": ".impeccable/mocks/decision/challenger-zine.png",
+      "hero": "https://impeccable.style/worlds/cards/hand-drawn-zine-explainer-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/hand-drawn-zine-explainer.webp"
+    },
+    {
+      "id": "challenger-airport",
+      "label": "The Article Concourse",
+      "verdict": "competitive",
+      "lineage": "international airport wayfinding and monumental gate signs",
+      "thesis": "Every visit becomes a clear chain of reading decisions, with articles treated as destinations rather than cards.",
+      "palette": ["#f2c900", "#111111", "#ffffff", "#d8d8d2"],
+      "materials": ["framed overhead bands", "black inset signs", "edge-locked arrows"],
+      "viewport": "A saturated yellow sign band names Vartifact and points toward Writing, About, and Contact; the latest article number fills the lower concourse.",
+      "case": "It delivers exceptional wayfinding and mobile clarity, but it risks making a personal blog feel institutional.",
+      "risk": "The yellow system must remain readable and personal across long articles, not only navigation screens.",
+      "comp": ".impeccable/mocks/decision/challenger-airport.png",
+      "hero": "https://impeccable.style/worlds/cards/wayfinding-cartography-signage-terminal-yellow-wayfinding-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/wayfinding-cartography-signage-terminal-yellow-wayfinding.webp"
+    },
+    {
+      "id": "declined-miura",
+      "label": "The Deployable Article Sheet",
+      "verdict": "declined",
+      "lineage": "Miura-fold deployable sheets",
+      "thesis": "The archive opens from a compact packet into one linked field of articles.",
+      "palette": ["#f5f4ef", "#222222", "#c5a23a", "#b8ced3"],
+      "materials": ["scored paper", "gold foil", "linked crease geometry"],
+      "viewport": "A folded article packet begins opening across the first screen.",
+      "case": "The deployment is memorable, but it makes basic reading and navigation harder to understand.",
+      "kept": "Its linked geometry raised the assigned direction into one connected coordinate system.",
+      "risk": "The fold metaphor can become a visual puzzle instead of a reading tool.",
+      "hero": "https://impeccable.style/worlds/cards/paper-folds-pleats-deployable-miura-orbit-sheet-hero.webp"
+    },
+    {
+      "id": "declined-bench",
+      "label": "The Cutting Bench",
+      "verdict": "declined",
+      "lineage": "film work prints, select rails, and pinned trims",
+      "thesis": "Articles run through a fixed editing rail while saved and deferred pieces hang below.",
+      "palette": ["#090909", "#e66b2d", "#f5f1e8"],
+      "materials": ["coarse film grain", "perforated rail", "folded tape flags"],
+      "viewport": "A horizontal rail scrubs through article frames and stops at the latest selection.",
+      "case": "It supports selection and return state, but long articles do not naturally belong on a cutting bench.",
+      "kept": "Its persistent place marker became a durable last-read and reading-position cue.",
+      "risk": "Horizontal scrubbing can fight expected reading behavior.",
+      "hero": "https://impeccable.style/worlds/cards/operate-a-cutting-bench-select-rail-hero.webp"
+    },
+    {
+      "id": "declined-monochrome",
+      "label": "The Monochrome Proof",
+      "verdict": "declined",
+      "lineage": "neutral product marketing with claim-and-proof pairs",
+      "thesis": "Every article promise is immediately paired with visible proof or a concrete excerpt.",
+      "palette": ["#fafafa", "#151515", "#39765c"],
+      "materials": ["strict neutral grid", "hairline controls", "proof frames"],
+      "viewport": "A simple introduction sits beside one large proof frame for the newest article.",
+      "case": "It is clear, but it treats a personal article archive like software marketing.",
+      "kept": "Its claim-proof discipline strengthened every article teaser.",
+      "risk": "It would be polished but too close to a generic professional website.",
+      "hero": "https://impeccable.style/worlds/cards/digital-design-canon-monochrome-product-marketing-hero.webp"
+    }
+  ],
+  "reroll": { "registers": ["safer", "bolder"] },
+  "buildPath": { "value": "comp", "toggle": true },
+  "canon": true,
+  "canonCard": {
+    "label": "The Contemporary Reading Blog",
+    "thesis": "A familiar article-first personal blog, executed with excellent typography and spacing.",
+    "palette": ["#f7f6f2", "#191919", "#416c59"],
+    "materials": ["quiet editorial grid", "large article type", "restrained photography"],
+    "viewport": "A clear author introduction leads into a conventional list of recent articles and social links.",
+    "risk": "It is easy to use, but it may look like many other well-made personal blogs.",
+    "comp": ".impeccable/mocks/decision/canon.png"
+  },
+  "steer": true
+}

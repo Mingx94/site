@@ -17,8 +17,8 @@
 <style>
   .container {
     inline-size: 100%;
-    max-inline-size: 64rem;
+    max-inline-size: 92rem;
     margin-inline: auto;
-    padding-inline: 1.25rem;
+    padding-inline: clamp(1rem, 4vw, 3.25rem);
   }
 </style>

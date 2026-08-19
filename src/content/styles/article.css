@@ -4,6 +4,7 @@
     margin-inline: auto;
     color: var(--foreground);
     counter-reset: section;
+    font-family: var(--font-serif);
   }
   .content :where(p, ul, ol, pre, table, blockquote) {
     margin-block: 1.25em;
@@ -23,7 +24,8 @@
   .content h2,
   .content h3 {
     color: var(--foreground);
-    font-weight: 700;
+    font-family: var(--font-serif);
+    font-weight: 600;
     letter-spacing: -0.025em;
   }
   .content h2 {
@@ -89,7 +91,7 @@
     max-width: 100%;
     height: auto;
     margin: auto;
-    border-radius: var(--radius-md);
+    border-radius: 0;
   }
   .content figcaption {
     margin-top: 0.75rem;
@@ -118,6 +120,7 @@
     background: color-mix(in oklch, var(--muted) 60%, transparent);
     font-size: 0.9em;
     font-weight: 400;
+    font-family: var(--font-sans);
   }
   .content pre {
     overflow-x: auto;

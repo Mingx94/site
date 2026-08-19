@@ -1,0 +1,9 @@
+Use case: ui-mockup
+Asset type: compositional variation B for a high-fidelity desktop homepage, 16:9 landscape
+Input images: Image 1 is the approved direction reference. Carry over its warm photographic proof paper, near-black film strips, oxide-red crop marks, serif/sans pairing, restrained grain, and component character. Do not copy its exact layout or reuse its exact photographs.
+Primary request: Recompose Vartifact's "Contact Sheet Reading Room" as a sequence-led editorial homepage. It must be a real readable website, not a poster.
+Surface structure, in order: slim Vartifact masthead with links "Writing", "About", "Contact"; an extra-wide selected feature frame spanning most of the page with its caption rail directly underneath; the real title "初次使用 Astro.js" and "Michael Tsai" arranged as a strong editorial caption below the image rather than beside it; a narrow horizontal contact strip showing the reading sequence; the beginning of "Recent Writing" below. One dominant move: the broad selected frame. Quiet everything else.
+Content: only use "Vartifact", "Michael Tsai", "Writing", "About", "Contact", "初次使用 Astro.js", "Recent Writing". Do not invent claims, article summaries, testimonials, statistics, clients, awards, or extra navigation.
+Typography: exactly two font families — clean sans for navigation, labels, and metadata; literary serif for titles and reading text.
+Composition/framing: 1440x900 desktop page, clear clickable regions, accessible hierarchy, visible second-fold hint.
+Constraints: image-first; keep the direction reference's visual world; no device frame; no browser chrome; no gradients; no pill UI; no card grid; no generic SaaS; no watermark; exact text where shown.

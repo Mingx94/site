@@ -2,6 +2,7 @@
   import BackToTop from "@/components/BackToTop.svelte";
   import Container from "@/components/Container.svelte";
   import FormattedDate from "@/components/FormattedDate.svelte";
+  import PostCover from "@/components/PostCover.svelte";
   import Seo from "@/components/Seo.svelte";
   import { staggerIn } from "@/lib/domEvent";
   import type { Post } from "@/lib/posts";
@@ -86,6 +87,15 @@
           {#each filtered as post, i (post.id)}
             <li>
               <a href="/blog/{post.id}" class="post-link">
+                <div class="post-cover">
+                  <PostCover
+                    slug={post.id}
+                    title={post.title}
+                    frame={String(i + 1).padStart(2, "0")}
+                    compact
+                    ratio="4 / 3"
+                  />
+                </div>
                 <span class="post-number">
                   N°{String(i + 1).padStart(2, "0")}
                 </span>
@@ -127,6 +137,15 @@
               {#each data.posts[year] as post, i (post.id)}
                 <li>
                   <a href="/blog/{post.id}" class="post-link">
+                    <div class="post-cover">
+                      <PostCover
+                        slug={post.id}
+                        title={post.title}
+                        frame={String(i + 1).padStart(2, "0")}
+                        compact
+                        ratio="4 / 3"
+                      />
+                    </div>
                     <span class="post-number">
                       N°{String(i + 1).padStart(2, "0")}
                     </span>
@@ -187,8 +206,9 @@
   .page-title {
     color: var(--foreground);
     font-size: clamp(3rem, 10vw, 6rem);
-    font-weight: 700;
-    letter-spacing: -0.05em;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.035em;
     line-height: 0.95;
   }
   .accent {
@@ -257,12 +277,13 @@
   }
   .post-link {
     display: grid;
-    grid-template-columns: 2.5rem 1fr auto;
+    grid-template-columns: 5rem minmax(0, 1fr) auto;
     align-items: baseline;
     gap: 1rem;
     padding-block: 1.5rem;
   }
   .post-number {
+    display: none;
     color: var(--muted-foreground);
     font: 12px var(--font-mono);
     font-variant-numeric: tabular-nums;
@@ -276,7 +297,8 @@
   .post-title {
     color: var(--foreground);
     font-size: 1.25rem;
-    font-weight: 600;
+    font-family: var(--font-serif);
+    font-weight: 500;
     line-height: 1.375;
     transition: color 300ms;
   }
@@ -360,8 +382,12 @@
       margin-bottom: 3.5rem;
     }
     .post-link {
+      grid-template-columns: minmax(11rem, 15rem) 2.5rem minmax(0, 1fr) auto;
       gap: 2rem;
       padding-block: 2rem;
+    }
+    .post-number {
+      display: block;
     }
     .post-title {
       font-size: 1.5rem;

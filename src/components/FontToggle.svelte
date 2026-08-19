@@ -2,20 +2,15 @@
   import { toggleFont } from "@/lib/font";
   import { onMount } from "svelte";
 
-  const fonts = [
-    { value: "iansui", label: "芫荽" },
-    { value: "huninn", label: "粉圓" },
-  ] as const;
-
-  let selected = $state("huninn");
+  let selected = $state<"serif" | "sans">("serif");
 
   onMount(() => {
     const stored = localStorage.getItem("font");
-    if (stored) selected = stored;
+    if (stored === "serif" || stored === "sans") selected = stored;
   });
 
   function toggle() {
-    const next = selected === "huninn" ? "iansui" : "huninn";
+    const next = selected === "serif" ? "sans" : "serif";
     selected = next;
     localStorage.setItem("font", next);
     toggleFont(next);
@@ -26,19 +21,20 @@
   <button
     onclick={toggle}
     class="toggle"
-    aria-label="切換字體：{fonts.find((f) => f.value === selected)?.label}"
+    aria-label="切換閱讀字體：{selected === 'serif' ? '襯線' : '黑體'}"
+    title="切換閱讀字體"
   >
-    <span class:dimmed={selected !== "iansui"} class="iansui">芫</span>
+    <span class:dimmed={selected !== "serif"} class="serif">襯</span>
     <span class="divider">/</span>
-    <span class:dimmed={selected !== "huninn"} class="huninn">粉</span>
+    <span class:dimmed={selected !== "sans"} class="sans">黑</span>
   </button>
   <!-- Styled tooltip. Positioned BELOW the button because the header
        is `position: fixed; top: 0` (see src/styles/global.css `header`
        base rule), so rendering it above the button pushes it off the
        top of the viewport. -->
   <div class="tooltip" aria-hidden="true">
-    切換字型：<span class="iansui">芫荽</span> /
-    <span class="huninn">粉圓</span>
+    閱讀字體：<span class="serif">襯線</span> /
+    <span class="sans">黑體</span>
   </div>
 </div>
 
@@ -51,6 +47,7 @@
     align-items: center;
     gap: 0.125rem;
     border: 0;
+    border: 1px solid transparent;
     border-radius: var(--radius-md);
     padding: 0.25rem 0.5rem;
     background: transparent;
@@ -62,11 +59,11 @@
   .toggle:hover {
     color: var(--foreground);
   }
-  .iansui {
-    font-family: var(--font-iansui);
+  .serif {
+    font-family: var(--font-serif);
   }
-  .huninn {
-    font-family: var(--font-huninn);
+  .sans {
+    font-family: var(--font-sans);
   }
   .dimmed {
     opacity: 0.4;
@@ -92,5 +89,9 @@
   }
   .font-toggle:hover .tooltip {
     opacity: 1;
+  }
+  .toggle:focus-visible {
+    border-color: var(--ring);
+    outline: none;
   }
 </style>
