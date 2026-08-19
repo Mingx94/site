@@ -55,12 +55,17 @@
 <Popover>
   <PopoverTrigger>
     {#snippet child({ props })}
-      <Button {...props} variant="outline" aria-label="主題設定" title="主題設定">
+      <Button
+        {...props}
+        variant="outline"
+        aria-label="主題設定"
+        title="主題設定"
+      >
         <RiPaletteLine class="size-4" />
       </Button>
     {/snippet}
   </PopoverTrigger>
-  <PopoverContent align="end" class="w-fit">
+  <PopoverContent align="end" width="fit">
     <div class="flex items-center gap-1">
       {#each themeList as theme (theme.value)}
         <Button

@@ -7,7 +7,6 @@
   import { onScroll } from "@/lib/domEvent";
   import { initFont } from "@/lib/font";
   import { initTheme } from "@/lib/theme";
-  import TwSizeIndicator from "@/components/TwSizeIndicator.svelte";
 
   interface Props {
     children: import("svelte").Snippet;
@@ -84,7 +83,6 @@
 <a href="#main" class="skip-link">跳到主要內容</a>
 
 <Header />
-<TwSizeIndicator />
 <main id="main" tabindex="-1">
   {@render children()}
 </main>

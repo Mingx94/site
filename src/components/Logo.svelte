@@ -5,13 +5,21 @@
   // they `import Logo from ".../Logo.svelte"`.
 </script>
 
-<span
-  class="logo"
->
+<span class="logo">
   vartifact<span class="mark">.</span>
 </span>
 
 <style>
-  .logo { display: inline-flex; align-items: baseline; color: var(--foreground); font-size: 1.125rem; font-weight: 700; letter-spacing: var(--tracking-tight); }
-  .mark { color: var(--primary); }
+  .logo {
+    display: inline-flex;
+    align-items: baseline;
+    color: var(--foreground);
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.75rem;
+    letter-spacing: var(--tracking-tight);
+  }
+  .mark {
+    color: var(--primary);
+  }
 </style>
