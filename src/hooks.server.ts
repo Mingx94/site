@@ -1,5 +1,4 @@
 import type { Handle } from "@sveltejs/kit";
-import { dev } from "$app/environment";
 
 // Security headers applied to every response. Values chosen to match the
 // site's actual external dependencies (Google Fonts, Cloudflare Insights,
@@ -53,7 +52,10 @@ function prefersMarkdown(accept: string | null): boolean {
   let mdQ = 0;
   let htmlQ = 0;
   for (const part of accept.split(",")) {
-    const [type, ...params] = part.trim().split(";").map((s) => s.trim());
+    const [type, ...params] = part
+      .trim()
+      .split(";")
+      .map((s) => s.trim());
     let q = 1;
     for (const p of params) {
       if (p.startsWith("q=")) q = parseFloat(p.slice(2)) || 0;
@@ -71,22 +73,6 @@ function prefersMarkdown(accept: string | null): boolean {
 const BLOG_POST_PATH = /^\/blog\/([^/]+?)\/?$/;
 
 export const handle: Handle = async ({ event, resolve }) => {
-  // The (editor) route group at `/editor/*` and the `/__editor/*`
-  // content-API middleware are local-only dev tools. `+layout.server.ts`
-  // already throws 404 for the route group in production, and
-  // `editorContentApi` refuses to attach outside `vite dev` — this early
-  // return is a belt-and-suspenders check that covers direct requests to
-  // either surface (`/editor`, `/__editor/file?…`, …) which could
-  // otherwise fall through SvelteKit's routing.
-  if (
-    !dev &&
-    (event.url.pathname === "/editor" ||
-      event.url.pathname.startsWith("/editor/") ||
-      event.url.pathname.startsWith("/__editor"))
-  ) {
-    return new Response(null, { status: 404 });
-  }
-
   // Content negotiation for blog posts: agents sending
   // `Accept: text/markdown` get the .md representation served at the
   // original URL. See Cloudflare's "Markdown for Agents" doc:
@@ -114,25 +100,6 @@ export const handle: Handle = async ({ event, resolve }) => {
   if (slug && !slug.endsWith(".md")) {
     const existing = response.headers.get("Vary");
     response.headers.set("Vary", existing ? `${existing}, Accept` : "Accept");
-  }
-
-  // Skip every site-wide security header for the dev-only editor surfaces.
-  // The editor chrome (/editor) mounts a sandboxed iframe at /editor/preview;
-  // X-Frame-Options: DENY and CSP `frame-ancestors 'none'` would otherwise
-  // block the iframe. Both routes only ever serve in dev (see guard above
-  // + `+layout.server.ts`), so there's nothing worth hardening here — the
-  // iframe sandbox attribute is the real boundary.
-  //
-  // Also send `Cache-Control: no-store` on editor routes: otherwise the
-  // browser may pin the FIRST response's security-header set to the URL
-  // and keep enforcing it on future iframe loads even after the server
-  // starts returning clean headers.
-  const isEditor =
-    event.url.pathname === "/editor" ||
-    event.url.pathname.startsWith("/editor/");
-  if (isEditor) {
-    response.headers.set("Cache-Control", "no-store");
-    return response;
   }
 
   for (const [name, value] of Object.entries(SECURITY_HEADERS)) {

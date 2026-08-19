@@ -29,7 +29,6 @@
 | `/rss.xml`、`/sitemap.xml` | 訂閱與 SEO |
 | `/llms.txt` | LLM 爬蟲用的 markdown 索引（[llmstxt.org](https://llmstxt.org)） |
 | `/.well-known/agent-skills/index.json` | Agent Skills discovery index |
-| `/editor` | **只在 dev 環境可用**的本地 CMS |
 
 ## 本地開發
 
@@ -57,20 +56,14 @@ npm run dev       # vite dev，預設 http://localhost:5173
 - `/llms.txt` 提供全站 markdown 索引
 - `/.well-known/agent-skills/index.json`（Cloudflare discovery RFC；目前不提供 skills）
 
-## 內建編輯器
-
-`/editor` 是 dev-only 的本地 CMS，直接讀寫 `src/content/` 下的檔案。Production build 會 404 擋掉所有 `/editor/*` 與 `/__editor/*`，編輯器程式碼也不會進 Worker bundle。細節見 [agents/editor.md](agents/editor.md)。
-
 ## 專案結構
 
 ```
 src/
 ├── routes/              SvelteKit 路由
-│   ├── (editor)/        dev-only 編輯器
 │   └── blog/[slug]/     文章頁
 ├── lib/
 │   ├── blog.remote.ts   view count / reactions 的 remote functions
-│   ├── editor/          編輯器實作
 │   └── server/          server-only helper
 ├── content/
 │   ├── posts/<slug>/    文章內容（article.svx + cover.jpg）
@@ -78,20 +71,17 @@ src/
 │   └── styles/          article 專用 CSS
 ├── components/          site UI 元件
 ├── styles/global.css    全站樣式
-└── hooks.server.ts      security headers / editor 路徑例外
+└── hooks.server.ts      security headers / content negotiation
 
 scripts/
-├── gen-og.ts            prebuild：產生 static/og/*.png
-└── check-worker-size.ts postbuild：防 svelte/compiler 漏進 worker
-
-vite-plugin-content-api.ts  dev-only 檔案系統 API（/__editor/*）
+└── gen-og.ts            prebuild：產生 static/og/*.png
 ```
 
 ## 寫新文章
 
 1. 在 `src/content/posts/<slug>/` 放 `article.svx` 和 `cover.jpg`
 2. `article.svx` frontmatter 要有 `title` / `date` / `description`
-3. `npm run dev` 打開 `/editor` 或直接用 IDE 編輯
+3. 用 IDE 編輯文章
 4. build 時 OG 圖會自動產生到 `static/og/<slug>.png`
 
 ## License
