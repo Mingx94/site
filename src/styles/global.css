@@ -1,24 +1,21 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./tokens.css";
+@import "./reset.css";
 @import "../content/styles/article.css";
 
 @plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:where(.dark, .dark *));
-
-@custom-variant data-underline (&:where([data-underline="true"]));
-
 @theme inline {
-  --font-iansui: "Iansui";
-  --font-huninn: "Huninn";
-  --font-sans-iansui: "Schibsted Grotesk", "Iansui", sans-serif;
-  --font-sans-huninn: "Schibsted Grotesk", "Huninn", sans-serif;
-  --font-mono: "JetBrains Mono", monospace;
-
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --font-iansui: var(--font-iansui);
+  --font-huninn: var(--font-huninn);
+  --font-sans-iansui: var(--font-sans-iansui);
+  --font-sans-huninn: var(--font-sans-huninn);
+  --font-mono: var(--font-mono);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -34,148 +31,92 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --radius: 0.5rem;
-  --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
-  --tracking-tight: calc(var(--tracking-normal) - 0.025em);
-  --tracking-wide: calc(var(--tracking-normal) + 0.025em);
-  --tracking-wider: calc(var(--tracking-normal) + 0.05em);
-  --tracking-widest: calc(var(--tracking-normal) + 0.1em);
 }
 
-:root {
-  --radius: 0.5rem;
-  --background: oklch(0.9711 0.0074 80.7211);
-  /* Notice component semantic colors */
-  --notice-note: oklch(0.5 0.18 240);
-  --notice-tip: oklch(0.52 0.17 160);
-  --notice-info: oklch(0.56 0.14 75);
-  --notice-warning: oklch(0.52 0.2 25);
-  --foreground: oklch(0.3 0.0358 30.2042);
-  --card: oklch(0.9711 0.0074 80.7211);
-  --card-foreground: oklch(0.3 0.0358 30.2042);
-  --popover: oklch(0.9711 0.0074 80.7211);
-  --popover-foreground: oklch(0.3 0.0358 30.2042);
-  --primary: oklch(0.5234 0.1347 144.1672);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.9571 0.021 147.636);
-  --secondary-foreground: oklch(0.4254 0.1159 144.3078);
-  --muted: oklch(0.937 0.0142 74.4218);
-  --muted-foreground: oklch(0.4495 0.0486 39.211);
-  --accent: oklch(0.8952 0.0504 146.0366);
-  --accent-foreground: oklch(0.4254 0.1159 144.3078);
-  --destructive: oklch(0.5386 0.1937 26.7249);
-  --border: oklch(0.8805 0.0208 74.6428);
-  --input: oklch(0.8805 0.0208 74.6428);
-  --ring: oklch(0.5234 0.1347 144.1672);
-  --destructive-foreground: oklch(1 0 0);
+html {
+  scrollbar-gutter: stable;
+  color-scheme: light;
 }
 
-.dark {
-  --background: oklch(0.2683 0.0279 150.7681);
-  /* Notice component semantic colors — lighter for dark backgrounds */
-  --notice-note: oklch(0.72 0.16 240);
-  --notice-tip: oklch(0.72 0.15 160);
-  --notice-info: oklch(0.78 0.13 75);
-  --notice-warning: oklch(0.72 0.18 25);
-  --foreground: oklch(0.9423 0.0097 72.6595);
-  --card: oklch(0.3327 0.0271 146.9867);
-  --card-foreground: oklch(0.9423 0.0097 72.6595);
-  --popover: oklch(0.3327 0.0271 146.9867);
-  --popover-foreground: oklch(0.9423 0.0097 72.6595);
-  --primary: oklch(0.6731 0.1624 144.2083);
-  --primary-foreground: oklch(0.2157 0.0453 145.7256);
-  --secondary: oklch(0.3942 0.0265 142.9926);
-  --secondary-foreground: oklch(0.897 0.0166 142.5518);
-  --muted: oklch(0.3327 0.0271 146.9867);
-  --muted-foreground: oklch(0.8579 0.0174 76.0955);
-  --accent: oklch(0.5752 0.1446 144.1813);
-  --accent-foreground: oklch(0.9423 0.0097 72.6595);
-  --destructive: oklch(0.5386 0.1937 26.7249);
-  --border: oklch(0.3942 0.0265 142.9926);
-  --input: oklch(0.3942 0.0265 142.9926);
-  --ring: oklch(0.6731 0.1624 144.2083);
-  --destructive-foreground: oklch(0.9423 0.0097 72.6595);
+html.dark { color-scheme: dark; }
+
+html,
+body {
+  inline-size: 100%;
+  min-block-size: 100%;
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
+body {
+  display: flex;
+  flex-direction: column;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans-iansui);
+  letter-spacing: var(--tracking-normal);
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+}
 
-  html {
-    scrollbar-gutter: stable;
-    color-scheme: light;
-  }
+html.huninn body { font-family: var(--font-sans-huninn); }
 
-  ::selection {
-    @apply bg-primary/20 text-foreground;
-  }
+::selection {
+  background: color-mix(in oklch, var(--primary) 20%, transparent);
+  color: var(--foreground);
+}
 
-  html.dark {
-    color-scheme: dark;
-  }
+header {
+  position: fixed;
+  z-index: 50;
+  inset: 0 0 auto;
+  padding-block: 1.25rem;
+  background: color-mix(in oklch, var(--background) 60%, transparent);
+  backdrop-filter: blur(12px);
+}
 
-  html.huninn body {
-    @apply font-sans-huninn;
-  }
+main {
+  flex: 1;
+  padding-block: 6rem 1.5rem;
+}
 
-  html,
-  body {
-    @apply size-full;
-  }
+footer {
+  padding-block: 1.25rem;
+  font-size: 0.875rem;
+}
 
-  body {
-    @apply font-sans-iansui antialiased;
-    @apply flex flex-col;
-    @apply bg-background text-foreground;
-    letter-spacing: var(--tracking-normal);
-    font-kerning: normal;
-  }
-
-  header {
-    @apply fixed top-0 right-0 left-0 z-50 py-5;
-    @apply bg-background/60;
-    @apply backdrop-blur-md;
-  }
-
-  main {
-    @apply flex-1 pt-24 pb-6;
-  }
-
-  footer {
-    @apply py-5 text-sm;
-  }
-
-  html #back-to-top {
-    @apply pointer-events-none opacity-0 transition-opacity duration-300;
-  }
+html #back-to-top {
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 300ms;
 }
 
 html.scrolled #back-to-top {
-  @apply pointer-events-auto opacity-100;
+  pointer-events: auto;
+  opacity: 1;
 }
 
-@layer components {
+.animate {
+  opacity: 0;
+  transform: translateY(0.75rem);
+  transition: opacity 700ms ease-out, transform 700ms ease-out;
+}
+
+.animate.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after { scroll-behavior: auto !important; }
+
   .animate {
-    @apply translate-y-3 opacity-0;
-    @apply transition-all duration-700 ease-out;
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
-
-  .animate.show {
-    @apply translate-y-0 opacity-100;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .animate {
-      transition: none;
-      opacity: 1;
-      transform: none;
-    }
-  }
-
-  /* Article typography lives in ../content/styles/article.css. */
 }
