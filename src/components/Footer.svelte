@@ -12,7 +12,7 @@
     <div class="footer-inner">
       <!-- Top row: masthead + service links -->
       <div class="top-row">
-        <span>— Vartifact / Personal Site</span>
+        <span>Vartifact / Contact Sheet Reading Room</span>
         <div class="links">
           <Link href="/blog" underline={false} class="footer-link">Writing</Link
           >
@@ -67,8 +67,8 @@
     gap: 0.75rem 1.5rem;
     margin-bottom: 1rem;
     color: var(--muted-foreground);
-    font: 10px var(--font-mono);
-    letter-spacing: 0.2em;
+    font: 600 10px var(--font-sans);
+    letter-spacing: 0.14em;
     text-transform: uppercase;
   }
   .links {
@@ -101,11 +101,16 @@
     height: 2rem;
     align-items: center;
     justify-content: center;
+    border: 1px solid transparent;
     border-radius: var(--radius-md);
     color: var(--muted-foreground) !important;
   }
   :global(.rss:hover) {
     color: var(--primary) !important;
+  }
+  :global(.rss:focus-visible) {
+    border-color: var(--ring);
+    outline: none;
   }
   :global(.rss svg) {
     width: 1rem;

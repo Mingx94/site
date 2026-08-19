@@ -1,248 +1,275 @@
 ---
 name: Vartifact
-description: A warm personal technical journal built for clear, calm reading.
+description: A photographic reading room for personal technical writing.
 colors:
-  evergreen-ink: "oklch(0.5234 0.1347 144.1672)"
-  evergreen-bright: "oklch(0.6731 0.1624 144.2083)"
-  soft-parchment: "oklch(0.9711 0.0074 80.7211)"
-  charcoal-moss: "oklch(0.2683 0.0279 150.7681)"
-  moss-surface: "oklch(0.3327 0.0271 146.9867)"
-  brown-ink: "oklch(0.3 0.0358 30.2042)"
-  cream-ink: "oklch(0.9423 0.0097 72.6595)"
-  soft-sepia: "oklch(0.4495 0.0486 39.211)"
-  sage-wash: "oklch(0.8952 0.0504 146.0366)"
-  hairline-clay: "oklch(0.8805 0.0208 74.6428)"
-  moss-border: "oklch(0.3942 0.0265 142.9926)"
-  signal-red: "oklch(0.5386 0.1937 26.7249)"
+  proof-paper: "#ebe3d8"
+  silver-gelatin: "#1f1e1d"
+  paper-card: "#eee8de"
+  paper-highlight: "#f8f2e3"
+  oxide-red: "#a33f29"
+  cream-mark: "#fff9ef"
+  warm-grey: "#dfd5c8"
+  muted-ink: "#665e56"
+  red-wash: "#c97055"
+  red-brown-ink: "#442319"
+  error-red: "#a9362b"
+  hairline: "#9f968c"
+  film-black: "#1c1a1a"
+  film-caption: "#eee6db"
+  darkroom: "#171615"
+  dark-card: "#211f1d"
+  dark-popover: "#282522"
+  dark-oxide: "#df8063"
+  dark-muted: "#bcb1a5"
+  dark-hairline: "#5f5750"
 typography:
   display:
-    fontFamily: "Schibsted Grotesk, Huninn, sans-serif"
-    fontSize: "clamp(3.25rem, 13vw, 8.5rem)"
-    fontWeight: 700
-    lineHeight: 0.88
-    letterSpacing: "-0.05em"
-  headline:
-    fontFamily: "Schibsted Grotesk, Huninn, sans-serif"
+    fontFamily: "Noto Serif TC, serif"
     fontSize: "clamp(3rem, 10vw, 6rem)"
-    fontWeight: 700
+    fontWeight: 500
     lineHeight: 0.95
-    letterSpacing: "-0.05em"
-  title:
-    fontFamily: "Schibsted Grotesk, Huninn, sans-serif"
-    fontSize: "1.5rem"
-    fontWeight: 600
-    lineHeight: 1.375
+    letterSpacing: "-0.035em"
+  headline:
+    fontFamily: "Noto Serif TC, serif"
+    fontSize: "clamp(2.25rem, 6vw, 4.5rem)"
+    fontWeight: 500
+    lineHeight: 1.05
     letterSpacing: "-0.025em"
+  title:
+    fontFamily: "Noto Serif TC, serif"
+    fontSize: "clamp(1.4rem, 3vw, 2rem)"
+    fontWeight: 500
+    lineHeight: 1.25
   body:
-    fontFamily: "Schibsted Grotesk, Iansui, sans-serif"
+    fontFamily: "Noto Serif TC, serif"
     fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.9
-    letterSpacing: "normal"
+  interface:
+    fontFamily: "Noto Sans TC, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 500
+    lineHeight: 1.5
   label:
-    fontFamily: "JetBrains Mono, monospace"
+    fontFamily: "Noto Sans TC, sans-serif"
     fontSize: "0.6875rem"
-    fontWeight: 400
+    fontWeight: 600
     lineHeight: 1.25
-    letterSpacing: "0.2em"
+    letterSpacing: "0.14em"
 rounded:
-  sm: "4px"
-  md: "6px"
-  lg: "8px"
-  xl: "12px"
+  square: "0px"
+  tight: "2px"
+  frame: "4px"
+  pill: "999px"
 spacing:
-  xs: "4px"
-  sm: "8px"
-  md: "16px"
-  lg: "24px"
-  xl: "32px"
+  xs: "8px"
+  sm: "16px"
+  md: "24px"
+  lg: "32px"
+  xl: "48px"
   section: "64px"
 components:
   button-primary:
-    backgroundColor: "{colors.evergreen-ink}"
-    textColor: "{colors.soft-parchment}"
-    typography: "{typography.label}"
-    rounded: "{rounded.md}"
+    backgroundColor: "{colors.oxide-red}"
+    textColor: "{colors.cream-mark}"
+    typography: "{typography.interface}"
+    rounded: "{rounded.frame}"
     padding: "8px 16px"
     height: "36px"
   button-outline:
-    backgroundColor: "{colors.soft-parchment}"
-    textColor: "{colors.brown-ink}"
-    typography: "{typography.label}"
-    rounded: "{rounded.md}"
+    backgroundColor: "{colors.proof-paper}"
+    textColor: "{colors.silver-gelatin}"
+    typography: "{typography.interface}"
+    rounded: "{rounded.frame}"
     padding: "8px 16px"
     height: "36px"
-  input-text:
+  search-field:
     backgroundColor: "transparent"
-    textColor: "{colors.brown-ink}"
+    textColor: "{colors.silver-gelatin}"
+    typography: "{typography.interface}"
+    rounded: "{rounded.square}"
+    padding: "16px 16px 16px 28px"
+  contact-field:
+    backgroundColor: "transparent"
+    textColor: "{colors.silver-gelatin}"
     typography: "{typography.body}"
-    rounded: "0px"
+    rounded: "{rounded.square}"
     padding: "8px 0"
-  article-card:
-    backgroundColor: "{colors.soft-parchment}"
-    textColor: "{colors.brown-ink}"
-    rounded: "{rounded.lg}"
-    padding: "12px 48px 12px 16px"
+  article-row:
+    backgroundColor: "transparent"
+    textColor: "{colors.silver-gelatin}"
+    typography: "{typography.title}"
+    rounded: "{rounded.square}"
+    padding: "24px 0"
+  reaction-chip:
+    backgroundColor: "transparent"
+    textColor: "{colors.silver-gelatin}"
+    typography: "{typography.interface}"
+    rounded: "{rounded.pill}"
+    padding: "6px 12px"
 ---
 
 # Design System: Vartifact
 
 ## Overview
 
-**Creative North Star: "The Quiet Technical Journal"**
+**Creative North Star: "The Contact Sheet Reading Room"**
 
-Vartifact feels like a carefully kept personal journal for the web. It combines the clarity of technical documentation with the warmth of paper, personal notes, and authored observations. The design is calm and editorial, but it should never feel cold or corporate.
+Vartifact treats each article as a selected photographic frame. The visual world joins a working darkroom with a quiet editorial reading room: warm proof paper supports the page, near-black film holds real cover images, and oxide-red registration marks identify active or selected material.
 
-The system uses large confident titles, long comfortable reading rhythm, quiet hairline dividers, and small monospaced labels. Green is used as ink: a focused signal for active states, punctuation, links, and meaningful actions. Soft shadows give buttons, cards, and floating controls a friendly tactile response without turning the site into a layered application dashboard.
+The system is image-first without competing with the writing. Large serif titles and long-form text provide the authored voice; the sans family handles navigation, metadata, controls, and technical indexing. Flat rules, square frames, and restrained motion keep the site precise rather than nostalgic or ornamental.
 
 **Key Characteristics:**
 
-- Warm paper-like surfaces with dark natural ink.
-- Large editorial titles paired with small technical labels.
-- Generous reading space inside a compact 64rem page frame.
-- Hairline structure, gentle corners, and restrained soft depth.
-- Calm motion that supports reading and respects reduced-motion settings.
+- Real article photography appears in film-edged frames.
+- Warm proof-paper surfaces replace sterile white.
+- Oxide red marks selection, links, progress, and action.
+- Serif reading voice and sans interface voice are the only two type families.
+- Hairline rules, registration marks, and numbered frames provide structure.
 
 ## Colors
 
-The palette pairs warm neutral paper with natural green ink and a deep moss night theme.
+The light theme resembles warm photographic proof paper; the dark theme becomes a near-black darkroom with softened cream text. Oxide red is the single recurring signal color.
 
 ### Primary
 
-- **Evergreen Ink** (oklch(0.5234 0.1347 144.1672)): The main action and emphasis color. Use it for active navigation, links, title punctuation, progress, selected controls, and primary buttons.
-- **Evergreen Bright** (oklch(0.6731 0.1624 144.2083)): The dark-theme form of the main accent, tuned to stay visible against Charcoal Moss.
+- **Oxide Red:** Active navigation, links, selection, reading progress, crop marks, and primary actions.
+- **Dark Oxide:** The higher-contrast dark-theme form of the same signal.
+
+### Secondary
+
+- **Red Wash:** Hover fills and secondary accent surfaces.
+- **Warm Grey:** Quiet tracks and secondary surfaces in light mode.
 
 ### Neutral
 
-- **Soft Parchment** (oklch(0.9711 0.0074 80.7211)): The light page and surface color.
-- **Charcoal Moss** (oklch(0.2683 0.0279 150.7681)): The dark page background.
-- **Moss Surface** (oklch(0.3327 0.0271 146.9867)): The dark-theme card, popover, and muted surface.
-- **Brown Ink** (oklch(0.3 0.0358 30.2042)): The main light-theme text color.
-- **Cream Ink** (oklch(0.9423 0.0097 72.6595)): The main dark-theme text color.
-- **Soft Sepia** (oklch(0.4495 0.0486 39.211)): Secondary light-theme text and metadata.
-- **Sage Wash** (oklch(0.8952 0.0504 146.0366)): Hover fills, selected backgrounds, and quiet emphasis.
-- **Hairline Clay** (oklch(0.8805 0.0208 74.6428)): Light-theme borders and dividers.
-- **Moss Border** (oklch(0.3942 0.0265 142.9926)): Dark-theme borders and dividers.
-- **Signal Red** (oklch(0.5386 0.1937 26.7249)): Errors, destructive actions, and draft warnings only.
+- **Proof Paper:** Main light page surface.
+- **Silver Gelatin:** Main light-theme text and linework.
+- **Paper Card:** Supporting light surface.
+- **Paper Highlight:** Popovers and brighter paper details.
+- **Muted Ink:** Secondary copy, metadata, and captions.
+- **Hairline:** Dividers, form rules, and frame structure.
+- **Film Black:** Contact sheets and photographic frame edges.
+- **Film Caption:** Text printed against Film Black.
+- **Darkroom:** Main dark page surface.
+- **Dark Card / Dark Popover:** Dark-theme supporting surfaces.
+- **Dark Muted / Dark Hairline:** Dark-theme metadata and rules.
+
+### Tertiary
+
+- **Error Red:** Destructive actions and form errors only.
 
 ### Named Rules
 
-**The Green Ink Rule.** Evergreen Ink is a focused signal, not a large decorative field. Keep it rare enough that active states and links remain meaningful.
+**The Oxide Mark Rule.** Oxide red identifies something selected, actionable, or in progress. It is not a large decorative field.
 
-**The Paper and Moss Rule.** Light mode feels like Soft Parchment; dark mode feels like Charcoal Moss. Do not replace either theme with pure white or pure black.
+**The Proof and Film Rule.** Reading happens on paper-toned surfaces; photography is held by near-black film. Keep this contrast legible in both themes.
 
 ## Typography
 
-**Display Font:** Schibsted Grotesk with Huninn fallback
+**Display Font:** Noto Serif TC
 
-**Body Font:** Schibsted Grotesk with switchable Iansui or Huninn Chinese support
+**Body Font:** Noto Serif TC
 
-**Label/Mono Font:** JetBrains Mono
+**Interface and Label Font:** Noto Sans TC
 
-**Character:** The pairing is warm and personal at reading sizes, confident at display sizes, and precise in metadata. The font toggle is part of the product: Chinese readers can choose the texture they prefer.
+**Character:** The serif family gives titles and articles a deliberate printed voice. The sans family keeps controls, dates, indexes, and metadata direct and technical. Labels may use tabular numerals and wide tracking, but they remain Noto Sans TC rather than introducing a third family.
 
 ### Hierarchy
 
-- **Display** (700, fluid 3.25rem–8.5rem, 0.88): Home masthead only; tight, large, and unmistakable.
-- **Headline** (700, fluid 3rem–6rem, 0.95): Route titles such as Articles, About, and Contact.
-- **Title** (600, 1.25rem–1.5rem, 1.375): Article list titles, cards, and subsection titles.
-- **Body** (400, 1rem–1.25rem, up to 1.9): Reading copy, limited to about 65ch for articles and 42rem for introductions.
-- **Label** (400, 10px–11px, 0.2em, uppercase): Navigation indexes, dates, section eyebrows, counts, and form labels.
+- **Display:** Route mastheads and the largest editorial statements.
+- **Headline:** Article titles and selected-feature titles.
+- **Title:** Article rows and section headings.
+- **Body:** Long-form articles, introductions, descriptions, and personal narrative; article prose stays near 65ch.
+- **Interface:** Navigation, buttons, utility links, controls, and compact values.
+- **Label:** Uppercase English metadata, dates, frame numbers, counts, and eyebrow text.
 
 ### Named Rules
 
-**The Two Voices Rule.** Use the sans family for human reading and JetBrains Mono for structure, metadata, indexes, and system labels.
+**The Two Families Rule.** Use Noto Serif TC for authored reading and Noto Sans TC for interface structure. Do not add a display or monospaced family.
 
-**The Tight Title Rule.** Large headings use close tracking and compact line height; body copy restores open rhythm for reading.
+**The Caption Discipline Rule.** Widely tracked uppercase labels stay small and brief; they support the reading hierarchy rather than becoming body copy.
 
 ## Layout
 
-The main frame is centered, no wider than 64rem, with 1.25rem side padding. The fixed header shares this frame and the main content begins below it with 6rem of top space. Article prose narrows to about 65 characters per line.
+The shared container is fluid up to 92rem with responsive side padding. The homepage opens with a balanced cover-and-copy composition, then exposes a horizontally scrollable contact strip before moving into ruled article lists. Archive and supporting routes use masthead strips, generous title blocks, and long vertical sections rather than dashboard grids.
 
-Pages use strong vertical sections rather than card grids. Hairline rules start sections, while repeated spacing steps of 8px, 16px, 24px, 32px, and 64px create the rhythm. Article and social lists use a number, a flexible text column, and a small directional icon.
+Article prose narrows to about 65 characters. The main responsive change occurs at 48rem, where type, gaps, and metadata open up. The table of contents becomes a fixed side rail at 96rem; below that it uses a floating control and bottom sheet. Contact-sheet frames scroll horizontally on narrow screens.
 
-The main responsive change happens at 48rem: titles and copy grow, gaps open, metadata can move into rows, and desktop-only labels appear. Small layout changes begin at 40rem. The article table of contents becomes a fixed side rail only at 96rem; below that it uses a floating button and bottom sheet.
+**The Selected Frame Rule.** Give one image or article clear priority; supporting frames form a sequence instead of an equal card grid.
 
-**The Reading First Rule.** Responsive changes protect line length and reading rhythm before they add decoration or density.
+**The Reading Measure Rule.** Protect prose measure and vertical rhythm before increasing density or decoration.
 
 ## Elevation & Depth
 
-The system is structurally flat, but interactive and floating elements use soft low-contrast shadows. Buttons and active tabs use a small contact shadow. Popovers use a modest floating shadow. The mobile table of contents uses the strongest depth because it must sit clearly above the article.
+The world is flat by default. Paper texture, film fields, borders, and tonal shifts create most depth. Small contact shadows belong to buttons and active tabs; popovers use a modest floating shadow; the mobile table of contents is the only strong overlay.
 
 ### Shadow Vocabulary
 
-- **Contact** (`0 1px 2px color-mix(in oklch, var(--foreground) 8%, transparent)`): Primary and outline buttons, active tabs, and optionally interactive cards.
-- **Floating** (`0 4px 6px color-mix(in oklch, var(--foreground) 12%, transparent)`): Popovers.
-- **Overlay** (`0 25px 50px -12px rgb(0 0 0 / 0.25)`): The mobile table-of-contents sheet.
-- **Focus** (`0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent)`): Keyboard focus.
+- **Contact:** A compact shadow for buttons and selected tab surfaces.
+- **Floating:** A low floating shadow for popovers.
+- **Overlay:** A stronger shadow for the mobile table-of-contents sheet.
+- **Focus:** A three-pixel oxide-tinted ring for keyboard focus.
 
-**The Soft Depth Rule.** Shadows show touch, focus, or floating hierarchy. They do not decorate static page sections.
+### Named Rules
+
+**The Flat Proof Rule.** Static reading surfaces do not float. Elevation communicates interaction or overlay hierarchy only.
 
 ## Shapes
 
-Corners are gently rounded, not pill-shaped by default. The shared scale runs from 4px to 12px, with 6px controls, 8px cards and media, and 12px only for larger soft containers. Hairline borders do most of the structural work.
+The core language is square and photographic. Article images and contact sheets have square edges; horizontal rules and frame borders do the structural work. Standard controls use compact four-pixel corners. Two-pixel corners are limited to tight inline treatments. Pills are reserved for reactions and circular icon controls.
 
-Pills are reserved for reactions and circular icon controls. Article images use 6px–8px clipping. Inputs remain flat and underline-based, which keeps forms connected to the editorial layout.
+Registration crosses, frame numbers, dashed metadata rows, and film captions are signature details. Use them where content behaves like selected material, not as decoration on every section.
 
 ## Components
 
 ### Buttons
 
-Friendly and tactile, but still compact.
-
-- **Shape:** Gently curved controls (6px) with a 36px default minimum height.
-- **Primary:** Evergreen Ink background, light text, 8px × 16px padding, and a soft contact shadow.
-- **Hover / Focus:** Hover deepens the current fill. Keyboard focus adds a 3px Evergreen ring. Disabled controls use 50% opacity.
-- **Outline / Ghost:** Paper or translucent moss surfaces with hairline borders; hover changes to Sage Wash.
-- **Destructive:** Signal Red is reserved for destructive actions and error-related controls.
+- **Shape:** Compact four-pixel corners and a 36px default minimum height.
+- **Primary:** Oxide-red fill with cream text and a small contact shadow.
+- **Outline:** Page-toned fill, hairline border, and the same compact geometry.
+- **Hover / Focus:** Hover shifts the semantic fill; focus uses the shared oxide ring. Disabled controls lose opacity and interaction.
 
 ### Cards / Containers
 
-Cards feel like notes resting on the page, not dashboard widgets.
-
-- **Corner Style:** Gentle 8px corners.
-- **Background:** The current page or card surface.
-- **Shadow Strategy:** Flat at rest or the Contact shadow for an interactive card.
-- **Border:** One-pixel Hairline Clay or Moss Border.
-- **Internal Padding:** Usually 12px vertically and 16px horizontally, with extra space for directional icons.
+- **Article Rows:** Flat ruled rows with a serif title, quiet metadata, and an arrow that moves slightly up and right on hover.
+- **Film Frames:** Near-black borders, real cover photography, a narrow caption rail, frame numbers, and oxide registration marks.
+- **Contact Sheet:** A film-black horizontal strip containing sequential frames; it scrolls on small screens.
+- **Shadow Strategy:** Flat at rest.
 
 ### Inputs / Fields
 
-- **Style:** Transparent fields with a bottom hairline, no enclosing box, and 8px vertical padding.
-- **Focus:** The underline changes to Evergreen Ink.
-- **Error / Disabled:** Signal Red labels errors; disabled actions lose opacity and interaction.
+- **Search:** A full-width field between horizontal rules with a leading search icon and optional result count.
+- **Contact Fields:** Transparent serif inputs with an underline and a small sans label above.
+- **Focus / Error:** Focus changes the underline to Oxide Red; errors use Error Red.
 
 ### Navigation
 
-The header is fixed over a softly blurred page-colored surface. Links use compact sans text; route indexes use tiny JetBrains Mono labels on wider screens. Muted text is the default, Brown or Cream Ink appears on hover, and Evergreen Ink plus a one-pixel underline marks the active route.
+The sticky header sits on a lightly blurred page-colored surface. The wordmark is compact and bold. Route links use Noto Sans TC; the active route turns oxide red and gains a thin underline. The reading-font toggle shows the serif/sans choice directly.
 
-### Tabs
+### Reaction Chips
 
-Tabs sit in a Sage Wash or muted track with 8px outer corners and 6px triggers. The active tab returns to the page surface with a soft contact shadow. Focus uses the shared Evergreen ring.
-
-### Article Lists
-
-Rows are divided by hairlines and use a three-part structure: monospaced number, article copy, and an arrow. Hover changes the title and arrow to Evergreen Ink while the arrow moves slightly up and right.
+Reaction controls are the intentional pill exception. They use a hairline border, compact padding, an emoji, and an optional count; hover and selected states receive a quiet oxide tint.
 
 ### Article Content
 
-Long-form content uses a 65ch reading column, 1.9 paragraph line height, numbered section headings, a large first-letter drop cap, restrained pull quotes, rounded images, and explicit styles for code, tables, notices, accordions, and media.
+Long-form content uses Noto Serif TC, a 65ch measure, open paragraph leading, numbered ruled sections, a large oxide drop cap, restrained pull quotes, square images, and explicit treatments for code, tables, notices, accordions, and media.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- **Do** put article titles and reading content first.
-- **Do** use Soft Parchment, Charcoal Moss, and natural ink colors instead of sterile white and black.
-- **Do** use JetBrains Mono for small structural labels and metadata.
-- **Do** use one-pixel dividers and generous vertical rhythm to organize pages.
-- **Do** keep hover motion small, purposeful, and between 150ms and 300ms.
-- **Do** preserve visible focus states and reduced-motion behavior.
+- **Do** lead with real article cover images and real writing.
+- **Do** pair one selected frame with a supporting sequence.
+- **Do** use Noto Serif TC and Noto Sans TC as the complete type system.
+- **Do** use hairlines, frame numbers, and registration marks to clarify structure.
+- **Do** keep article prose near 65ch and preserve horizontal frame scrolling on mobile.
+- **Do** preserve visible focus states, theme parity, and reduced-motion behavior.
 
 ### Don't:
 
-- **Don't** make the site look like a corporate dashboard with dense panels, charts, or application chrome.
-- **Don't** use neon colors, glowing cyber effects, or loud technology gradients.
-- **Don't** turn every section into a card.
-- **Don't** use large green backgrounds when a small green signal is enough.
-- **Don't** replace the warm editorial rhythm with cramped utility layouts.
+- **Don't** add a third font family, including a separate monospaced label font.
+- **Don't** round article images or turn the contact sheet into generic soft cards.
+- **Don't** use oxide red as a broad background when a small mark communicates selection.
+- **Don't** add shadows to static reading sections.
+- **Don't** invent photography, claims, or content when real article material exists.

@@ -1,23 +1,5 @@
-<script module lang="ts">
-  // Eagerly pick up every post's cover image at two resolutions:
-  // the main srcset (served responsively) and a pre-blurred 32px LQIP.
-  // Module-level so glob evaluates once per build, not per instance.
-  // Paths are relative to this component so Vite can resolve them.
-  const covers = import.meta.glob<{ default: string }>("../posts/*/cover.jpg", {
-    eager: true,
-    query: { enhanced: true, w: "1280;640;400" },
-  });
-
-  const placeholders = import.meta.glob<{ default: string }>(
-    "../posts/*/cover.jpg",
-    {
-      eager: true,
-      query: { enhanced: true, w: "32", blur: "10" },
-    },
-  );
-</script>
-
 <script lang="ts">
+  import PostCover from "@/components/PostCover.svelte";
   import { page } from "$app/state";
   import { staggerIn } from "@/lib/domEvent";
 
@@ -30,49 +12,15 @@
   }
 
   let { title, slug: slugProp = undefined }: Props = $props();
-  let loaded = $state(false);
-
   const slug = $derived(slugProp ?? page.params.slug);
-  const key = $derived(`../posts/${slug}/cover.jpg`);
-  const image = $derived(covers[key]?.default);
-  const placeholder = $derived(placeholders[key]?.default);
 </script>
 
-{#if image && placeholder}
-  <div {@attach staggerIn} class="animate cover">
-    <!-- LQIP: tiny pre-blurred placeholder -->
-    <enhanced:img src={placeholder} alt="" aria-hidden="true" class="image" />
-
-    <!-- Full image fades in on top -->
-    <enhanced:img
-      src={image}
-      sizes="(min-width:1920px) 1280px, (min-width:1080px) 640px, (min-width:768px) 400px"
-      alt={title}
-      fetchpriority="high"
-      onload={() => (loaded = true)}
-      class="image full"
-      style:opacity={loaded ? 1 : 0}
-      loading="eager"
-    />
-  </div>
-{/if}
+<div {@attach staggerIn} class="animate cover">
+  <PostCover {slug} {title} frame="01" priority />
+</div>
 
 <style>
   .cover {
-    position: relative;
-    aspect-ratio: 3/2;
     margin: 2rem auto 0.5rem;
-    overflow: hidden;
-    border-radius: var(--radius-lg);
-  }
-  .image {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .full {
-    transition: opacity 700ms ease-out;
   }
 </style>

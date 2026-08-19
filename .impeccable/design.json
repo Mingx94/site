@@ -1,222 +1,346 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-19T21:18:35.0758887+08:00",
+  "generatedAt": "2026-08-19T22:16:12.1541299+08:00",
   "title": "Design System: Vartifact",
   "extensions": {
     "colorMeta": {
-      "evergreen-ink": {
+      "proof-paper": {
+        "role": "neutral",
+        "displayName": "Proof Paper",
+        "canonical": "#ebe3d8",
+        "tonalRamp": [
+          "color-mix(in oklch, #ebe3d8 25%, black)",
+          "color-mix(in oklch, #ebe3d8 45%, black)",
+          "color-mix(in oklch, #ebe3d8 70%, black)",
+          "#ebe3d8",
+          "color-mix(in oklch, #ebe3d8 80%, white)",
+          "color-mix(in oklch, #ebe3d8 60%, white)",
+          "color-mix(in oklch, #ebe3d8 35%, white)",
+          "color-mix(in oklch, #ebe3d8 15%, white)"
+        ]
+      },
+      "silver-gelatin": {
+        "role": "neutral",
+        "displayName": "Silver Gelatin",
+        "canonical": "#1f1e1d",
+        "tonalRamp": [
+          "color-mix(in oklch, #1f1e1d 70%, black)",
+          "#1f1e1d",
+          "color-mix(in oklch, #1f1e1d 80%, white)",
+          "color-mix(in oklch, #1f1e1d 65%, white)",
+          "color-mix(in oklch, #1f1e1d 50%, white)",
+          "color-mix(in oklch, #1f1e1d 35%, white)",
+          "color-mix(in oklch, #1f1e1d 20%, white)",
+          "color-mix(in oklch, #1f1e1d 8%, white)"
+        ]
+      },
+      "paper-card": {
+        "role": "neutral",
+        "displayName": "Paper Card",
+        "canonical": "#eee8de",
+        "tonalRamp": [
+          "color-mix(in oklch, #eee8de 25%, black)",
+          "color-mix(in oklch, #eee8de 45%, black)",
+          "color-mix(in oklch, #eee8de 70%, black)",
+          "#eee8de",
+          "color-mix(in oklch, #eee8de 80%, white)",
+          "color-mix(in oklch, #eee8de 60%, white)",
+          "color-mix(in oklch, #eee8de 35%, white)",
+          "color-mix(in oklch, #eee8de 15%, white)"
+        ]
+      },
+      "paper-highlight": {
+        "role": "neutral",
+        "displayName": "Paper Highlight",
+        "canonical": "#f8f2e3",
+        "tonalRamp": [
+          "color-mix(in oklch, #f8f2e3 25%, black)",
+          "color-mix(in oklch, #f8f2e3 45%, black)",
+          "color-mix(in oklch, #f8f2e3 70%, black)",
+          "#f8f2e3",
+          "color-mix(in oklch, #f8f2e3 80%, white)",
+          "color-mix(in oklch, #f8f2e3 60%, white)",
+          "color-mix(in oklch, #f8f2e3 35%, white)",
+          "color-mix(in oklch, #f8f2e3 15%, white)"
+        ]
+      },
+      "oxide-red": {
         "role": "primary",
-        "displayName": "Evergreen Ink",
-        "canonical": "oklch(0.5234 0.1347 144.1672)",
+        "displayName": "Oxide Red",
+        "canonical": "#a33f29",
         "tonalRamp": [
-          "oklch(0.15 0.1347 144.1672)",
-          "oklch(0.25 0.1347 144.1672)",
-          "oklch(0.35 0.1347 144.1672)",
-          "oklch(0.45 0.1347 144.1672)",
-          "oklch(0.55 0.1347 144.1672)",
-          "oklch(0.68 0.12 144.1672)",
-          "oklch(0.82 0.08 144.1672)",
-          "oklch(0.95 0.03 144.1672)"
+          "color-mix(in oklch, #a33f29 35%, black)",
+          "color-mix(in oklch, #a33f29 55%, black)",
+          "color-mix(in oklch, #a33f29 78%, black)",
+          "#a33f29",
+          "color-mix(in oklch, #a33f29 80%, white)",
+          "color-mix(in oklch, #a33f29 60%, white)",
+          "color-mix(in oklch, #a33f29 38%, white)",
+          "color-mix(in oklch, #a33f29 16%, white)"
         ]
       },
-      "evergreen-bright": {
-        "role": "primary",
-        "displayName": "Evergreen Bright",
-        "canonical": "oklch(0.6731 0.1624 144.2083)",
-        "tonalRamp": [
-          "oklch(0.15 0.1624 144.2083)",
-          "oklch(0.25 0.1624 144.2083)",
-          "oklch(0.35 0.1624 144.2083)",
-          "oklch(0.45 0.1624 144.2083)",
-          "oklch(0.58 0.1624 144.2083)",
-          "oklch(0.7 0.14 144.2083)",
-          "oklch(0.83 0.09 144.2083)",
-          "oklch(0.95 0.03 144.2083)"
-        ]
-      },
-      "soft-parchment": {
+      "cream-mark": {
         "role": "neutral",
-        "displayName": "Soft Parchment",
-        "canonical": "oklch(0.9711 0.0074 80.7211)",
+        "displayName": "Cream Mark",
+        "canonical": "#fff9ef",
         "tonalRamp": [
-          "oklch(0.15 0.0074 80.7211)",
-          "oklch(0.27 0.0074 80.7211)",
-          "oklch(0.4 0.0074 80.7211)",
-          "oklch(0.53 0.0074 80.7211)",
-          "oklch(0.66 0.0074 80.7211)",
-          "oklch(0.78 0.0074 80.7211)",
-          "oklch(0.89 0.0074 80.7211)",
-          "oklch(0.97 0.0074 80.7211)"
+          "color-mix(in oklch, #fff9ef 25%, black)",
+          "color-mix(in oklch, #fff9ef 45%, black)",
+          "color-mix(in oklch, #fff9ef 70%, black)",
+          "#fff9ef",
+          "color-mix(in oklch, #fff9ef 80%, white)",
+          "color-mix(in oklch, #fff9ef 60%, white)",
+          "color-mix(in oklch, #fff9ef 35%, white)",
+          "color-mix(in oklch, #fff9ef 15%, white)"
         ]
       },
-      "charcoal-moss": {
+      "warm-grey": {
+        "role": "secondary",
+        "displayName": "Warm Grey",
+        "canonical": "#dfd5c8",
+        "tonalRamp": [
+          "color-mix(in oklch, #dfd5c8 25%, black)",
+          "color-mix(in oklch, #dfd5c8 45%, black)",
+          "color-mix(in oklch, #dfd5c8 70%, black)",
+          "#dfd5c8",
+          "color-mix(in oklch, #dfd5c8 80%, white)",
+          "color-mix(in oklch, #dfd5c8 60%, white)",
+          "color-mix(in oklch, #dfd5c8 35%, white)",
+          "color-mix(in oklch, #dfd5c8 15%, white)"
+        ]
+      },
+      "muted-ink": {
         "role": "neutral",
-        "displayName": "Charcoal Moss",
-        "canonical": "oklch(0.2683 0.0279 150.7681)",
+        "displayName": "Muted Ink",
+        "canonical": "#665e56",
         "tonalRamp": [
-          "oklch(0.15 0.0279 150.7681)",
-          "oklch(0.27 0.0279 150.7681)",
-          "oklch(0.39 0.0279 150.7681)",
-          "oklch(0.51 0.0279 150.7681)",
-          "oklch(0.63 0.0279 150.7681)",
-          "oklch(0.75 0.0279 150.7681)",
-          "oklch(0.86 0.02 150.7681)",
-          "oklch(0.95 0.01 150.7681)"
+          "color-mix(in oklch, #665e56 40%, black)",
+          "color-mix(in oklch, #665e56 65%, black)",
+          "#665e56",
+          "color-mix(in oklch, #665e56 82%, white)",
+          "color-mix(in oklch, #665e56 65%, white)",
+          "color-mix(in oklch, #665e56 48%, white)",
+          "color-mix(in oklch, #665e56 28%, white)",
+          "color-mix(in oklch, #665e56 10%, white)"
         ]
       },
-      "moss-surface": {
+      "red-wash": {
+        "role": "secondary",
+        "displayName": "Red Wash",
+        "canonical": "#c97055",
+        "tonalRamp": [
+          "color-mix(in oklch, #c97055 35%, black)",
+          "color-mix(in oklch, #c97055 55%, black)",
+          "color-mix(in oklch, #c97055 78%, black)",
+          "#c97055",
+          "color-mix(in oklch, #c97055 80%, white)",
+          "color-mix(in oklch, #c97055 60%, white)",
+          "color-mix(in oklch, #c97055 38%, white)",
+          "color-mix(in oklch, #c97055 16%, white)"
+        ]
+      },
+      "red-brown-ink": {
         "role": "neutral",
-        "displayName": "Moss Surface",
-        "canonical": "oklch(0.3327 0.0271 146.9867)",
+        "displayName": "Red Brown Ink",
+        "canonical": "#442319",
         "tonalRamp": [
-          "oklch(0.15 0.0271 146.9867)",
-          "oklch(0.27 0.0271 146.9867)",
-          "oklch(0.39 0.0271 146.9867)",
-          "oklch(0.51 0.0271 146.9867)",
-          "oklch(0.63 0.0271 146.9867)",
-          "oklch(0.75 0.0271 146.9867)",
-          "oklch(0.86 0.02 146.9867)",
-          "oklch(0.95 0.01 146.9867)"
+          "color-mix(in oklch, #442319 70%, black)",
+          "#442319",
+          "color-mix(in oklch, #442319 80%, white)",
+          "color-mix(in oklch, #442319 65%, white)",
+          "color-mix(in oklch, #442319 50%, white)",
+          "color-mix(in oklch, #442319 35%, white)",
+          "color-mix(in oklch, #442319 20%, white)",
+          "color-mix(in oklch, #442319 8%, white)"
         ]
       },
-      "brown-ink": {
-        "role": "neutral",
-        "displayName": "Brown Ink",
-        "canonical": "oklch(0.3 0.0358 30.2042)",
-        "tonalRamp": [
-          "oklch(0.15 0.0358 30.2042)",
-          "oklch(0.27 0.0358 30.2042)",
-          "oklch(0.39 0.0358 30.2042)",
-          "oklch(0.51 0.0358 30.2042)",
-          "oklch(0.63 0.0358 30.2042)",
-          "oklch(0.75 0.03 30.2042)",
-          "oklch(0.86 0.02 30.2042)",
-          "oklch(0.95 0.01 30.2042)"
-        ]
-      },
-      "cream-ink": {
-        "role": "neutral",
-        "displayName": "Cream Ink",
-        "canonical": "oklch(0.9423 0.0097 72.6595)",
-        "tonalRamp": [
-          "oklch(0.15 0.0097 72.6595)",
-          "oklch(0.27 0.0097 72.6595)",
-          "oklch(0.39 0.0097 72.6595)",
-          "oklch(0.51 0.0097 72.6595)",
-          "oklch(0.63 0.0097 72.6595)",
-          "oklch(0.75 0.0097 72.6595)",
-          "oklch(0.86 0.0097 72.6595)",
-          "oklch(0.95 0.0097 72.6595)"
-        ]
-      },
-      "soft-sepia": {
-        "role": "neutral",
-        "displayName": "Soft Sepia",
-        "canonical": "oklch(0.4495 0.0486 39.211)",
-        "tonalRamp": [
-          "oklch(0.15 0.0486 39.211)",
-          "oklch(0.27 0.0486 39.211)",
-          "oklch(0.39 0.0486 39.211)",
-          "oklch(0.51 0.0486 39.211)",
-          "oklch(0.63 0.045 39.211)",
-          "oklch(0.75 0.035 39.211)",
-          "oklch(0.86 0.025 39.211)",
-          "oklch(0.95 0.01 39.211)"
-        ]
-      },
-      "sage-wash": {
-        "role": "primary",
-        "displayName": "Sage Wash",
-        "canonical": "oklch(0.8952 0.0504 146.0366)",
-        "tonalRamp": [
-          "oklch(0.15 0.0504 146.0366)",
-          "oklch(0.27 0.0504 146.0366)",
-          "oklch(0.39 0.0504 146.0366)",
-          "oklch(0.51 0.0504 146.0366)",
-          "oklch(0.63 0.0504 146.0366)",
-          "oklch(0.75 0.0504 146.0366)",
-          "oklch(0.86 0.0504 146.0366)",
-          "oklch(0.95 0.025 146.0366)"
-        ]
-      },
-      "hairline-clay": {
-        "role": "neutral",
-        "displayName": "Hairline Clay",
-        "canonical": "oklch(0.8805 0.0208 74.6428)",
-        "tonalRamp": [
-          "oklch(0.15 0.0208 74.6428)",
-          "oklch(0.27 0.0208 74.6428)",
-          "oklch(0.39 0.0208 74.6428)",
-          "oklch(0.51 0.0208 74.6428)",
-          "oklch(0.63 0.0208 74.6428)",
-          "oklch(0.75 0.0208 74.6428)",
-          "oklch(0.86 0.0208 74.6428)",
-          "oklch(0.95 0.01 74.6428)"
-        ]
-      },
-      "moss-border": {
-        "role": "neutral",
-        "displayName": "Moss Border",
-        "canonical": "oklch(0.3942 0.0265 142.9926)",
-        "tonalRamp": [
-          "oklch(0.15 0.0265 142.9926)",
-          "oklch(0.27 0.0265 142.9926)",
-          "oklch(0.39 0.0265 142.9926)",
-          "oklch(0.51 0.0265 142.9926)",
-          "oklch(0.63 0.0265 142.9926)",
-          "oklch(0.75 0.0265 142.9926)",
-          "oklch(0.86 0.02 142.9926)",
-          "oklch(0.95 0.01 142.9926)"
-        ]
-      },
-      "signal-red": {
+      "error-red": {
         "role": "tertiary",
-        "displayName": "Signal Red",
-        "canonical": "oklch(0.5386 0.1937 26.7249)",
+        "displayName": "Error Red",
+        "canonical": "#a9362b",
         "tonalRamp": [
-          "oklch(0.15 0.1937 26.7249)",
-          "oklch(0.25 0.1937 26.7249)",
-          "oklch(0.35 0.1937 26.7249)",
-          "oklch(0.45 0.1937 26.7249)",
-          "oklch(0.56 0.18 26.7249)",
-          "oklch(0.68 0.14 26.7249)",
-          "oklch(0.82 0.09 26.7249)",
-          "oklch(0.95 0.03 26.7249)"
+          "color-mix(in oklch, #a9362b 35%, black)",
+          "color-mix(in oklch, #a9362b 55%, black)",
+          "color-mix(in oklch, #a9362b 78%, black)",
+          "#a9362b",
+          "color-mix(in oklch, #a9362b 80%, white)",
+          "color-mix(in oklch, #a9362b 60%, white)",
+          "color-mix(in oklch, #a9362b 38%, white)",
+          "color-mix(in oklch, #a9362b 16%, white)"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#9f968c",
+        "tonalRamp": [
+          "color-mix(in oklch, #9f968c 30%, black)",
+          "color-mix(in oklch, #9f968c 50%, black)",
+          "color-mix(in oklch, #9f968c 75%, black)",
+          "#9f968c",
+          "color-mix(in oklch, #9f968c 78%, white)",
+          "color-mix(in oklch, #9f968c 58%, white)",
+          "color-mix(in oklch, #9f968c 34%, white)",
+          "color-mix(in oklch, #9f968c 14%, white)"
+        ]
+      },
+      "film-black": {
+        "role": "neutral",
+        "displayName": "Film Black",
+        "canonical": "#1c1a1a",
+        "tonalRamp": [
+          "color-mix(in oklch, #1c1a1a 70%, black)",
+          "#1c1a1a",
+          "color-mix(in oklch, #1c1a1a 80%, white)",
+          "color-mix(in oklch, #1c1a1a 65%, white)",
+          "color-mix(in oklch, #1c1a1a 50%, white)",
+          "color-mix(in oklch, #1c1a1a 35%, white)",
+          "color-mix(in oklch, #1c1a1a 20%, white)",
+          "color-mix(in oklch, #1c1a1a 8%, white)"
+        ]
+      },
+      "film-caption": {
+        "role": "neutral",
+        "displayName": "Film Caption",
+        "canonical": "#eee6db",
+        "tonalRamp": [
+          "color-mix(in oklch, #eee6db 25%, black)",
+          "color-mix(in oklch, #eee6db 45%, black)",
+          "color-mix(in oklch, #eee6db 70%, black)",
+          "#eee6db",
+          "color-mix(in oklch, #eee6db 80%, white)",
+          "color-mix(in oklch, #eee6db 60%, white)",
+          "color-mix(in oklch, #eee6db 35%, white)",
+          "color-mix(in oklch, #eee6db 15%, white)"
+        ]
+      },
+      "darkroom": {
+        "role": "neutral",
+        "displayName": "Darkroom",
+        "canonical": "#171615",
+        "tonalRamp": [
+          "color-mix(in oklch, #171615 70%, black)",
+          "#171615",
+          "color-mix(in oklch, #171615 80%, white)",
+          "color-mix(in oklch, #171615 65%, white)",
+          "color-mix(in oklch, #171615 50%, white)",
+          "color-mix(in oklch, #171615 35%, white)",
+          "color-mix(in oklch, #171615 20%, white)",
+          "color-mix(in oklch, #171615 8%, white)"
+        ]
+      },
+      "dark-card": {
+        "role": "neutral",
+        "displayName": "Dark Card",
+        "canonical": "#211f1d",
+        "tonalRamp": [
+          "color-mix(in oklch, #211f1d 70%, black)",
+          "#211f1d",
+          "color-mix(in oklch, #211f1d 80%, white)",
+          "color-mix(in oklch, #211f1d 65%, white)",
+          "color-mix(in oklch, #211f1d 50%, white)",
+          "color-mix(in oklch, #211f1d 35%, white)",
+          "color-mix(in oklch, #211f1d 20%, white)",
+          "color-mix(in oklch, #211f1d 8%, white)"
+        ]
+      },
+      "dark-popover": {
+        "role": "neutral",
+        "displayName": "Dark Popover",
+        "canonical": "#282522",
+        "tonalRamp": [
+          "color-mix(in oklch, #282522 70%, black)",
+          "#282522",
+          "color-mix(in oklch, #282522 80%, white)",
+          "color-mix(in oklch, #282522 65%, white)",
+          "color-mix(in oklch, #282522 50%, white)",
+          "color-mix(in oklch, #282522 35%, white)",
+          "color-mix(in oklch, #282522 20%, white)",
+          "color-mix(in oklch, #282522 8%, white)"
+        ]
+      },
+      "dark-oxide": {
+        "role": "primary",
+        "displayName": "Dark Oxide",
+        "canonical": "#df8063",
+        "tonalRamp": [
+          "color-mix(in oklch, #df8063 35%, black)",
+          "color-mix(in oklch, #df8063 55%, black)",
+          "color-mix(in oklch, #df8063 78%, black)",
+          "#df8063",
+          "color-mix(in oklch, #df8063 80%, white)",
+          "color-mix(in oklch, #df8063 60%, white)",
+          "color-mix(in oklch, #df8063 38%, white)",
+          "color-mix(in oklch, #df8063 16%, white)"
+        ]
+      },
+      "dark-muted": {
+        "role": "neutral",
+        "displayName": "Dark Muted",
+        "canonical": "#bcb1a5",
+        "tonalRamp": [
+          "color-mix(in oklch, #bcb1a5 30%, black)",
+          "color-mix(in oklch, #bcb1a5 50%, black)",
+          "color-mix(in oklch, #bcb1a5 75%, black)",
+          "#bcb1a5",
+          "color-mix(in oklch, #bcb1a5 78%, white)",
+          "color-mix(in oklch, #bcb1a5 58%, white)",
+          "color-mix(in oklch, #bcb1a5 34%, white)",
+          "color-mix(in oklch, #bcb1a5 14%, white)"
+        ]
+      },
+      "dark-hairline": {
+        "role": "neutral",
+        "displayName": "Dark Hairline",
+        "canonical": "#5f5750",
+        "tonalRamp": [
+          "color-mix(in oklch, #5f5750 40%, black)",
+          "color-mix(in oklch, #5f5750 65%, black)",
+          "#5f5750",
+          "color-mix(in oklch, #5f5750 82%, white)",
+          "color-mix(in oklch, #5f5750 65%, white)",
+          "color-mix(in oklch, #5f5750 48%, white)",
+          "color-mix(in oklch, #5f5750 28%, white)",
+          "color-mix(in oklch, #5f5750 10%, white)"
         ]
       }
     },
     "typographyMeta": {
       "display": {
         "displayName": "Editorial Display",
-        "purpose": "Home masthead only."
+        "purpose": "Route mastheads and the largest editorial statements."
       },
       "headline": {
-        "displayName": "Route Headline",
-        "purpose": "Primary route and article headings."
+        "displayName": "Selected Headline",
+        "purpose": "Article and selected-feature titles."
       },
       "title": {
-        "displayName": "Reading Title",
-        "purpose": "Article rows, cards, and subsections."
+        "displayName": "Article Title",
+        "purpose": "Article rows and section headings."
       },
       "body": {
-        "displayName": "Warm Reading Body",
-        "purpose": "Long-form copy and introductions."
+        "displayName": "Reading Body",
+        "purpose": "Long-form articles, introductions, and narrative."
+      },
+      "interface": {
+        "displayName": "Interface",
+        "purpose": "Navigation, controls, utility links, and compact values."
       },
       "label": {
-        "displayName": "Technical Label",
-        "purpose": "Indexes, metadata, dates, and controls."
+        "displayName": "Film Label",
+        "purpose": "Frame numbers, dates, counts, and eyebrow text."
       }
     },
     "shadows": [
       {
         "name": "contact",
         "value": "0 1px 2px color-mix(in oklch, var(--foreground) 8%, transparent)",
-        "purpose": "Buttons, active tabs, and interactive cards."
+        "purpose": "Buttons and selected tab surfaces."
       },
       {
         "name": "floating",
         "value": "0 4px 6px color-mix(in oklch, var(--foreground) 12%, transparent)",
-        "purpose": "Popovers and small floating surfaces."
+        "purpose": "Popovers."
       },
       {
         "name": "overlay",
@@ -226,35 +350,39 @@
       {
         "name": "focus",
         "value": "0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent)",
-        "purpose": "Visible keyboard focus."
+        "purpose": "Keyboard focus on compact controls."
       }
     ],
     "motion": [
       {
         "name": "state-fast",
         "value": "150ms ease-out",
-        "purpose": "Popover, tab, and control state changes."
+        "purpose": "Popover and compact control state changes."
       },
       {
         "name": "state-standard",
         "value": "200ms ease",
-        "purpose": "Navigation, form, and compact hover states."
+        "purpose": "Navigation, form, and hover states."
       },
       {
         "name": "directional",
         "value": "300ms ease-in-out",
-        "purpose": "Arrows, links, and directional feedback."
+        "purpose": "Arrow and link movement."
       },
       {
         "name": "page-entry",
-        "value": "700ms ease-out",
-        "purpose": "Subtle page-entry rise and fade."
+        "value": "520ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Small opacity-and-rise page entry."
+      },
+      {
+        "name": "image-reveal",
+        "value": "650ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Full-resolution cover fade over its placeholder."
       }
     ],
     "breakpoints": [
-      { "name": "sm", "value": "640px" },
-      { "name": "md", "value": "768px" },
-      { "name": "toc-rail", "value": "1536px" }
+      { "name": "reading", "value": "48rem" },
+      { "name": "toc-rail", "value": "96rem" }
     ]
   },
   "components": [
@@ -262,111 +390,126 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "The compact tactile action used for the main next step.",
+      "description": "The compact oxide action used for submit and primary controls.",
       "html": "<button class=\"ds-btn-primary\">送出 →</button>",
-      "css": ".ds-btn-primary { min-height: 36px; padding: 8px 16px; border: 0; border-radius: var(--radius-md, 6px); background: var(--primary); color: var(--primary-foreground); font: 500 14px/1 var(--font-sans-iansui); box-shadow: 0 1px 2px color-mix(in oklch, var(--foreground) 8%, transparent); transition: background 150ms, box-shadow 150ms; cursor: pointer; } .ds-btn-primary:hover { background: color-mix(in oklch, var(--primary) 90%, transparent); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); } .ds-btn-primary:active { transform: translateY(1px); }"
+      "css": ".ds-btn-primary { min-height: 36px; padding: 8px 16px; border: 0; border-radius: var(--radius-md, 4px); background: var(--primary); color: var(--primary-foreground); box-shadow: 0 1px 2px color-mix(in oklch, var(--foreground) 8%, transparent); font: 500 14px/1 var(--font-sans); transition: background-color 150ms, box-shadow 150ms; cursor: pointer; } .ds-btn-primary:hover { background: color-mix(in oklch, var(--primary) 90%, transparent); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); } .ds-btn-primary:active { transform: translateY(1px); }"
     },
     {
       "name": "Outline Button",
       "kind": "button",
       "refersTo": "button-outline",
-      "description": "A quiet secondary action with a paper surface and hairline edge.",
-      "html": "<button class=\"ds-btn-outline\">回上一頁</button>",
-      "css": ".ds-btn-outline { min-height: 36px; padding: 8px 16px; border: 1px solid var(--border); border-radius: var(--radius-md, 6px); background: var(--background); color: var(--foreground); font: 500 14px/1 var(--font-sans-iansui); box-shadow: 0 1px 2px color-mix(in oklch, var(--foreground) 8%, transparent); transition: background 150ms, color 150ms, border-color 150ms, box-shadow 150ms; cursor: pointer; } .ds-btn-outline:hover { background: var(--accent); color: var(--accent-foreground); } .ds-btn-outline:focus-visible { outline: none; border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); }"
-    },
-    {
-      "name": "Editorial Text Field",
-      "kind": "input",
-      "refersTo": "input-text",
-      "description": "An underline-only field that stays part of the editorial page rhythm.",
-      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">· EMAIL</span><input class=\"ds-field-input\" type=\"email\" placeholder=\"name@example.com\"></label>",
-      "css": ".ds-field { display: grid; gap: 8px; padding-top: 16px; border-top: 1px solid var(--border); color: var(--foreground); } .ds-field-label { color: var(--muted-foreground); font: 400 10px/1.25 var(--font-mono); letter-spacing: 0.2em; text-transform: uppercase; } .ds-field-input { width: 100%; padding: 8px 0; border: 0; border-bottom: 1px solid var(--border); outline: none; background: transparent; color: var(--foreground); font: 400 18px/1.5 var(--font-sans-iansui); transition: border-color 200ms; } .ds-field-input::placeholder { color: color-mix(in oklch, var(--muted-foreground) 40%, transparent); } .ds-field-input:focus { border-color: var(--primary); }"
+      "description": "The quiet utility action used for theme and return controls.",
+      "html": "<button class=\"ds-btn-outline\">回到頂端</button>",
+      "css": ".ds-btn-outline { min-height: 36px; padding: 8px 16px; border: 1px solid var(--border); border-radius: var(--radius-md, 4px); background: var(--background); color: var(--foreground); box-shadow: 0 1px 2px color-mix(in oklch, var(--foreground) 8%, transparent); font: 500 14px/1 var(--font-sans); transition: background-color 150ms, color 150ms, box-shadow 150ms; cursor: pointer; } .ds-btn-outline:hover { background: var(--accent); color: var(--accent-foreground); } .ds-btn-outline:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); } .ds-btn-outline:active { transform: translateY(1px); }"
     },
     {
       "name": "Site Navigation",
       "kind": "nav",
-      "description": "Compact route links with technical indexes and a green active mark.",
-      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link ds-nav-active\" href=\"#\"><span>N°01</span>文章</a><a class=\"ds-nav-link\" href=\"#\"><span>N°02</span>關於</a><a class=\"ds-nav-link\" href=\"#\"><span>N°03</span>聯絡</a></nav>",
-      "css": ".ds-nav { display: flex; align-items: center; gap: 8px; } .ds-nav-link { position: relative; padding: 4px 6px; color: var(--muted-foreground); font: 400 14px/1.5 var(--font-sans-iansui); text-decoration: none; transition: color 200ms; } .ds-nav-link span { margin-right: 4px; font: 400 9px/1 var(--font-mono); letter-spacing: 0.1em; opacity: 0.6; } .ds-nav-link:hover { color: var(--foreground); } .ds-nav-link:focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; } .ds-nav-active { color: var(--primary); } .ds-nav-active::after { content: ''; position: absolute; right: 6px; bottom: -2px; left: 6px; height: 1px; background: var(--primary); }"
+      "description": "Compact route links with a thin oxide active mark.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link ds-nav-active\" href=\"#\">Writing</a><a class=\"ds-nav-link\" href=\"#\">About</a><a class=\"ds-nav-link\" href=\"#\">Contact</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 16px; } .ds-nav-link { position: relative; padding: 6px 7px; color: var(--muted-foreground); font: 500 14px/1.5 var(--font-sans); text-decoration: none; transition: color 200ms; } .ds-nav-link:hover { color: var(--foreground); } .ds-nav-link:focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; } .ds-nav-active { color: var(--primary); } .ds-nav-active::after { position: absolute; right: 6px; bottom: -2px; left: 6px; height: 1px; background: var(--primary); content: ''; }"
+    },
+    {
+      "name": "Film Frame",
+      "kind": "card",
+      "description": "The signature cover treatment with a film edge, frame number, caption rail, and crop marks.",
+      "html": "<figure class=\"ds-film\"><div class=\"ds-film-image\"><i class=\"ds-crop ds-crop-a\"></i><i class=\"ds-crop ds-crop-b\"></i></div><figcaption><span>▲</span><span>01</span><span>Selected frame</span></figcaption></figure>",
+      "css": ".ds-film { width: 360px; margin: 0; padding: 12px 12px 0; background: var(--film); color: var(--film-foreground); } .ds-film-image { position: relative; aspect-ratio: 3 / 2; background: linear-gradient(145deg, color-mix(in srgb, var(--muted) 75%, var(--film)), color-mix(in srgb, var(--primary) 40%, var(--film))); } .ds-film figcaption { display: grid; height: 24px; grid-template-columns: auto auto 1fr; align-items: center; gap: 6px; color: var(--primary); font: 600 10px/1 var(--font-sans); letter-spacing: 0.14em; text-transform: uppercase; } .ds-film figcaption span:last-child { justify-self: center; } .ds-crop { position: absolute; width: 16px; height: 16px; color: var(--primary); } .ds-crop::before, .ds-crop::after { position: absolute; background: currentColor; content: ''; } .ds-crop::before { top: 50%; left: 0; width: 100%; height: 1px; } .ds-crop::after { top: 0; left: 50%; width: 1px; height: 100%; } .ds-crop-a { top: -7px; left: -7px; } .ds-crop-b { right: -7px; bottom: -7px; } .ds-film:focus-within { outline: 2px solid var(--ring); outline-offset: 4px; }"
     },
     {
       "name": "Article Row",
       "kind": "card",
-      "description": "The main article index pattern: number, reading copy, and a directional arrow.",
-      "html": "<a class=\"ds-article-row\" href=\"#\"><span class=\"ds-article-number\">N°01</span><span class=\"ds-article-copy\"><strong>一篇技術文章的標題</strong><small>清楚說明文章會幫助讀者理解什麼。</small><em>2026.08.19 · 5 MIN READ</em></span><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M7 17 17 7M7 7h10v10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/></svg></a>",
-      "css": ".ds-article-row { display: grid; grid-template-columns: 40px 1fr auto; align-items: baseline; gap: 32px; padding: 32px 0; border-top: 1px solid var(--border); color: var(--foreground); text-decoration: none; } .ds-article-number { color: var(--muted-foreground); font: 400 12px/1 var(--font-mono); } .ds-article-copy { display: grid; gap: 8px; min-width: 0; } .ds-article-copy strong { font: 600 24px/1.375 var(--font-sans-iansui); transition: color 300ms; } .ds-article-copy small { color: var(--muted-foreground); font: 400 16px/1.5 var(--font-sans-iansui); } .ds-article-copy em { color: var(--muted-foreground); font: normal 400 10px/1.25 var(--font-mono); letter-spacing: 0.2em; text-transform: uppercase; } .ds-article-row svg { width: 20px; height: 20px; color: color-mix(in oklch, var(--muted-foreground) 60%, transparent); transition: color 300ms, transform 300ms; } .ds-article-row:hover strong, .ds-article-row:hover svg { color: var(--primary); } .ds-article-row:hover svg { transform: translate(2px, -2px); } .ds-article-row:focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; }"
+      "refersTo": "article-row",
+      "description": "A flat ruled index item with article hierarchy and directional feedback.",
+      "html": "<a class=\"ds-article-row\" href=\"#\"><span class=\"ds-article-number\">01</span><span class=\"ds-article-copy\"><strong>初次使用 Astro.js</strong><small>技術文章摘要與閱讀線索。</small></span><span class=\"ds-article-arrow\">↗</span></a>",
+      "css": ".ds-article-row { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; align-items: center; gap: 16px; padding: 24px 0; border-top: 1px solid var(--border); color: var(--foreground); text-decoration: none; } .ds-article-number { color: var(--primary); font: 600 11px/1.25 var(--font-sans); font-variant-numeric: tabular-nums; letter-spacing: 0.14em; } .ds-article-copy { display: grid; gap: 6px; min-width: 0; } .ds-article-copy strong { font: 500 24px/1.25 var(--font-serif); transition: color 220ms; } .ds-article-copy small { color: var(--muted-foreground); font: 400 14px/1.6 var(--font-sans); } .ds-article-arrow { transition: color 220ms, transform 220ms; } .ds-article-row:hover strong, .ds-article-row:hover .ds-article-arrow { color: var(--primary); } .ds-article-row:hover .ds-article-arrow { transform: translate(2px, -2px); } .ds-article-row:focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; }"
     },
     {
-      "name": "Tabs",
-      "kind": "custom",
-      "description": "A quiet segmented control with a tactile active surface.",
-      "html": "<div class=\"ds-tabs\"><button class=\"ds-tab ds-tab-active\">Preview</button><button class=\"ds-tab\">Code</button></div>",
-      "css": ".ds-tabs { display: inline-flex; width: fit-content; height: 36px; align-items: center; padding: 3px; border-radius: var(--radius-lg, 8px); background: var(--muted); color: var(--muted-foreground); } .ds-tab { height: calc(100% - 1px); padding: 4px 8px; border: 1px solid transparent; border-radius: var(--radius-md, 6px); outline: none; background: transparent; color: var(--foreground); font: 500 14px/1 var(--font-sans-iansui); transition: color 150ms, box-shadow 150ms; cursor: pointer; } .ds-tab-active { background: var(--background); box-shadow: 0 1px 2px color-mix(in oklch, var(--foreground) 8%, transparent); } .ds-tab:hover { color: var(--primary); } .ds-tab:focus-visible { border-color: var(--ring); box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); }"
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "search-field",
+      "description": "A full-width archive search held between horizontal rules.",
+      "html": "<label class=\"ds-search\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"7\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/><path d=\"m20 20-4-4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/></svg><input type=\"search\" placeholder=\"搜尋...\"></label>",
+      "css": ".ds-search { position: relative; display: block; border-block: 1px solid var(--border); color: var(--muted-foreground); } .ds-search svg { position: absolute; top: 50%; left: 0; width: 16px; height: 16px; transform: translateY(-50%); } .ds-search input { width: 100%; padding: 16px 16px 16px 28px; border: 0; outline: none; background: transparent; color: var(--foreground); font: 400 16px/1.5 var(--font-sans); } .ds-search input::placeholder { color: color-mix(in oklch, var(--muted-foreground) 60%, transparent); } .ds-search:focus-within { border-color: var(--primary); color: var(--primary); }"
+    },
+    {
+      "name": "Contact Field",
+      "kind": "input",
+      "refersTo": "contact-field",
+      "description": "An underline-only serif field with a small technical label.",
+      "html": "<label class=\"ds-field\"><span>· Email</span><input type=\"email\" value=\"reader@example.com\"></label>",
+      "css": ".ds-field { display: grid; gap: 8px; padding-top: 16px; border-top: 1px solid var(--border); } .ds-field span { color: var(--muted-foreground); font: 600 10px/1.25 var(--font-sans); letter-spacing: 0.14em; text-transform: uppercase; } .ds-field input { width: 100%; padding: 8px 0; border: 0; border-bottom: 1px solid var(--border); outline: none; background: transparent; color: var(--foreground); font: 400 18px/1.5 var(--font-serif); transition: border-color 200ms; } .ds-field input:focus { border-color: var(--primary); }"
     },
     {
       "name": "Reaction Chip",
       "kind": "chip",
-      "description": "A friendly pill-shaped article reaction with a quiet count.",
-      "html": "<button class=\"ds-reaction\" aria-pressed=\"false\"><span aria-hidden=\"true\">💡</span><small>12</small></button>",
-      "css": ".ds-reaction { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; background: transparent; color: var(--foreground); cursor: pointer; transition: background 200ms, border-color 200ms, box-shadow 200ms; } .ds-reaction span { font-size: 18px; } .ds-reaction small { color: var(--muted-foreground); font: 400 14px/1 var(--font-sans-iansui); } .ds-reaction:hover, .ds-reaction[aria-pressed='true'] { border-color: color-mix(in oklch, var(--primary) 30%, transparent); background: color-mix(in oklch, var(--primary) 10%, transparent); box-shadow: 0 1px 2px color-mix(in oklch, var(--foreground) 8%, transparent); } .ds-reaction:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); }"
+      "refersTo": "reaction-chip",
+      "description": "The intentional pill exception for compact article reactions.",
+      "html": "<button class=\"ds-reaction\" aria-pressed=\"true\"><span aria-hidden=\"true\">💡</span><small>12</small></button>",
+      "css": ".ds-reaction { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid color-mix(in oklch, var(--primary) 30%, transparent); border-radius: 999px; background: color-mix(in oklch, var(--primary) 10%, transparent); color: var(--foreground); font-family: var(--font-sans); cursor: pointer; transition: background 200ms, border-color 200ms; } .ds-reaction span { font-size: 18px; } .ds-reaction small { color: var(--muted-foreground); font: 400 14px/1 var(--font-sans); } .ds-reaction:hover { background: var(--muted); } .ds-reaction:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); }"
     }
   ],
   "narrative": {
-    "northStar": "The Quiet Technical Journal",
-    "overview": "Vartifact feels like a carefully kept personal journal for the web. It combines the clarity of technical documentation with the warmth of paper, personal notes, and authored observations. The design is calm and editorial, but it should never feel cold or corporate.\n\nThe system uses large confident titles, long comfortable reading rhythm, quiet hairline dividers, and small monospaced labels. Green is used as ink: a focused signal for active states, punctuation, links, and meaningful actions. Soft shadows give buttons, cards, and floating controls a friendly tactile response without turning the site into a layered application dashboard.",
+    "northStar": "The Contact Sheet Reading Room",
+    "overview": "Vartifact treats each article as a selected photographic frame. The visual world joins a working darkroom with a quiet editorial reading room: warm proof paper supports the page, near-black film holds real cover images, and oxide-red registration marks identify active or selected material.\n\nThe system is image-first without competing with the writing. Large serif titles and long-form text provide the authored voice; the sans family handles navigation, metadata, controls, and technical indexing. Flat rules, square frames, and restrained motion keep the site precise rather than nostalgic or ornamental.",
     "keyCharacteristics": [
-      "Warm paper-like surfaces with dark natural ink.",
-      "Large editorial titles paired with small technical labels.",
-      "Generous reading space inside a compact 64rem page frame.",
-      "Hairline structure, gentle corners, and restrained soft depth.",
-      "Calm motion that supports reading and respects reduced-motion settings."
+      "Real article photography appears in film-edged frames.",
+      "Warm proof-paper surfaces replace sterile white.",
+      "Oxide red marks selection, links, progress, and action.",
+      "Serif reading voice and sans interface voice are the only two type families.",
+      "Hairline rules, registration marks, and numbered frames provide structure."
     ],
     "rules": [
       {
-        "name": "The Green Ink Rule",
-        "body": "Evergreen Ink is a focused signal, not a large decorative field. Keep it rare enough that active states and links remain meaningful.",
+        "name": "The Oxide Mark Rule",
+        "body": "Oxide red identifies something selected, actionable, or in progress. It is not a large decorative field.",
         "section": "colors"
       },
       {
-        "name": "The Paper and Moss Rule",
-        "body": "Light mode feels like Soft Parchment; dark mode feels like Charcoal Moss. Do not replace either theme with pure white or pure black.",
+        "name": "The Proof and Film Rule",
+        "body": "Reading happens on paper-toned surfaces; photography is held by near-black film. Keep this contrast legible in both themes.",
         "section": "colors"
       },
       {
-        "name": "The Two Voices Rule",
-        "body": "Use the sans family for human reading and JetBrains Mono for structure, metadata, indexes, and system labels.",
+        "name": "The Two Families Rule",
+        "body": "Use Noto Serif TC for authored reading and Noto Sans TC for interface structure. Do not add a display or monospaced family.",
         "section": "typography"
       },
       {
-        "name": "The Tight Title Rule",
-        "body": "Large headings use close tracking and compact line height; body copy restores open rhythm for reading.",
+        "name": "The Caption Discipline Rule",
+        "body": "Widely tracked uppercase labels stay small and brief; they support the reading hierarchy rather than becoming body copy.",
         "section": "typography"
       },
       {
-        "name": "The Reading First Rule",
-        "body": "Responsive changes protect line length and reading rhythm before they add decoration or density.",
+        "name": "The Selected Frame Rule",
+        "body": "Give one image or article clear priority; supporting frames form a sequence instead of an equal card grid.",
         "section": "layout"
       },
       {
-        "name": "The Soft Depth Rule",
-        "body": "Shadows show touch, focus, or floating hierarchy. They do not decorate static page sections.",
+        "name": "The Reading Measure Rule",
+        "body": "Protect prose measure and vertical rhythm before increasing density or decoration.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat Proof Rule",
+        "body": "Static reading surfaces do not float. Elevation communicates interaction or overlay hierarchy only.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "Do put article titles and reading content first.",
-      "Do use Soft Parchment, Charcoal Moss, and natural ink colors instead of sterile white and black.",
-      "Do use JetBrains Mono for small structural labels and metadata.",
-      "Do use one-pixel dividers and generous vertical rhythm to organize pages.",
-      "Do keep hover motion small, purposeful, and between 150ms and 300ms.",
-      "Do preserve visible focus states and reduced-motion behavior."
+      "Do lead with real article cover images and real writing.",
+      "Do pair one selected frame with a supporting sequence.",
+      "Do use Noto Serif TC and Noto Sans TC as the complete type system.",
+      "Do use hairlines, frame numbers, and registration marks to clarify structure.",
+      "Do keep article prose near 65ch and preserve horizontal frame scrolling on mobile.",
+      "Do preserve visible focus states, theme parity, and reduced-motion behavior."
     ],
     "donts": [
-      "Don't make the site look like a corporate dashboard with dense panels, charts, or application chrome.",
-      "Don't use neon colors, glowing cyber effects, or loud technology gradients.",
-      "Don't turn every section into a card.",
-      "Don't use large green backgrounds when a small green signal is enough.",
-      "Don't replace the warm editorial rhythm with cramped utility layouts."
+      "Don't add a third font family, including a separate monospaced label font.",
+      "Don't round article images or turn the contact sheet into generic soft cards.",
+      "Don't use oxide red as a broad background when a small mark communicates selection.",
+      "Don't add shadows to static reading sections.",
+      "Don't invent photography, claims, or content when real article material exists."
     ]
   }
 }

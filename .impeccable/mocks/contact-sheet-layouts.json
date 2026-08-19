@@ -1,0 +1,46 @@
+{
+  "title": "Choose the Contact Sheet layout",
+  "question": "All three use the same visual style. Choose the page layout you want me to build.",
+  "options": [
+    {
+      "id": "layout-a",
+      "label": "A — Balanced editorial",
+      "kicker": "ORIGINAL CHOICE",
+      "lineage": "large selected frame, title column, horizontal contact strip",
+      "thesis": "The image and article title share the first screen, followed by a strong six-frame reading strip.",
+      "palette": ["#151515", "#f1eee6", "#ef6a32", "#8ea7a0"],
+      "materials": ["photographic proof paper", "film-edge numbering", "grease-pencil marks"],
+      "viewport": "A balanced two-column feature keeps the title immediately visible while the contact strip spans the page below.",
+      "risk": "The first screen is denser than the other layouts.",
+      "comp": ".impeccable/mocks/decision/model-pick.png"
+    },
+    {
+      "id": "layout-b",
+      "label": "B — Cinematic sequence",
+      "kicker": "VARIATION",
+      "lineage": "extra-wide selected frame, caption headline, horizontal sequence",
+      "thesis": "One wide image sets the mood first, then the title and contact strip guide the reader downward.",
+      "palette": ["#151515", "#f1eee6", "#ef6a32", "#8ea7a0"],
+      "materials": ["photographic proof paper", "film-edge numbering", "grease-pencil marks"],
+      "viewport": "The selected image dominates the opening, with the title and six-frame strip acting as its editorial caption.",
+      "risk": "The article title starts lower on small laptop screens.",
+      "comp": ".impeccable/mocks/contact-sheet-variation-b.png"
+    },
+    {
+      "id": "layout-c",
+      "label": "C — Vertical index",
+      "kicker": "VARIATION",
+      "lineage": "vertical thumbnail rail, large selected frame, editorial detail column",
+      "thesis": "A permanent left index makes the contact-sheet idea strongest while preserving a clear reading column.",
+      "palette": ["#151515", "#f1eee6", "#ef6a32", "#8ea7a0"],
+      "materials": ["photographic proof paper", "film-edge numbering", "grease-pencil marks"],
+      "viewport": "Six small frames feed into one large selected image, with the article title and metadata held on the right.",
+      "risk": "The vertical rail needs a simpler mobile translation.",
+      "comp": ".impeccable/mocks/contact-sheet-variation-c.png"
+    }
+  ],
+  "reroll": false,
+  "buildPath": { "value": "comp", "toggle": false },
+  "canon": false,
+  "steer": true
+}

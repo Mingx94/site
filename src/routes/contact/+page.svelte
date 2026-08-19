@@ -203,8 +203,9 @@
   .page-title {
     color: var(--foreground);
     font-size: clamp(3rem, 10vw, 6rem);
-    font-weight: 700;
-    letter-spacing: -0.05em;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.035em;
     line-height: 0.95;
   }
   .accent {
@@ -215,6 +216,7 @@
     color: var(--muted-foreground);
     font-size: 1.125rem;
     line-height: 1.625;
+    font-family: var(--font-serif);
   }
   .desktop-break {
     display: none;
@@ -270,6 +272,7 @@
     border-bottom: 1px solid var(--border);
     background: transparent;
     font-size: 1.125rem;
+    font-family: var(--font-serif);
     transition: border-color 200ms;
   }
   .input::placeholder {

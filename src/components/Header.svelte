@@ -6,9 +6,9 @@
   import { page } from "$app/state";
 
   const navItems = [
-    { href: "/blog", label: "文章", index: "01" },
-    { href: "/about", label: "關於", index: "02" },
-    { href: "/contact", label: "聯絡", index: "03" },
+    { href: "/blog", label: "Writing" },
+    { href: "/about", label: "About" },
+    { href: "/contact", label: "Contact" },
   ];
 
   function isActive(href: string): boolean {
@@ -32,7 +32,6 @@
             underline={false}
             class="nav-link {isActive(item.href) ? 'active' : ''}"
           >
-            <span class="index" aria-hidden="true">N°{item.index}</span>
             {item.label}
             {#if isActive(item.href)}
               <span class="active-line" aria-hidden="true"></span>
@@ -55,18 +54,22 @@
   .bar {
     justify-content: space-between;
     gap: 1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid
+      color-mix(in srgb, var(--foreground) 72%, transparent);
   }
   nav {
-    gap: 0.25rem;
+    gap: clamp(0.1rem, 1vw, 1.25rem);
   }
   :global(.home-link) {
     color: var(--foreground) !important;
   }
   :global(.nav-link) {
     position: relative;
-    padding: 0.25rem 0.375rem;
+    padding: 0.35rem 0.45rem;
     color: var(--muted-foreground) !important;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+    font-weight: 500;
     transition: color 200ms;
   }
   :global(.nav-link:hover) {
@@ -74,15 +77,6 @@
   }
   :global(.nav-link.active) {
     color: var(--primary) !important;
-  }
-  .index {
-    display: none;
-    margin-right: 0.25rem;
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    opacity: 0.6;
   }
   .active-line {
     position: absolute;
@@ -100,10 +94,7 @@
   }
   @media (width >= 48rem) {
     nav {
-      gap: 0.5rem;
-    }
-    .index {
-      display: inline;
+      gap: 1rem;
     }
   }
 </style>
