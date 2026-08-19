@@ -97,4 +97,32 @@
       gap: 1rem;
     }
   }
+  @media (width < 30rem) {
+    .bar {
+      gap: 0.5rem;
+    }
+    nav {
+      gap: 0;
+    }
+    :global(.nav-link) {
+      padding-inline: 0.25rem;
+      font-size: 0.875rem;
+    }
+    .divider {
+      margin-inline: 0.1rem;
+    }
+    :global(.font-toggle .toggle) {
+      padding-inline: 0.25rem;
+    }
+  }
+  @media (width < 23rem) {
+    .bar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    nav {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
 </style>

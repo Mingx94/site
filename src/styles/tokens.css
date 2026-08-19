@@ -16,6 +16,9 @@
   --tracking-wide: 0.04em;
   --tracking-wider: 0.08em;
   --tracking-widest: 0.14em;
+  --shadow-contact: 0 1px 2px
+    color-mix(in oklch, var(--foreground) 8%, transparent);
+  --shadow-overlay: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --background: #ebe3d8;
   --foreground: #1f1e1d;
   --card: #eee8de;

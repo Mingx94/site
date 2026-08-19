@@ -56,13 +56,14 @@
 
 {#if headings.length > 0}
   <!-- Desktop sidebar (2xl+) — left-anchored to container right edge -->
-  <nav class="desktop-toc">
+  <nav class="desktop-toc" aria-label="文章目錄">
     <div class="toc-title">目錄</div>
     <ul class="toc-list">
       {#each headings as heading (heading.id)}
         <li>
           <a
             href={`#${heading.id}`}
+            aria-current={activeId === heading.id ? "location" : undefined}
             class="toc-link"
             class:subsection={heading.level === 3}
             class:active={activeId === heading.id}
@@ -158,17 +159,11 @@
 <style>
   .desktop-toc {
     display: none;
-    position: fixed;
-    top: 8rem;
-    left: calc(50% + 32rem + 1.5rem);
-    width: 14rem;
-    max-height: calc(100vh - 12rem);
-    overflow-y: auto;
   }
   .toc-title {
     margin-bottom: 0.5rem;
     color: var(--muted-foreground);
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     font-weight: 600;
   }
   .toc-list {
@@ -198,8 +193,8 @@
   .toc-toggle {
     position: fixed;
     z-index: 40;
-    right: 1.5rem;
-    bottom: 1.5rem;
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
     display: flex;
     width: 3rem;
     height: 3rem;
@@ -208,7 +203,7 @@
     color: var(--primary-foreground);
     border-radius: 999px;
     background: var(--primary);
-    box-shadow: 0 10px 15px -3px rgb(0 0 0/0.1);
+    box-shadow: var(--shadow-contact);
     transition: transform 200ms;
   }
   .toc-toggle:hover {
@@ -232,9 +227,9 @@
     max-height: 70vh;
     overflow-y: auto;
     border-top: 1px solid var(--border);
-    border-radius: 1rem 1rem 0 0;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     background: var(--background);
-    box-shadow: 0 25px 50px -12px rgb(0 0 0/0.25);
+    box-shadow: var(--shadow-overlay);
   }
   .mobile-head {
     position: sticky;
@@ -266,7 +261,7 @@
     background: var(--muted);
   }
   .mobile-list {
-    padding: 0.75rem 1.25rem;
+    padding: 0.75rem 1.25rem calc(0.75rem + env(safe-area-inset-bottom));
     font-size: 0.875rem;
   }
   .mobile-list li + li {
@@ -295,6 +290,12 @@
   @media (width >= 96rem) {
     .desktop-toc {
       display: block;
+      position: sticky;
+      top: 6rem;
+      width: 100%;
+      max-height: calc(100vh - 8rem);
+      overflow-y: auto;
+      padding-block: 1rem;
     }
     .toc-toggle,
     .backdrop,

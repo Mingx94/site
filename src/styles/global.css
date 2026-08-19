@@ -14,7 +14,7 @@
   }
   html,
   body {
-    min-inline-size: 20rem;
+    min-inline-size: 0;
     min-block-size: 100%;
   }
   body {
@@ -129,5 +129,11 @@
   .motion-ready .animate:not(.show) {
     opacity: 1;
     transform: none;
+  }
+}
+
+@media (width < 48rem) {
+  html {
+    scrollbar-gutter: auto;
   }
 }
