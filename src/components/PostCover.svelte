@@ -36,11 +36,7 @@
   const accessibleTitle = $derived(title.trim() || "文章");
 </script>
 
-<figure
-  class:compact
-  class="film-frame"
-  style={`--frame-ratio:${ratio}`}
->
+<figure class:compact class="film-frame" style={`--frame-ratio:${ratio}`}>
   <div class="registration top-left" aria-hidden="true"></div>
   <div class="registration top-right" aria-hidden="true"></div>
   <div class="registration bottom-left" aria-hidden="true"></div>
