@@ -79,19 +79,33 @@
           {#each data.recentBlogs as post, index (post.id)}
             <a
               href="/blog/{post.id}"
+              class:single-frame={data.recentBlogs.length === 1}
               class="frame"
               aria-label="閱讀：{post.title}"
             >
               <span class="frame-number"
                 >{String(index + 1).padStart(2, "0")}</span
               >
-              <PostCover
-                slug={post.id}
-                title={post.title}
-                frame={String(index + 1).padStart(2, "0")}
-                compact
-                ratio="4 / 3"
-              />
+              <div class="frame-cover">
+                <PostCover
+                  slug={post.id}
+                  title={post.title}
+                  frame={String(index + 1).padStart(2, "0")}
+                  compact
+                  ratio="4 / 3"
+                />
+              </div>
+              {#if data.recentBlogs.length === 1}
+                <div class="frame-copy">
+                  <span>Selected proof</span>
+                  <strong>{post.title}</strong>
+                  {#if post.description}<p>{post.description}</p>{/if}
+                  <span>
+                    <FormattedDate date={post.date} />
+                    {#if post.readingTime} · {post.readingTime} min{/if}
+                  </span>
+                </div>
+              {/if}
             </a>
           {/each}
         </div>
@@ -174,8 +188,14 @@
   .home {
     display: flex;
     flex-direction: column;
-    gap: clamp(4.5rem, 9vw, 8rem);
     padding-block: 1rem 2rem;
+  }
+  .feature + .contact-sheet {
+    margin-top: clamp(1.5rem, 3vw, 3rem);
+  }
+  .contact-sheet + .writing,
+  .writing + .elsewhere {
+    margin-top: clamp(4.5rem, 9vw, 8rem);
   }
   .feature {
     display: grid;
@@ -281,6 +301,30 @@
     padding: 0.15rem 0.25rem 0.4rem;
     color: var(--film-accent);
   }
+  .frame-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: 1rem 0.25rem 0.5rem;
+    color: color-mix(in srgb, var(--film-foreground) 72%, transparent);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    line-height: 1.55;
+  }
+  .frame-copy strong {
+    color: var(--film-foreground);
+    font-family: var(--font-serif);
+    font-size: clamp(1.35rem, 3vw, 2.25rem);
+    font-weight: 500;
+    line-height: 1.15;
+  }
+  .frame-copy > span {
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
   .frame:hover {
     color: var(--film-accent);
   }
@@ -315,6 +359,11 @@
   .post-list li,
   .elsewhere li {
     border-top: 1px solid var(--border);
+  }
+  .post-list,
+  .elsewhere ul {
+    padding-left: 0;
+    list-style: none;
   }
   .post-link {
     display: grid;
@@ -381,6 +430,9 @@
     .feature {
       grid-template-columns: minmax(0, 1.65fr) minmax(19rem, 0.8fr);
     }
+    h1 {
+      word-break: keep-all;
+    }
     .post-link {
       grid-template-columns: 3rem minmax(0, 1fr) auto auto;
       gap: 2rem;
@@ -390,6 +442,27 @@
     }
     .frame {
       min-width: 15rem;
+    }
+    .frame.single-frame {
+      display: grid;
+      width: 100%;
+      grid-template-areas:
+        "number copy"
+        "cover copy";
+      grid-template-columns: minmax(18rem, 30rem) minmax(14rem, 1fr);
+      column-gap: clamp(1.5rem, 4vw, 4rem);
+      align-items: end;
+    }
+    .single-frame .frame-number {
+      grid-area: number;
+    }
+    .single-frame .frame-cover {
+      grid-area: cover;
+    }
+    .single-frame .frame-copy {
+      grid-area: copy;
+      align-self: center;
+      max-width: 28rem;
     }
   }
 </style>

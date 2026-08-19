@@ -91,7 +91,7 @@
     opacity: 1;
     transform: none;
   }
-  .animate:not(.show) {
+  .motion-ready .animate:not(.show) {
     opacity: 0;
     transform: translateY(0.5rem);
   }
@@ -126,7 +126,7 @@
     animation-iteration-count: 1 !important;
   }
   .animate,
-  .animate:not(.show) {
+  .motion-ready .animate:not(.show) {
     opacity: 1;
     transform: none;
   }

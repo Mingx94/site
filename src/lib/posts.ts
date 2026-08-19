@@ -9,6 +9,7 @@ export interface Post {
   date: Date;
   updated?: Date;
   draft?: boolean;
+  dropCap?: boolean;
   readingTime?: number;
 }
 
@@ -32,7 +33,12 @@ export const allPosts: Post[] = Object.entries(postModules)
       const metadata = file.metadata as Omit<Post, "slug">;
       const raw = rawModules[path] ?? "";
       const readingTime = getReadingTime(raw);
-      const post = { ...metadata, id, readingTime } satisfies Post;
+      const body = raw.replace(
+        /^\s*(?:---[\s\S]*?---|\+\+\+[\s\S]*?\+\+\+)\s*/,
+        "",
+      );
+      const dropCap = metadata.dropCap ?? !/^\p{Number}/u.test(body);
+      const post = { ...metadata, id, readingTime, dropCap } satisfies Post;
 
       return post;
     }

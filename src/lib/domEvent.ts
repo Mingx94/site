@@ -4,6 +4,7 @@ let queue: Element[] = [];
 let scheduled = false;
 
 export const staggerIn: Attachment = (node) => {
+  document.documentElement.classList.add("motion-ready");
   queue.push(node);
 
   if (!scheduled) {
