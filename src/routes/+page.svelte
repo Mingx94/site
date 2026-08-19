@@ -123,37 +123,51 @@
       </section>
     {/if}
 
-    <section
-      aria-labelledby="writing"
-      {@attach staggerIn}
-      class="animate writing"
-    >
-      <div class="section-head">
-        <h2 id="writing">Recent Writing</h2>
-        {#if data.showMoreLink}
-          <Link href="/blog" underline={false} class="index-link"
-            >Full index →</Link
-          >
-        {/if}
-      </div>
-      <ol class="post-list">
-        {#each data.recentBlogs as post, index (post.id)}
-          <li>
-            <a href="/blog/{post.id}" class="post-link">
-              <span class="post-number"
-                >{String(index + 1).padStart(2, "0")}</span
-              >
-              <div class="post-copy">
-                <h3>{post.title}</h3>
-                {#if post.description}<p>{post.description}</p>{/if}
-              </div>
-              <div class="post-meta"><FormattedDate date={post.date} /></div>
-              <RiArrowRightUpLine class="post-arrow" />
-            </a>
-          </li>
-        {/each}
-      </ol>
-    </section>
+    {#if data.recentBlogs.length > 0}
+      <section
+        aria-labelledby="writing"
+        {@attach staggerIn}
+        class="animate writing"
+      >
+        <div class="section-head">
+          <h2 id="writing">Recent Writing</h2>
+          {#if data.showMoreLink}
+            <Link href="/blog" underline={false} class="index-link"
+              >Full index →</Link
+            >
+          {/if}
+        </div>
+        <ol class="post-list">
+          {#each data.recentBlogs as post, index (post.id)}
+            <li>
+              <a href="/blog/{post.id}" class="post-link">
+                <span class="post-number"
+                  >{String(index + 1).padStart(2, "0")}</span
+                >
+                <div class="post-copy">
+                  <h3>{post.title}</h3>
+                  {#if post.description}<p>{post.description}</p>{/if}
+                </div>
+                <div class="post-meta"><FormattedDate date={post.date} /></div>
+                <RiArrowRightUpLine class="post-arrow" aria-hidden="true" />
+              </a>
+            </li>
+          {/each}
+        </ol>
+      </section>
+    {:else}
+      <section
+        aria-labelledby="empty-title"
+        {@attach staggerIn}
+        class="animate empty-writing"
+      >
+        <h1 id="empty-title">目前沒有公開文章</h1>
+        <p>你可以先查看作者介紹，或從其他平台找到 Michael。</p>
+        <Link href="/about" underline={false} class="empty-link"
+          >關於 Michael →</Link
+        >
+      </section>
+    {/if}
 
     {#if elsewhere.length}
       <section
@@ -239,6 +253,7 @@
     font-size: clamp(3rem, 7vw, 5.75rem);
     line-height: 1.03;
     letter-spacing: -0.035em;
+    overflow-wrap: anywhere;
     text-wrap: balance;
   }
   h1 a {
@@ -277,6 +292,7 @@
     color: var(--muted-foreground);
     font-family: var(--font-serif);
     line-height: 1.75;
+    overflow-wrap: anywhere;
   }
   .contact-sheet {
     overflow: hidden;
@@ -411,6 +427,7 @@
     color: var(--muted-foreground);
     font-family: var(--font-serif);
     line-height: 1.6;
+    overflow-wrap: anywhere;
   }
   .post-meta {
     display: none;
@@ -453,12 +470,37 @@
     display: flex;
     margin-top: 3rem;
   }
+  .empty-writing {
+    max-width: 46rem;
+    padding-block: clamp(4rem, 12vw, 9rem);
+    border-block: 1px solid var(--foreground);
+  }
+  .empty-writing h1 {
+    max-width: none;
+    font-size: clamp(2.25rem, 6vw, 4.5rem);
+  }
+  .empty-writing p {
+    max-width: 38rem;
+    margin-top: 1.25rem;
+    color: var(--muted-foreground);
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+  :global(.empty-link) {
+    display: inline-flex !important;
+    min-height: 2.75rem;
+    align-items: center;
+    margin-top: 1.5rem;
+    color: var(--foreground) !important;
+    font-weight: 600;
+  }
+  :global(.empty-link:hover) {
+    color: var(--primary) !important;
+  }
   @media (width >= 52rem) {
     .feature {
       grid-template-columns: minmax(0, 1.65fr) minmax(19rem, 0.8fr);
-    }
-    h1 {
-      word-break: keep-all;
     }
     .post-link {
       grid-template-columns: 3rem minmax(0, 1fr) auto auto;
