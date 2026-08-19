@@ -20,14 +20,36 @@
   const TURNSTILE_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js";
   const loadTurnstile: Attachment = (node) => {
     let widgetId: string | undefined;
+    let widgetSize: "flexible" | "compact" | undefined;
+    let disposed = false;
+
+    const removeWidget = () => {
+      if (!widgetId || !window.turnstile) return;
+      try {
+        window.turnstile.remove(widgetId);
+      } catch {
+        // Already removed by Turnstile internals.
+      }
+      widgetId = undefined;
+    };
 
     const render = () => {
-      if (!window.turnstile) return;
+      if (disposed || !window.turnstile) return;
+      const nextSize =
+        node.getBoundingClientRect().width < 300 ? "compact" : "flexible";
+      if (widgetId && widgetSize === nextSize) return;
+
+      removeWidget();
+      widgetSize = nextSize;
       widgetId = window.turnstile.render(node as HTMLElement, {
         sitekey: data.turnstileSiteKey,
+        size: nextSize,
         "response-field-name": "turnstileToken",
       });
     };
+
+    const resizeObserver = new ResizeObserver(render);
+    resizeObserver.observe(node);
 
     if (window.turnstile) {
       render();
@@ -47,13 +69,9 @@
     }
 
     return () => {
-      if (widgetId && window.turnstile) {
-        try {
-          window.turnstile.remove(widgetId);
-        } catch {
-          // Already removed by Turnstile internals.
-        }
-      }
+      disposed = true;
+      resizeObserver.disconnect();
+      removeWidget();
     };
   };
 </script>
@@ -73,11 +91,7 @@
 
     <!-- Title block -->
     <div class="title-block">
-      <h1
-        {@attach staggerIn}
-        class="animate page-title"
-        style="font-size: clamp(3rem, 10vw, 6rem);"
-      >
+      <h1 {@attach staggerIn} class="animate page-title">
         聯絡<span class="accent">.</span>
       </h1>
 
@@ -267,6 +281,7 @@
   }
   .input {
     width: 100%;
+    min-height: 2.75rem;
     padding-block: 0.5rem;
     color: var(--foreground);
     border-bottom: 1px solid var(--border);
@@ -317,6 +332,33 @@
     }
     .success-title {
       font-size: 1.5rem;
+    }
+  }
+  @media (width >= 64rem) {
+    .contact {
+      display: grid;
+      grid-template-areas:
+        "strip strip"
+        "title form";
+      grid-template-columns: minmax(16rem, 0.8fr) minmax(28rem, 1fr);
+      column-gap: clamp(4rem, 8vw, 9rem);
+      row-gap: 4rem;
+    }
+    .strip {
+      grid-area: strip;
+    }
+    .title-block {
+      grid-area: title;
+      min-width: 0;
+      margin-top: 0;
+    }
+    .contact > section {
+      grid-area: form;
+      min-width: 0;
+    }
+    .form {
+      width: 100%;
+      max-width: 40rem;
     }
   }
 </style>

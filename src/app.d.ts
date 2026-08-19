@@ -5,7 +5,11 @@ declare global {
     turnstile?: {
       render: (
         element: HTMLElement,
-        options: { sitekey: string; "response-field-name"?: string },
+        options: {
+          sitekey: string;
+          size?: "normal" | "flexible" | "compact";
+          "response-field-name"?: string;
+        },
       ) => string;
       remove: (widgetId: string) => void;
     };

@@ -163,4 +163,13 @@
   :global(.dark) .button--variant-ghost:hover {
     background: color-mix(in oklch, var(--accent) 50%, transparent);
   }
+
+  @media (width < 64rem), (pointer: coarse) {
+    .button {
+      min-block-size: 2.75rem;
+    }
+    .button--size-icon {
+      min-inline-size: 2.75rem;
+    }
+  }
 </style>
