@@ -10,18 +10,13 @@
 <footer {@attach staggerIn} class="animate">
   <Container>
     <div class="footer-inner">
-      <!-- Top row: masthead + service links -->
-      <div class="top-row">
-        <span>Vartifact / Contact Sheet Reading Room</span>
-        <div class="links">
-          <Link href="/blog" underline={false} class="footer-link">Writing</Link
-          >
-          <Link href="/about" underline={false} class="footer-link">About</Link>
-          <Link href="/contact" underline={false} class="footer-link"
-            >Contact</Link
-          >
-        </div>
-      </div>
+      <nav class="links" aria-label="頁尾導覽">
+        <Link href="/blog" underline={false} class="footer-link">Writing</Link>
+        <Link href="/about" underline={false} class="footer-link">About</Link>
+        <Link href="/contact" underline={false} class="footer-link"
+          >Contact</Link
+        >
+      </nav>
 
       <!-- Bottom row: copyright + controls -->
       <div class="bottom-row">
@@ -54,26 +49,19 @@
     padding-top: 1.25rem;
     border-top: 1px solid var(--border);
   }
-  .top-row,
   .bottom-row,
   .links,
   .controls {
     display: flex;
   }
-  .top-row {
-    flex-wrap: wrap;
+  .links {
     align-items: baseline;
-    justify-content: space-between;
-    gap: 0.75rem 1.5rem;
+    gap: 1.25rem;
     margin-bottom: 1rem;
     color: var(--muted-foreground);
     font: 600 10px var(--font-sans);
     letter-spacing: 0.14em;
     text-transform: uppercase;
-  }
-  .links {
-    align-items: baseline;
-    gap: 1.25rem;
   }
   :global(.footer-link) {
     color: var(--muted-foreground) !important;
