@@ -251,7 +251,8 @@
   }
   .search-input {
     width: 100%;
-    padding: 1rem 1rem 1rem 1.75rem;
+    min-height: 3.5rem;
+    padding: 1rem 6rem 1rem 1.75rem;
     background: transparent;
     font-size: 1rem;
     outline: none;
@@ -272,23 +273,39 @@
   .post-list li {
     border-top: 1px solid var(--border);
   }
+  .post-list {
+    padding-left: 0;
+    list-style: none;
+  }
   .post-list li:first-child {
     border-top: 0;
   }
   .post-link {
     display: grid;
-    grid-template-columns: 5rem minmax(0, 1fr) auto;
-    align-items: baseline;
-    gap: 1rem;
-    padding-block: 1.5rem;
+    grid-template-areas:
+      "cover cover cover"
+      "number copy arrow";
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 1rem 0.75rem;
+    padding-block: 1.5rem 2rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  .post-cover {
+    grid-area: cover;
+    min-width: 0;
   }
   .post-number {
-    display: none;
+    display: block;
+    grid-area: number;
+    padding-top: 0.25rem;
     color: var(--muted-foreground);
     font: 12px var(--font-mono);
     font-variant-numeric: tabular-nums;
   }
   .post-copy {
+    grid-area: copy;
     min-width: 0;
   }
   .post-copy > * + * {
@@ -322,6 +339,8 @@
     text-transform: uppercase;
   }
   :global(.post-arrow) {
+    grid-area: arrow;
+    align-self: center;
     width: 1rem;
     height: 1rem;
     color: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
@@ -365,6 +384,16 @@
     display: flex;
     margin-top: 3rem;
   }
+  @media (width >= 40rem) {
+    .post-link {
+      grid-template-areas: "cover number copy arrow";
+      grid-template-columns:
+        minmax(10rem, 38%)
+        2.25rem minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 1rem;
+    }
+  }
   @media (width >= 48rem) {
     .archive {
       padding-top: 2rem;
@@ -382,12 +411,13 @@
       margin-bottom: 3.5rem;
     }
     .post-link {
-      grid-template-columns: minmax(11rem, 15rem) 2.5rem minmax(0, 1fr) auto;
+      grid-template-areas: "cover number copy arrow";
+      grid-template-columns:
+        minmax(11rem, 15rem)
+        2.5rem minmax(0, 1fr) auto;
+      align-items: center;
       gap: 2rem;
       padding-block: 2rem;
-    }
-    .post-number {
-      display: block;
     }
     .post-title {
       font-size: 1.5rem;
@@ -401,6 +431,21 @@
     }
     .years {
       gap: 5rem;
+    }
+  }
+  @media (width >= 72rem) {
+    .post-link {
+      grid-template-columns:
+        clamp(17rem, 24vw, 21rem)
+        3rem minmax(0, 1fr) auto;
+      gap: clamp(2rem, 4vw, 4rem);
+      padding-block: 2.5rem;
+    }
+    .post-title {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+    }
+    .post-description {
+      max-width: 48rem;
     }
   }
 </style>
