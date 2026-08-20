@@ -169,9 +169,14 @@
                 underline={false}
                 class="elsewhere-link"
               >
-                <span>{item.label}</span><span class="handle"
+                <span class="elsewhere-name">{item.label}</span
+                ><span class="handle"
                   >{item.handle}</span
                 >
+                <RiArrowRightUpLine
+                  class="elsewhere-arrow"
+                  aria-hidden="true"
+                />
               </Link>
             </li>
           {/each}
@@ -397,12 +402,20 @@
   :global(.elsewhere-link:hover) {
     color: var(--primary) !important;
   }
+  .elsewhere-name {
+    font-size: 1.125rem;
+    line-height: 1.3;
+  }
   .handle {
     color: var(--muted-foreground);
     font-family: var(--font-sans);
     font-size: 0.8rem;
+    min-inline-size: 0;
     overflow-wrap: anywhere;
     text-align: right;
+  }
+  :global(.elsewhere-arrow) {
+    display: none;
   }
   .back-top {
     display: flex;
@@ -449,6 +462,45 @@
     }
     .frame {
       min-width: 15rem;
+    }
+    .elsewhere ul {
+      display: grid;
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(min(100%, 13rem), 1fr)
+      );
+      gap: 0 clamp(2rem, 4vw, 4rem);
+    }
+    :global(.elsewhere-link) {
+      display: grid !important;
+      min-height: 5.5rem;
+      grid-template-areas:
+        "name arrow"
+        "handle arrow";
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      justify-content: initial;
+      gap: 0.25rem 1rem;
+    }
+    .elsewhere-name {
+      grid-area: name;
+      font-size: 1.25rem;
+    }
+    .handle {
+      grid-area: handle;
+      text-align: left;
+    }
+    :global(.elsewhere-arrow) {
+      display: block;
+      width: 1.1rem;
+      height: 1.1rem;
+      grid-area: arrow;
+      transition:
+        color 220ms ease-out,
+        transform 220ms ease-out;
+    }
+    :global(.elsewhere-link:hover .elsewhere-arrow) {
+      transform: translate(0.15rem, -0.15rem);
     }
   }
   @media (width < 40rem) {
