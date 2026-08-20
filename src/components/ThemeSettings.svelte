@@ -25,7 +25,14 @@
 
   onMount(() => {
     const stored = localStorage.getItem("theme");
-    activeTheme = (stored as "light" | "dark") ?? "system";
+    if (stored === "light" || stored === "dark") {
+      activeTheme = stored;
+    } else {
+      activeTheme = "system";
+      if (stored !== null) {
+        localStorage.removeItem("theme");
+      }
+    }
   });
 
   function onSelectTheme(theme: "light" | "dark" | "system") {
@@ -94,7 +101,7 @@
   }
   :global(.theme-option) {
     color: var(--muted-foreground) !important;
-    box-shadow: none !important;
+    background: transparent;
   }
   :global(.theme-option svg) {
     width: 1rem;
