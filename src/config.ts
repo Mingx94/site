@@ -35,7 +35,7 @@ export default {
     reddit: "",
     rss: "/rss.xml",
     email: "",
-    bluesky: "https://bsky.app/profile/vartifact.cc",
+    bluesky: "",
     threads: "",
   },
 };
