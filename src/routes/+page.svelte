@@ -209,7 +209,8 @@
     margin-top: clamp(1.5rem, 3vw, 3rem);
   }
   .contact-sheet + .writing,
-  .writing + .elsewhere {
+  .writing + .elsewhere,
+  .empty-writing + .elsewhere {
     margin-top: clamp(4.5rem, 9vw, 8rem);
   }
   .feature {
@@ -276,7 +277,7 @@
     display: grid;
     grid-template-columns: 5rem 1fr;
     gap: 1rem;
-    padding-block: 0.65rem;
+    padding-block: 0.75rem;
     border-bottom: 1px dashed color-mix(in srgb, var(--border) 70%, transparent);
   }
   dt {
@@ -295,16 +296,15 @@
     overflow-wrap: anywhere;
   }
   .contact-sheet {
-    overflow: hidden;
-    padding: 0.7rem;
+    padding: 0.75rem;
     background: var(--film);
     color: var(--film-foreground);
   }
   .frames {
     display: flex;
-    gap: 0.7rem;
+    gap: 0.75rem;
     overflow-x: auto;
-    padding-bottom: 0.4rem;
+    padding: 0.5rem;
     scrollbar-color: var(--primary) var(--film);
   }
   .frame {
@@ -337,14 +337,14 @@
   }
   .frame-number {
     display: block;
-    padding: 0.15rem 0.25rem 0.4rem;
+    padding: 0.25rem 0.25rem 0.5rem;
     color: var(--film-accent);
   }
   .frame-copy {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.65rem;
+    gap: 0.75rem;
     padding: 1rem 0.25rem 0.5rem;
     color: color-mix(in srgb, var(--film-foreground) 72%, transparent);
     font-family: var(--font-sans);
@@ -373,7 +373,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 0.5rem 1rem;
-    padding: 0.7rem 0.25rem 0.1rem;
+    padding: 0.75rem 0.5rem 0;
     color: color-mix(in srgb, var(--film-foreground) 75%, transparent);
   }
   .section-head {
@@ -498,9 +498,9 @@
   :global(.empty-link:hover) {
     color: var(--primary) !important;
   }
-  @media (width >= 52rem) {
+  @media (width >= 46rem) {
     .feature {
-      grid-template-columns: minmax(0, 1.65fr) minmax(19rem, 0.8fr);
+      grid-template-columns: minmax(0, 1.65fr) minmax(17rem, 0.8fr);
     }
     .post-link {
       grid-template-columns: 3rem minmax(0, 1fr) auto auto;
@@ -516,7 +516,7 @@
       grid-template-areas:
         "number copy"
         "cover copy";
-      grid-template-columns: minmax(18rem, 30rem) minmax(14rem, 1fr);
+      grid-template-columns: minmax(12rem, 18rem) minmax(14rem, 1fr);
       column-gap: clamp(1.5rem, 4vw, 4rem);
       align-items: end;
     }
@@ -534,7 +534,8 @@
   }
   @media (width < 40rem) {
     .contact-sheet + .writing,
-    .writing + .elsewhere {
+    .writing + .elsewhere,
+    .empty-writing + .elsewhere {
       margin-top: 3.5rem;
     }
     .feature-label {
@@ -544,7 +545,7 @@
       margin-top: 1rem;
     }
     .single-frame .frame-copy {
-      gap: 0.45rem;
+      gap: 0.5rem;
     }
     .single-frame .frame-copy strong {
       font-size: 1rem;
