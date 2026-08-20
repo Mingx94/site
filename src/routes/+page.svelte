@@ -449,6 +449,17 @@
   :global(.empty-link:hover) {
     color: var(--primary) !important;
   }
+  @media (width < 46rem) {
+    .feature {
+      gap: 0;
+    }
+    .feature-copy {
+      padding: 1.25rem 1rem 1.5rem;
+      border-inline: 0.75rem solid var(--film);
+      border-bottom: 0.75rem solid var(--film);
+      background: var(--card);
+    }
+  }
   @media (width >= 46rem) {
     .feature {
       grid-template-columns: minmax(0, 1.65fr) minmax(17rem, 0.8fr);
@@ -512,6 +523,10 @@
     }
     .feature-label {
       margin-bottom: 1rem;
+    }
+    .feature-copy {
+      border-inline-width: 0.5rem;
+      border-bottom-width: 0.5rem;
     }
     .feature-description {
       margin-top: 1rem;
