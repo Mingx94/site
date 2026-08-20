@@ -8,29 +8,41 @@
   import type { Post } from "@/lib/posts";
   import RiArrowRightUpLine from "~icons/ri/arrow-right-up-line";
   import RiSearchLine from "~icons/ri/search-line";
+  import { tick } from "svelte";
   import type { PageProps } from "./$types";
 
   let { data }: PageProps = $props();
 
   let query = $state("");
+  let searchInput = $state<HTMLInputElement>();
+
+  const normalizeSearch = (value: string) =>
+    value.trim().normalize("NFKC").toLocaleLowerCase("zh-TW");
 
   const allPosts = $derived(
     data.years.flatMap((year) => data.posts[year] as Post[]),
   );
 
   const total = $derived(allPosts.length);
+  const searchTerm = $derived(normalizeSearch(query));
+  const displayQuery = $derived(query.trim());
 
   const filtered = $derived(
-    query.trim() === ""
+    searchTerm === ""
       ? null
       : allPosts.filter((post) => {
-          const q = query.toLowerCase();
           return (
-            post.title.toLowerCase().includes(q) ||
-            (post.description ?? "").toLowerCase().includes(q)
+            normalizeSearch(post.title).includes(searchTerm) ||
+            normalizeSearch(post.description ?? "").includes(searchTerm)
           );
         }),
   );
+
+  const clearSearch = async () => {
+    query = "";
+    await tick();
+    searchInput?.focus();
+  };
 </script>
 
 <Seo
@@ -43,7 +55,10 @@
     <!-- Masthead strip -->
     <div {@attach staggerIn} class="animate strip">
       <span>· Archive · Writing</span>
-      <span>{String(total).padStart(2, "0")} entries</span>
+      <span>
+        {String(total).padStart(2, "0")}
+        {total === 1 ? "entry" : "entries"}
+      </span>
     </div>
 
     <!-- Title block -->
@@ -62,79 +77,43 @@
       </p>
     </div>
 
-    <!-- Search -->
-    <div {@attach staggerIn} class="animate search">
-      <RiSearchLine class="search-icon" />
-      <label for="blog-search" class="visually-hidden">搜尋文章</label>
-      <input
-        id="blog-search"
-        type="search"
-        bind:value={query}
-        placeholder="搜尋..."
-        class="search-input"
-      />
-      {#if query.trim()}
-        <span class="result-count">
-          {filtered?.length ?? 0} found
-        </span>
-      {/if}
-    </div>
+    {#if total > 0}
+      <!-- Search -->
+      <div
+        {@attach staggerIn}
+        class="animate search"
+        role="search"
+        aria-label="文章搜尋"
+      >
+        <RiSearchLine class="search-icon" aria-hidden="true" />
+        <label for="blog-search" class="visually-hidden">搜尋文章</label>
+        <input
+          id="blog-search"
+          type="search"
+          bind:value={query}
+          bind:this={searchInput}
+          placeholder="搜尋..."
+          maxlength="100"
+          enterkeyhint="search"
+          aria-controls="blog-results"
+          aria-describedby={searchTerm ? "search-status" : undefined}
+          class="search-input"
+        />
+        {#if searchTerm}
+          <span id="search-status" class="result-count" aria-live="polite">
+            {filtered?.length ?? 0}
+            {(filtered?.length ?? 0) === 1 ? "result" : "results"}
+          </span>
+        {/if}
+      </div>
 
-    {#if filtered !== null}
-      <!-- Search results -->
-      {#if filtered.length > 0}
-        <ol class="post-list">
-          {#each filtered as post, i (post.id)}
-            <li>
-              <a href="/blog/{post.id}" class="post-link">
-                <div class="post-cover">
-                  <PostCover
-                    slug={post.id}
-                    title={post.title}
-                    frame={String(i + 1).padStart(2, "0")}
-                    compact
-                    ratio="4 / 3"
-                  />
-                </div>
-                <span class="post-number">
-                  N°{String(i + 1).padStart(2, "0")}
-                </span>
-                <div class="post-copy">
-                  <h3 class="post-title">
-                    {post.title}
-                  </h3>
-                  {#if post.description}
-                    <p class="post-description">
-                      {post.description}
-                    </p>
-                  {/if}
-                  <div class="post-meta">
-                    <FormattedDate date={post.date} />
-                  </div>
-                </div>
-                <RiArrowRightUpLine class="post-arrow" />
-              </a>
-            </li>
-          {/each}
-        </ol>
-      {:else}
-        <p class="empty">找不到相關文章。</p>
-      {/if}
-    {:else}
-      <!-- Year groups -->
-      <div class="years">
-        {#each data.years as year (year)}
-          <section {@attach staggerIn} class="animate">
-            <div class="year-head">
-              <h2 class="eyebrow">
-                · Year · {year}
-              </h2>
-              <span class="count">
-                {data.posts[year].length} entries
-              </span>
-            </div>
+      <div id="blog-results">
+        {#if filtered !== null}
+          <!-- Search results -->
+          {#if filtered.length > 0}
+            <h2 class="visually-hidden">搜尋結果</h2>
             <ol class="post-list">
-              {#each data.posts[year] as post, i (post.id)}
+              {#each filtered as post, i (post.id)}
                 <li>
                   <a href="/blog/{post.id}" class="post-link">
                     <div class="post-cover">
@@ -162,14 +141,86 @@
                         <FormattedDate date={post.date} />
                       </div>
                     </div>
-                    <RiArrowRightUpLine class="post-arrow" />
+                    <RiArrowRightUpLine class="post-arrow" aria-hidden="true" />
                   </a>
                 </li>
               {/each}
             </ol>
-          </section>
-        {/each}
+          {:else}
+            <div class="empty">
+              <p>
+                找不到「<bdi>{displayQuery}</bdi>」相關文章。
+              </p>
+              <button class="clear-search" type="button" onclick={clearSearch}>
+                清除搜尋
+              </button>
+            </div>
+          {/if}
+        {:else}
+          <!-- Year groups -->
+          <div class="years">
+            {#each data.years as year (year)}
+              <section {@attach staggerIn} class="animate">
+                <div class="year-head">
+                  <h2 class="eyebrow">
+                    · Year · {year}
+                  </h2>
+                  <span class="count">
+                    {data.posts[year].length}
+                    {data.posts[year].length === 1 ? "entry" : "entries"}
+                  </span>
+                </div>
+                <ol class="post-list">
+                  {#each data.posts[year] as post, i (post.id)}
+                    <li>
+                      <a href="/blog/{post.id}" class="post-link">
+                        <div class="post-cover">
+                          <PostCover
+                            slug={post.id}
+                            title={post.title}
+                            frame={String(i + 1).padStart(2, "0")}
+                            compact
+                            ratio="4 / 3"
+                          />
+                        </div>
+                        <span class="post-number">
+                          N°{String(i + 1).padStart(2, "0")}
+                        </span>
+                        <div class="post-copy">
+                          <h3 class="post-title">
+                            {post.title}
+                          </h3>
+                          {#if post.description}
+                            <p class="post-description">
+                              {post.description}
+                            </p>
+                          {/if}
+                          <div class="post-meta">
+                            <FormattedDate date={post.date} />
+                          </div>
+                        </div>
+                        <RiArrowRightUpLine
+                          class="post-arrow"
+                          aria-hidden="true"
+                        />
+                      </a>
+                    </li>
+                  {/each}
+                </ol>
+              </section>
+            {/each}
+          </div>
+        {/if}
       </div>
+    {:else}
+      <section
+        class="empty archive-empty"
+        aria-labelledby="archive-empty-title"
+      >
+        <h2 id="archive-empty-title">目前沒有公開文章。</h2>
+        <p>新的文章會出現在這裡。</p>
+        <a href="/" class="empty-link">回到首頁 →</a>
+      </section>
     {/if}
   </div>
 
@@ -231,7 +282,7 @@
   :global(.search-icon) {
     position: absolute;
     top: 50%;
-    left: 0;
+    inset-inline-start: 0;
     width: 1rem;
     height: 1rem;
     color: var(--muted-foreground);
@@ -252,7 +303,8 @@
   .search-input {
     width: 100%;
     min-height: 3.5rem;
-    padding: 1rem 6rem 1rem 1.75rem;
+    padding-block: 1rem;
+    padding-inline: 1.75rem 6rem;
     background: transparent;
     font-size: 1rem;
     outline: none;
@@ -263,7 +315,7 @@
   .result-count {
     position: absolute;
     top: 50%;
-    right: 0;
+    inset-inline-end: 0;
     color: var(--muted-foreground);
     font: 10px var(--font-mono);
     letter-spacing: 0.2em;
@@ -317,6 +369,7 @@
     font-family: var(--font-serif);
     font-weight: 500;
     line-height: 1.375;
+    overflow-wrap: anywhere;
     transition: color 300ms;
   }
   .post-link:hover .post-title {
@@ -327,6 +380,7 @@
     overflow: hidden;
     color: var(--muted-foreground);
     font-size: 0.875rem;
+    overflow-wrap: anywhere;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     line-clamp: 2;
@@ -353,9 +407,42 @@
     transform: translate(0.125rem, -0.125rem);
   }
   .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
     padding-block: 4rem;
     color: var(--muted-foreground);
     text-align: center;
+  }
+  .empty bdi {
+    overflow-wrap: anywhere;
+  }
+  .clear-search,
+  .empty-link {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    padding-inline: 0.25rem;
+    color: var(--foreground);
+    border-bottom: 1px solid var(--primary);
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    text-decoration: none;
+  }
+  .clear-search:hover,
+  .empty-link:hover {
+    color: var(--primary);
+  }
+  .archive-empty {
+    border-block: 1px solid var(--border);
+  }
+  .archive-empty h2 {
+    color: var(--foreground);
+    font-family: var(--font-serif);
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 500;
   }
   .years {
     display: flex;

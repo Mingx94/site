@@ -46,7 +46,7 @@
     <enhanced:img
       src={image}
       sizes={compact
-        ? "(min-width: 48rem) 240px, 65vw"
+        ? "(min-width: 72rem) 336px, (min-width: 48rem) 240px, (min-width: 40rem) 38vw, 100vw"
         : "(min-width: 80rem) 820px, 100vw"}
       alt={accessibleTitle}
       fetchpriority={priority ? "high" : "auto"}
