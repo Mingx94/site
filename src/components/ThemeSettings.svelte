@@ -1,22 +1,21 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { toggleTheme } from "@/lib/theme";
-  import LucideMoon from "~icons/lucide/moon";
-  import LucideMonitor from "~icons/lucide/monitor";
-  import LucideSun from "~icons/lucide/sun";
-  import { Button } from "./ui/button";
 
   const themeList = [
     {
       name: "淺色",
+      shortName: "淺",
       value: "light",
     },
     {
       name: "深色",
+      shortName: "深",
       value: "dark",
     },
     {
       name: "系統",
+      shortName: "系",
       value: "system",
     },
   ] as const;
@@ -47,80 +46,77 @@
   }
 </script>
 
-{#snippet themeIcon(theme: "light" | "dark" | "system")}
-  {#if theme === "system"}
-    <LucideMonitor />
-  {:else if theme === "dark"}
-    <LucideMoon />
-  {:else}
-    <LucideSun />
-  {/if}
-{/snippet}
-
 <div class="theme-settings" role="group" aria-label="色彩主題">
   <span class="theme-label" aria-hidden="true">主題</span>
-  <div class="themes">
-    {#each themeList as theme (theme.value)}
-      <Button
-        variant="ghost"
-        size="sm"
-        onclick={() => onSelectTheme(theme.value)}
-        aria-pressed={activeTheme === theme.value}
-        title="切換為{theme.name}主題"
-        class="theme-option {activeTheme === theme.value ? 'active' : ''}"
-      >
-        {@render themeIcon(theme.value)}
-        <span>{theme.name}</span>
-      </Button>
-    {/each}
-  </div>
+  {#each themeList as theme, index (theme.value)}
+    {#if index > 0}
+      <span class="divider" aria-hidden="true">/</span>
+    {/if}
+    <button
+      type="button"
+      onclick={() => onSelectTheme(theme.value)}
+      aria-pressed={activeTheme === theme.value}
+      aria-label="{theme.name}主題"
+      title="切換為{theme.name}主題"
+      class:active={activeTheme === theme.value}
+      class="theme-option"
+    >
+      {theme.shortName}
+    </button>
+  {/each}
 </div>
 
 <style>
-  .theme-settings,
-  .themes {
+  .theme-settings {
     display: flex;
     align-items: center;
-  }
-  .theme-settings {
-    gap: 0.5rem;
-  }
-  .theme-label {
     color: var(--muted-foreground);
     font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  .theme-label {
+    margin-inline-end: 0.375rem;
     font-size: 0.6875rem;
     font-weight: 600;
     letter-spacing: 0.14em;
   }
-  .themes {
-    gap: 0.25rem;
-    border: 1px solid var(--border);
+  .theme-option {
+    display: inline-flex;
+    min-inline-size: 1.75rem;
+    min-block-size: 2rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
     border-radius: var(--radius-md);
-    padding: 0.125rem;
-    background: color-mix(in srgb, var(--card) 72%, transparent);
-  }
-  :global(.theme-option) {
-    color: var(--muted-foreground) !important;
+    padding: 0.25rem 0.375rem;
     background: transparent;
+    color: var(--muted-foreground);
+    line-height: 1;
+    transition:
+      color 150ms,
+      background-color 150ms;
   }
-  :global(.theme-option svg) {
-    width: 1rem;
-    height: 1rem;
-  }
-  :global(.theme-option:hover) {
-    color: var(--foreground) !important;
+  .theme-option:hover {
+    color: var(--foreground);
     background: color-mix(in oklch, var(--primary) 8%, transparent);
   }
-  :global(.theme-option.active) {
-    color: var(--primary) !important;
-    background: color-mix(in oklch, var(--primary) 10%, transparent);
+  .theme-option.active {
+    color: var(--primary);
+    font-weight: 600;
   }
-  @media (width < 40rem) {
-    :global(.theme-option) {
-      padding-inline: 0.5rem;
-    }
-    :global(.theme-option svg) {
-      display: none;
+  .theme-option:focus-visible {
+    border-color: var(--ring);
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent);
+  }
+  .divider {
+    color: var(--border);
+  }
+  @media (width < 64rem), (pointer: coarse) {
+    .theme-option {
+      min-inline-size: 2.75rem;
+      min-block-size: 2.75rem;
     }
   }
 </style>
