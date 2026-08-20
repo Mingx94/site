@@ -4,7 +4,6 @@
   import config from "@/config";
   import { staggerIn } from "@/lib/domEvent";
   import Link from "./Link.svelte";
-  import RiRssLine from "~icons/ri/rss-line";
 </script>
 
 <footer {@attach staggerIn} class="animate">
@@ -12,6 +11,13 @@
     <div class="footer-inner">
       <nav class="links" aria-label="頁尾導覽">
         <Link href="/blog" underline={false} class="footer-link">Writing</Link>
+        <Link
+          href="/rss.xml"
+          external={true}
+          underline={false}
+          class="footer-link"
+          aria-label="RSS 訂閱">RSS</Link
+        >
         <Link href="/about" underline={false} class="footer-link">About</Link>
         <Link href="/contact" underline={false} class="footer-link"
           >Contact</Link
@@ -23,19 +29,7 @@
         <span class="copyright">
           {config.params.copyright}
         </span>
-        <div class="controls">
-          <Link
-            aria-label="RSS 訂閱"
-            title="RSS"
-            href="/rss.xml"
-            external={true}
-            underline={false}
-            class="rss"
-          >
-            <RiRssLine />
-          </Link>
-          <ThemeSettings />
-        </div>
+        <ThemeSettings />
       </div>
     </div>
   </Container>
@@ -50,8 +44,7 @@
     border-top: 1px solid var(--border);
   }
   .bottom-row,
-  .links,
-  .controls {
+  .links {
     display: flex;
   }
   .links {
@@ -79,31 +72,6 @@
   .copyright {
     color: var(--muted-foreground);
   }
-  .controls {
-    align-items: center;
-    gap: 0.5rem;
-  }
-  :global(.rss) {
-    display: inline-flex !important;
-    width: 2rem;
-    height: 2rem;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid transparent;
-    border-radius: var(--radius-md);
-    color: var(--muted-foreground) !important;
-  }
-  :global(.rss:hover) {
-    color: var(--primary) !important;
-  }
-  :global(.rss:focus-visible) {
-    border-color: var(--ring);
-    outline: none;
-  }
-  :global(.rss svg) {
-    width: 1rem;
-    height: 1rem;
-  }
   @media (width < 64rem), (pointer: coarse) {
     :global(.footer-link) {
       display: inline-flex !important;
@@ -111,10 +79,6 @@
       min-height: 2.75rem;
       align-items: center;
       justify-content: center;
-    }
-    :global(.rss) {
-      width: 2.75rem;
-      height: 2.75rem;
     }
   }
 </style>
