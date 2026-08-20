@@ -4,9 +4,7 @@
   import LucideMoon from "~icons/lucide/moon";
   import LucideMonitor from "~icons/lucide/monitor";
   import LucideSun from "~icons/lucide/sun";
-  import RiPaletteLine from "~icons/ri/palette-line";
   import { Button } from "./ui/button";
-  import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
   const themeList = [
     {
@@ -52,56 +50,66 @@
   {/if}
 {/snippet}
 
-<Popover>
-  <PopoverTrigger>
-    {#snippet child({ props })}
+<div class="theme-settings" role="group" aria-label="色彩主題">
+  <span class="theme-label" aria-hidden="true">主題</span>
+  <div class="themes">
+    {#each themeList as theme (theme.value)}
       <Button
-        {...props}
-        variant="outline"
-        class="theme-trigger"
-        aria-label="主題設定"
-        title="主題設定"
+        variant="ghost"
+        size="sm"
+        onclick={() => onSelectTheme(theme.value)}
+        aria-pressed={activeTheme === theme.value}
+        title="切換為{theme.name}主題"
+        class="theme-option {activeTheme === theme.value ? 'active' : ''}"
       >
-        <RiPaletteLine />
+        {@render themeIcon(theme.value)}
+        <span>{theme.name}</span>
       </Button>
-    {/snippet}
-  </PopoverTrigger>
-  <PopoverContent align="end" width="fit">
-    <div class="themes">
-      {#each themeList as theme (theme.value)}
-        <Button
-          variant="outline"
-          onclick={() => onSelectTheme(theme.value)}
-          aria-pressed={activeTheme === theme.value}
-          title={theme.name}
-          class={activeTheme === theme.value ? "active" : ""}
-        >
-          {@render themeIcon(theme.value)}
-        </Button>
-      {/each}
-    </div>
-  </PopoverContent>
-</Popover>
+    {/each}
+  </div>
+</div>
 
 <style>
+  .theme-settings,
   .themes {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
   }
-  :global(.themes svg),
-  :global([aria-label="主題設定"] svg) {
+  .theme-settings {
+    gap: 0.5rem;
+  }
+  .theme-label {
+    color: var(--muted-foreground);
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+  }
+  .themes {
+    gap: 0.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.125rem;
+    background: color-mix(in srgb, var(--card) 72%, transparent);
+  }
+  :global(.theme-option) {
+    color: var(--muted-foreground) !important;
+    box-shadow: none !important;
+  }
+  :global(.theme-option svg) {
     width: 1rem;
     height: 1rem;
   }
-  :global(.themes .active) {
-    color: var(--primary);
-    border-color: color-mix(in oklch, var(--primary) 40%, transparent);
+  :global(.theme-option.active) {
+    color: var(--primary) !important;
     background: color-mix(in oklch, var(--primary) 10%, transparent);
   }
-  @media (width < 64rem), (pointer: coarse) {
-    :global(.theme-trigger) {
-      min-block-size: 2.75rem;
+  @media (width < 40rem) {
+    :global(.theme-option) {
+      padding-inline: 0.5rem;
+    }
+    :global(.theme-option svg) {
+      display: none;
     }
   }
 </style>
