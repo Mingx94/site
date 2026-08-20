@@ -358,17 +358,24 @@
     min-height: 2.75rem;
     padding-block: 0.5rem;
     color: var(--foreground);
+    border: 0;
     border-bottom: 1px solid var(--border);
+    border-radius: 0;
     background: transparent;
+    box-shadow: none;
     font-size: 1.125rem;
     font-family: var(--font-serif);
     transition: border-color 200ms;
+    appearance: none;
   }
   .input::placeholder {
     color: color-mix(in oklch, var(--muted-foreground) 40%, transparent);
   }
   .input:focus {
-    border-color: var(--primary);
+    border-bottom-color: var(--primary);
+  }
+  .input:focus-visible {
+    border-bottom-width: 2px;
     outline: none;
   }
   .message {
