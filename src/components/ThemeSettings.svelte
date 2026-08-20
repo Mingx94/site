@@ -107,6 +107,10 @@
     width: 1rem;
     height: 1rem;
   }
+  :global(.theme-option:hover) {
+    color: var(--foreground) !important;
+    background: color-mix(in oklch, var(--primary) 8%, transparent);
+  }
   :global(.theme-option.active) {
     color: var(--primary) !important;
     background: color-mix(in oklch, var(--primary) 10%, transparent);
