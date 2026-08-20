@@ -278,6 +278,10 @@
     position: relative;
     margin-bottom: 2.5rem;
     border-block: 1px solid var(--border);
+    transition: border-color 200ms ease-out;
+  }
+  .search:focus-within {
+    border-color: var(--primary);
   }
   :global(.search-icon) {
     position: absolute;
@@ -287,7 +291,11 @@
     height: 1rem;
     color: var(--muted-foreground);
     transform: translateY(-50%);
+    transition: color 200ms ease-out;
     pointer-events: none;
+  }
+  .search:focus-within :global(.search-icon) {
+    color: var(--primary);
   }
   .visually-hidden {
     position: absolute;
@@ -305,7 +313,10 @@
     min-height: 3.5rem;
     padding-block: 1rem;
     padding-inline: 1.75rem 6rem;
+    border: 0;
+    border-radius: 0;
     background: transparent;
+    box-shadow: none;
     font-size: 1rem;
     outline: none;
   }
