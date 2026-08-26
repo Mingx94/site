@@ -6,8 +6,13 @@ import { defineConfig } from "astro/config";
 import emdash from "emdash/astro";
 import Icons from "unplugin-icons/vite";
 
+const siteUrl =
+  process.env.CLOUDFLARE_ENV === "preview"
+    ? "https://blog-preview.vartifact.workers.dev"
+    : "https://vartifact.cc";
+
 export default defineConfig({
-  site: "https://vartifact.cc",
+  site: siteUrl,
   output: "server",
   adapter: cloudflare(),
   integrations: [
@@ -16,7 +21,7 @@ export default defineConfig({
     emdash({
       database: d1({ binding: "DB" }),
       storage: r2({ binding: "MEDIA" }),
-      siteUrl: "https://vartifact.cc",
+      siteUrl,
     }),
   ],
   vite: {
