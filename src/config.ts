@@ -2,7 +2,7 @@ export default {
   site: {
     title: "Vartifact | 部落格",
     base_url: import.meta.env.DEV
-      ? "http://localhost:5173"
+      ? "http://localhost:4321"
       : "https://vartifact.cc",
     favicon: "/favicon.svg",
     favicon_dark: "/favicon-dark.svg",

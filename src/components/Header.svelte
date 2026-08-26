@@ -3,7 +3,12 @@
   import FontToggle from "@/components/FontToggle.svelte";
   import Link from "@/components/Link.svelte";
   import Logo from "@/components/Logo.svelte";
-  import { page } from "$app/state";
+
+  interface Props {
+    pathname: string;
+  }
+
+  let { pathname }: Props = $props();
 
   const navItems = [
     { href: "/blog", label: "Writing" },
@@ -13,7 +18,7 @@
 
   function isActive(href: string): boolean {
     return (
-      page.url.pathname === href || page.url.pathname.startsWith(href + "/")
+      pathname === href || pathname.startsWith(href + "/")
     );
   }
 </script>

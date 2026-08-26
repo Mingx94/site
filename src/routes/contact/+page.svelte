@@ -1,19 +1,38 @@
 <script lang="ts">
   import BackToPrev from "@/components/BackToPrev.svelte";
   import Container from "@/components/Container.svelte";
-  import Seo from "@/components/Seo.svelte";
   import { Button } from "@/components/ui/button";
   import { staggerIn } from "@/lib/domEvent";
-  import { submitContact } from "./contact.remote";
   import { tick } from "svelte";
   import type { Attachment } from "svelte/attachments";
 
   let { data } = $props();
 
   let sent = $state(false);
+  let pending = $state(false);
   let errorMsg = $state("");
   let turnstileStatus = $state<"loading" | "ready" | "error">("loading");
   let feedbackElement = $state<HTMLDivElement>();
+
+  async function submit(event: SubmitEvent) {
+    event.preventDefault();
+    errorMsg = "";
+    pending = true;
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        body: new FormData(event.currentTarget as HTMLFormElement),
+      });
+      if (!response.ok) throw new Error();
+      sent = true;
+    } catch {
+      errorMsg = "送出失敗，請再試一次。";
+    } finally {
+      pending = false;
+      await tick();
+      feedbackElement?.focus();
+    }
+  }
 
   // The Turnstile script is idempotent and cached once loaded, so we
   // reuse it across SPA remounts. The widget, on the other hand, holds
@@ -106,11 +125,6 @@
   };
 </script>
 
-<Seo
-  title="聯絡 | Vartifact"
-  description="合作、提問、或打個招呼——請留下訊息。"
-/>
-
 <Container>
   <div class="contact">
     <!-- Masthead strip -->
@@ -148,27 +162,14 @@
         </div>
       {:else}
         <form
-          {...submitContact.enhance(async ({ submit }) => {
-            errorMsg = "";
-            try {
-              if (await submit()) {
-                sent = true;
-              } else {
-                errorMsg = "送出失敗，請再試一次。";
-              }
-            } catch {
-              errorMsg = "送出失敗，請再試一次。";
-            }
-            await tick();
-            feedbackElement?.focus();
-          })}
+          onsubmit={submit}
           class="form"
-          aria-busy={submitContact.pending ? "true" : "false"}
+          aria-busy={pending ? "true" : "false"}
         >
           <div class="field">
             <label for="name" class="label"> · Name · 名稱 </label>
             <input
-              {...submitContact.fields.name.as("text")}
+              name="name"
               id="name"
               required
               autocomplete="name"
@@ -180,7 +181,7 @@
           <div class="field">
             <label for="email" class="label"> · Email </label>
             <input
-              {...submitContact.fields.email.as("email")}
+              name="email"
               id="email"
               required
               autocomplete="email"
@@ -192,7 +193,7 @@
           <div class="field">
             <label for="message" class="label"> · Message · 訊息 </label>
             <textarea
-              {...submitContact.fields.message.as("text")}
+              name="message"
               id="message"
               required
               maxlength={2000}
@@ -232,10 +233,10 @@
             <span class="label"> · Ready to send </span>
             <Button
               type="submit"
-              disabled={!!submitContact.pending || turnstileStatus !== "ready"}
+              disabled={pending || turnstileStatus !== "ready"}
               aria-describedby="turnstile-status"
             >
-              {#if submitContact.pending}
+              {#if pending}
                 送出中…
               {:else if turnstileStatus === "loading"}
                 等待驗證

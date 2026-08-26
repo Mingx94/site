@@ -5,15 +5,25 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "blog",
-	"main": ".svelte-kit/cloudflare/_worker.js",
+	"main": "./src/worker.ts",
 	"compatibility_date": "2026-04-07",
 	"compatibility_flags": [
-		"nodejs_compat",
-		"nodejs_als"
+		"nodejs_compat"
 	],
-	"assets": {
-		"binding": "ASSETS",
-		"directory": ".svelte-kit/cloudflare",
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "blog-emdash"
+		}
+	],
+	"r2_buckets": [
+		{
+			"binding": "MEDIA",
+			"bucket_name": "blog-emdash-media"
+		}
+	],
+	"triggers": {
+		"crons": ["* * * * *", "*/2 * * * *"]
 	},
   "observability": {
     "enabled": true,
@@ -42,12 +52,11 @@
 	"kv_namespaces": [
 		{
 			"binding": "BLOG_KV",
-			"id": "8f933e166b8044e9af33e4ed03f1de39",
-			"remote": true
+			"id": "8f933e166b8044e9af33e4ed03f1de39"
 		},
 	],
 	/**
-	 * Rate limit binding used by blog.remote.ts to cap per-IP abuse on
+	 * Rate limit binding used by Astro API routes to cap per-IP abuse on
 	 * trackView / addReaction / removeReaction.
 	 * limit=30/period=60s chosen conservatively — a real reader won't
 	 * hit 30 counter-writes in a minute; a script will.
@@ -75,6 +84,7 @@
 	},
 	/**
    * Secrets (set via `wrangler secret put`):
-   * - TURNSTILE_SECRET_KEY
+	 * - TURNSTILE_SECRET_KEY
+	 * - EMDASH_ENCRYPTION_KEY
    */
 }

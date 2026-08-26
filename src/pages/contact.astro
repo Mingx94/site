@@ -1,0 +1,11 @@
+---
+import Contact from "@/routes/contact/+page.svelte";
+import Base from "@/layouts/Base.astro";
+import { env } from "cloudflare:workers";
+
+const turnstileSiteKey = env.TURNSTILE_SITE_KEY ?? "";
+---
+
+<Base title="聯絡 | Vartifact" description="合作、提問、或打個招呼——請留下訊息。">
+  <Contact data={{ turnstileSiteKey }} client:load />
+</Base>

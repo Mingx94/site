@@ -3,7 +3,7 @@
   import { zhTW } from "date-fns/locale";
 
   interface Props {
-    date: Date;
+    date: Date | string;
   }
 
   let { date }: Props = $props();

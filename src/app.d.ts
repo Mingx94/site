@@ -18,28 +18,6 @@ declare global {
     };
   }
 
-  namespace Cloudflare {
-    interface Env {
-      TURNSTILE_SECRET_KEY: string;
-      SEND_EMAIL: SendEmail;
-    }
-  }
-
-  interface Array<T> {
-    filter<S extends T>(
-      predicate: (value: T, index: number, array: T[]) => value is S,
-    ): S[];
-  }
-
-  namespace App {
-    // interface Error {}
-    // interface Locals {}
-    // interface PageData {}
-    // interface PageState {}
-    interface Platform {
-      env?: Cloudflare.Env;
-    }
-  }
 }
 
 export {};

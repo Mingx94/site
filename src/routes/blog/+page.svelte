@@ -3,15 +3,14 @@
   import Container from "@/components/Container.svelte";
   import FormattedDate from "@/components/FormattedDate.svelte";
   import PostCover from "@/components/PostCover.svelte";
-  import Seo from "@/components/Seo.svelte";
   import { staggerIn } from "@/lib/domEvent";
   import type { Post } from "@/lib/posts";
   import RiArrowRightUpLine from "~icons/ri/arrow-right-up-line";
   import RiSearchLine from "~icons/ri/search-line";
   import { tick } from "svelte";
-  import type { PageProps } from "./$types";
 
-  let { data }: PageProps = $props();
+  let { data }: { data: { years: string[]; posts: Record<string, Post[]> } } =
+    $props();
 
   let query = $state("");
   let searchInput = $state<HTMLInputElement>();
@@ -44,11 +43,6 @@
     searchInput?.focus();
   };
 </script>
-
-<Seo
-  title="文章 | Vartifact"
-  description="技術隨筆、閱讀筆記，以及其他片段。"
-/>
 
 <Container>
   <div class="archive">
@@ -119,6 +113,7 @@
                     <div class="post-cover">
                       <PostCover
                         slug={post.id}
+                        src={post.cover}
                         title={post.title}
                         frame={String(i + 1).padStart(2, "0")}
                         compact
@@ -177,6 +172,7 @@
                         <div class="post-cover">
                           <PostCover
                             slug={post.id}
+                            src={post.cover}
                             title={post.title}
                             frame={String(i + 1).padStart(2, "0")}
                             compact

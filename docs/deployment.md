@@ -1,74 +1,79 @@
 # Cloudflare 部署
 
-本專案使用 Cloudflare Workers。`wrangler.jsonc` 內的資源 ID 與電子郵件設定屬於目前的 Cloudflare 帳號。改用其他帳號時，必須更換這些值。
+本專案由一個 Astro Worker 同時提供公開網站與 EmDash。正式環境使用 `DB` D1 database 與 `MEDIA` R2 bucket；preview 必須使用不同資源。
 
 ## 前置需求
 
 - Node.js 22 或更新版本
-- 專案依賴已透過 `npm ci` 安裝
-- Wrangler 已登入正確的 Cloudflare 帳號：`npx wrangler login`
+- `npm ci`
+- `npx wrangler login`
+- 將 Cloudflare 建立指令回傳的 resource ID 寫入 `wrangler.jsonc`
 
-## Cloudflare 資源
-
-| 設定 | 用途 | 注意事項 |
-| --- | --- | --- |
-| `BLOG_KV` | 瀏覽次數、reaction 與聯絡表單資料 | 新帳號必須建立 KV namespace，並更換 `id`。 |
-| `BLOG_RATE` | 限制每個 IP 的寫入頻率 | `namespace_id` 必須在帳號內保持唯一。 |
-| `SEND_EMAIL` | 傳送聯絡表單通知 | 先啟用 Email Routing，並驗證目的信箱。 |
-| `TURNSTILE_SITE_KEY` | 在瀏覽器載入 Turnstile | 建立新 widget 後，更換 `wrangler.jsonc` 內的公開金鑰。 |
-| `TURNSTILE_SECRET_KEY` | 在伺服器驗證 Turnstile | 只以 Wrangler secret 儲存，不可提交到 Git。 |
-
-設定正式環境的 Turnstile secret：
+## 建立資源
 
 ```bash
+npx wrangler d1 create blog-emdash
+npx wrangler r2 bucket create blog-emdash-media
+npx wrangler d1 create blog-emdash-preview
+npx wrangler r2 bucket create blog-emdash-media-preview
+```
+
+正式環境保留既有的 `BLOG_KV`、`BLOG_RATE`、`SEND_EMAIL` 與 Turnstile bindings。Preview 設定不得重用正式 D1、R2 或可寫入正式資料的 KV。
+
+## Secrets
+
+產生一次 EmDash encryption key，存入密碼管理器，再設定 Worker secret。不要提交 key。
+
+```bash
+npx emdash secrets generate
+npx wrangler secret put EMDASH_ENCRYPTION_KEY
 npx wrangler secret put TURNSTILE_SECRET_KEY
 ```
 
-若要更換收件地址，請同時更新 `wrangler.jsonc` 與 `src/routes/contact/contact.remote.ts`。兩處的地址必須一致。
+本機 secret 放在未追蹤的 `.dev.vars`。
 
-自訂網域未記錄在 `wrangler.jsonc`。需要時，請在 Cloudflare Dashboard 將網域連接至部署後的 Worker。
-
-## 本機測試
-
-一般畫面與內容開發使用：
+## 本機驗證
 
 ```bash
-npm run dev
-```
-
-此模式沒有 Cloudflare bindings。瀏覽次數和 reaction 不會寫入，聯絡表單也不能完整運作。
-
-要測試 Cloudflare Worker 與 bindings，先建立輸出，再啟動 Wrangler：
-
-```bash
+npm run check
+npm test
 npm run build
 npx wrangler dev
 ```
 
-將本機 secret 放在未追蹤的 `.dev.vars`：
-
-```dotenv
-TURNSTILE_SECRET_KEY=your-secret
-```
-
-`BLOG_KV` 設有 `remote: true`。Wrangler 開發模式會連接設定的遠端 KV。測試寫入可能影響正式資料。
-
-## 部署
+第一次開啟 `/_emdash/admin` 時，EmDash 會建立 schema 並載入 `.emdash/seed.json`。確認範例文章後，套用歷史日期修正：
 
 ```bash
+npx wrangler d1 execute blog-emdash --local --file migrations/0001-content-dates.sql
+```
+
+## 正式部署
+
+1. 匯出正式 D1、從 EmDash Admin 下載內容備份，並另外備份 R2 objects。
+2. 記錄目前可回復的 Worker version。
+3. 執行檢查、測試與建置。
+4. 部署 Worker，讓 EmDash 套用內建 migration 與 seed。
+5. 套用 `migrations/0001-content-dates.sql`。
+6. 完成 smoke test 後才切換自訂網域流量。
+
+```bash
+npx wrangler d1 export blog-emdash --remote --output backup-before-emdash.sql
 npm ci
 npm run check
 npm test
 npm run build
 npx wrangler deploy
+npx wrangler d1 execute blog-emdash --remote --file migrations/0001-content-dates.sql
 ```
 
-本專案沒有 `npm run deploy` 指令。`npm run build` 會先產生 OG 圖，再建立 `.svelte-kit/cloudflare` Worker 輸出。
+Smoke test 必須涵蓋 EmDash setup/login、文章編輯與發布、D1/R2、views/reactions、聯絡表單、公開頁面、Markdown、RSS、sitemap、robots、llms 與 security.txt。
 
-部署後請檢查：
+## 回復
 
-1. 首頁與文章頁可正常開啟。
-2. `/rss.xml`、`/sitemap.xml` 與 `/llms.txt` 可正常讀取。
-3. 瀏覽次數與 reaction 可以更新。
-4. Turnstile 可驗證聯絡表單。
-5. 聯絡表單通知可送到已驗證的信箱。
+若 smoke test 失敗，先將流量切回舊 Worker version，再調查資料問題：
+
+```bash
+npx wrangler rollback
+```
+
+D1 只在確認需要時才由部署前匯出檔還原。R2 使用部署前複製的 objects 還原，避免把正常的新內容一起覆寫。
