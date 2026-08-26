@@ -22,7 +22,7 @@ export function toggleTheme(dark: boolean) {
     document.documentElement.classList.remove("dark");
   }
 
-  window.getComputedStyle(css).opacity;
+  void window.getComputedStyle(css).opacity;
   document.head.removeChild(css);
 }
 

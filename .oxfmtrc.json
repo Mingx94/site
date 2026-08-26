@@ -1,0 +1,13 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "endOfLine": "lf",
+  "printWidth": 80,
+  "ignorePatterns": [
+    ".gitignore",
+    "README.md",
+    ".impeccable/**",
+    ".emdash/migrations.json",
+    "emdash-env.d.ts",
+    "src/worker-configuration.d.ts"
+  ]
+}

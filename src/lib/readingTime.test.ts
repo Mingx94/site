@@ -38,7 +38,8 @@ description: "Lots of extra words in the description lorem ipsum dolor sit amet"
   });
 
   it("strips code fences", () => {
-    const withCode = "中".repeat(100) + "\n```ts\n" + "x ".repeat(5000) + "\n```";
+    const withCode =
+      "中".repeat(100) + "\n```ts\n" + "x ".repeat(5000) + "\n```";
     // Only the 100 CJK chars survive → 1 min (the floor).
     expect(getReadingTime(withCode)).toBe(1);
   });
@@ -53,8 +54,7 @@ description: "Lots of extra words in the description lorem ipsum dolor sit amet"
   });
 
   it("strips image tags but keeps link text", () => {
-    const text =
-      "![cover](/foo.jpg) [看這裡](/bar) " + "中".repeat(500);
+    const text = "![cover](/foo.jpg) [看這裡](/bar) " + "中".repeat(500);
     // link text "看這裡" (3 chars) + 500 CJK ≈ 1.006 min → ceil to 2
     expect(getReadingTime(text)).toBe(2);
   });

@@ -22,7 +22,8 @@ const SECURITY_HEADERS: Record<string, string> = {
   "X-Content-Type-Options": "nosniff",
   "Referrer-Policy": "strict-origin-when-cross-origin",
   "X-Frame-Options": "DENY",
-  "Permissions-Policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+  "Permissions-Policy":
+    "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
 };
 
 const BLOG_POST_PATH = /^\/blog\/([^/]+?)\/?$/;
@@ -44,7 +45,10 @@ export const onRequest = defineMiddleware(async ({ request, url }, next) => {
   const response = await next();
   if (slug) {
     response.headers.append("Vary", "Accept");
-    response.headers.set("Link", `</blog/${encodeURIComponent(slug)}.md>; rel="alternate"; type="text/markdown"`);
+    response.headers.set(
+      "Link",
+      `</blog/${encodeURIComponent(slug)}.md>; rel="alternate"; type="text/markdown"`,
+    );
   }
   for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
     if (!response.headers.has(name)) response.headers.set(name, value);

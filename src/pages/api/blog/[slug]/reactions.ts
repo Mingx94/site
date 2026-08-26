@@ -21,12 +21,6 @@ export const POST: APIRoute = async ({ params, request }) => {
   }
   const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
   return response(
-    await changeReaction(
-      env,
-      params.slug ?? "",
-      body.emoji,
-      body.action,
-      ip,
-    ),
+    await changeReaction(env, params.slug ?? "", body.emoji, body.action, ip),
   );
 };

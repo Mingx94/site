@@ -12,8 +12,7 @@ export const prerender = true;
  */
 export function GET() {
   const body = {
-    $schema:
-      "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+    $schema: "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
     skills: [],
   };
 

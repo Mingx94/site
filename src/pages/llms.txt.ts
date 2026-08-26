@@ -11,8 +11,16 @@ export const GET: APIRoute = async () => {
     "",
     "## Blog posts",
     "",
-    ...posts.map((post) => `- [${post.title}](https://vartifact.cc/blog/${encodeURIComponent(post.id)}.md)${post.description ? `: ${post.description}` : ""}`),
+    ...posts.map(
+      (post) =>
+        `- [${post.title}](https://vartifact.cc/blog/${encodeURIComponent(post.id)}.md)${post.description ? `: ${post.description}` : ""}`,
+    ),
     "",
   ];
-  return new Response(lines.join("\n"), { headers: { "Content-Type": "text/markdown; charset=utf-8", "Cache-Control": "public, max-age=300, s-maxage=3600" } });
+  return new Response(lines.join("\n"), {
+    headers: {
+      "Content-Type": "text/markdown; charset=utf-8",
+      "Cache-Control": "public, max-age=300, s-maxage=3600",
+    },
+  });
 };
