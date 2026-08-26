@@ -1,0 +1,19 @@
+---
+interface Props {
+  date: Date | string;
+}
+
+const date = new Date(Astro.props.date);
+const parts = Object.fromEntries(
+  new Intl.DateTimeFormat("zh-TW", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  })
+    .formatToParts(date)
+    .map(({ type, value }) => [type, value]),
+);
+const formatted = `${parts.year} 年 ${parts.month} 月 ${parts.day} 日`;
+---
+
+<time datetime={date.toISOString()}>{formatted}</time>

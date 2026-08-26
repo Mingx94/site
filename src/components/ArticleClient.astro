@@ -1,12 +1,12 @@
-<script lang="ts">
-  interface Props {
-    slug: string;
-    readingTime: number;
-    draft?: boolean;
-  }
+---
+interface Props {
+  slug: string;
+  readingTime: number;
+  draft?: boolean;
+}
 
-  let { slug, readingTime, draft = false }: Props = $props();
-</script>
+const { slug, readingTime, draft = false } = Astro.props;
+---
 
 <div
   class="progress-track"
@@ -27,10 +27,5 @@
     height: 0.125rem;
     background: color-mix(in oklch, var(--border) 50%, transparent);
   }
-  .progress {
-    height: 100%;
-    background: var(--primary);
-    transform-origin: left;
-    transition: transform 75ms linear;
-  }
+  .progress { height: 100%; background: var(--primary); transform-origin: left; transition: transform 75ms linear; }
 </style>

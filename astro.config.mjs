@@ -1,6 +1,5 @@
 import cloudflare from "@astrojs/cloudflare";
 import react from "@astrojs/react";
-import svelte from "@astrojs/svelte";
 import { d1, r2 } from "@emdash-cms/cloudflare";
 import { cloudflareEmail } from "@emdash-cms/cloudflare/plugins";
 import { formsPlugin } from "@emdash-cms/plugin-forms";
@@ -19,7 +18,6 @@ export default defineConfig({
   adapter: cloudflare(),
   integrations: [
     react(),
-    svelte(),
     emdash({
       database: d1({ binding: "DB" }),
       storage: r2({ binding: "MEDIA" }),
@@ -34,9 +32,9 @@ export default defineConfig({
     }),
   ],
   vite: {
-    plugins: [Icons({ compiler: "svelte" })],
+    plugins: [Icons({ compiler: "astro" })],
     optimizeDeps: {
-      include: ["astro/app/manifest", "@astrojs/svelte/server.js"],
+      include: ["astro/app/manifest"],
     },
   },
   devToolbar: { enabled: false },

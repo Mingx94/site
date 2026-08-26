@@ -1,5 +1,3 @@
-import type { RequestHandler } from "./$types";
-
 export const prerender = true;
 
 /**
@@ -12,7 +10,7 @@ export const prerender = true;
  * with { name, type, description, url, sha256 } — the sha256 must be the
  * digest of the fetched skill document.
  */
-export const GET: RequestHandler = () => {
+export function GET() {
   const body = {
     $schema:
       "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
@@ -25,4 +23,4 @@ export const GET: RequestHandler = () => {
       "Cache-Control": "public, max-age=3600, s-maxage=86400",
     },
   });
-};
+}

@@ -9,10 +9,6 @@
     <span class="divider">/</span>
     <span data-font="sans" class="sans dimmed">黑</span>
   </button>
-  <!-- Styled tooltip. Positioned BELOW the button because the header
-       is `position: fixed; top: 0` (see src/styles/global.css `header`
-       base rule), so rendering it above the button pushes it off the
-       top of the viewport. -->
   <div class="tooltip" aria-hidden="true">
     閱讀字體：<span class="sans">Huninn 黑體</span> /
     <span class="serif">Iansui 襯體</span>
@@ -20,14 +16,11 @@
 </div>
 
 <style>
-  .font-toggle {
-    position: relative;
-  }
+  .font-toggle { position: relative; }
   .toggle {
     display: inline-flex;
     align-items: center;
     gap: 0.125rem;
-    border: 0;
     border: 1px solid transparent;
     border-radius: var(--radius-md);
     padding: 0.25rem 0.5rem;
@@ -37,21 +30,11 @@
     line-height: 1.25rem;
     transition: color 200ms;
   }
-  .toggle:hover {
-    color: var(--foreground);
-  }
-  .serif {
-    font-family: var(--font-serif);
-  }
-  .sans {
-    font-family: var(--font-sans);
-  }
-  .dimmed {
-    opacity: 0.4;
-  }
-  .divider {
-    color: var(--border);
-  }
+  .toggle:hover { color: var(--foreground); }
+  .serif { font-family: var(--font-serif); }
+  .sans { font-family: var(--font-sans); }
+  .dimmed { opacity: 0.4; }
+  .divider { color: var(--border); }
   .tooltip {
     position: absolute;
     inset: 100% 0 auto auto;
@@ -67,11 +50,6 @@
     opacity: 0;
     transition: opacity 150ms;
   }
-  .font-toggle:hover .tooltip {
-    opacity: 1;
-  }
-  .toggle:focus-visible {
-    border-color: var(--ring);
-    outline: none;
-  }
+  .font-toggle:hover .tooltip { opacity: 1; }
+  .toggle:focus-visible { border-color: var(--ring); outline: none; }
 </style>

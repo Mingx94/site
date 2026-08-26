@@ -1,0 +1,39 @@
+<button type="button" class="back-button" data-back-to-prev>
+  <svg viewBox="0 0 24 24" aria-hidden="true" class="arrow">
+    <line x1="5" y1="12" x2="19" y2="12" class="shaft"></line>
+    <polyline points="12 5 5 12 12 19" class="head"></polyline>
+  </svg>
+  <span data-back-label>前往文章列表</span>
+</button>
+
+<style>
+  .back-button {
+    display: inline-flex;
+    min-block-size: 2.25rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.375rem 0.75rem 0.375rem 2rem;
+    background: var(--background);
+    color: var(--foreground);
+    box-shadow: 0 1px 2px color-mix(in oklch, var(--foreground) 8%, transparent);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1;
+    transition: background-color 150ms, color 150ms, border-color 150ms, box-shadow 150ms;
+  }
+  .back-button:hover { background: var(--accent); color: var(--accent-foreground); }
+  .back-button:focus-visible { border-color: var(--ring); outline: none; box-shadow: 0 0 0 3px color-mix(in oklch, var(--ring) 50%, transparent); }
+  .arrow { width: 1rem; height: 1rem; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 2; pointer-events: none; }
+  .shaft, .head { transition: transform 300ms ease-in-out; }
+  .shaft { transform: translateX(0.5rem) scaleX(0); }
+  .head { transform: translateX(0.25rem); }
+  .back-button:hover .shaft, .back-button:hover .head { transform: none; }
+  span { font-size: 0.875rem; }
+  :global(.dark) .back-button { background: color-mix(in oklch, var(--input) 30%, transparent); border-color: var(--input); }
+  :global(.dark) .back-button:hover { background: color-mix(in oklch, var(--input) 50%, transparent); }
+  @media (width < 64rem), (pointer: coarse) { .back-button { min-block-size: 2.75rem; } }
+</style>
