@@ -13,7 +13,8 @@
 	"d1_databases": [
 		{
 			"binding": "DB",
-			"database_name": "blog-emdash"
+			"database_name": "blog-emdash",
+			"database_id": "3c199b92-6b7c-45da-8d01-669ebdb3bc20"
 		}
 	],
 	"r2_buckets": [
@@ -81,6 +82,29 @@
    */
 	"vars": {
 		"TURNSTILE_SITE_KEY": "0x4AAAAAAC9uFe71dDNfqvcZ",
+	},
+	"env": {
+		"preview": {
+			"d1_databases": [
+				{
+					"binding": "DB",
+					"database_name": "blog-emdash-preview",
+					"database_id": "74dc908b-e831-45ff-9274-e6f1f450b4bc"
+				}
+			],
+			"r2_buckets": [
+				{
+					"binding": "MEDIA",
+					"bucket_name": "blog-emdash-media-preview"
+				}
+			],
+			"kv_namespaces": [
+				{
+					"binding": "BLOG_KV",
+					"id": "3da827c525f747e4b283a48247569624"
+				}
+			]
+		}
 	},
 	/**
    * Secrets (set via `wrangler secret put`):

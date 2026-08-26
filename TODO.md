@@ -15,8 +15,8 @@
 
 以下步驟需要有效的 Cloudflare 登入，且會變更正式帳號資源：
 
-- [ ] 建立 production 與 preview 的 D1/R2，將 resource IDs 寫入 `wrangler.jsonc`。
-- [ ] 備份並設定 `EMDASH_ENCRYPTION_KEY` 與 `TURNSTILE_SECRET_KEY`。
+- [x] 建立 production 與 preview 的 D1/R2、隔離 preview KV，將 resource IDs 寫入 `wrangler.jsonc`。
+- [ ] 產生並備份 `EMDASH_ENCRYPTION_KEY`，設定 production 與 preview secrets；production 已保留既有的 `TURNSTILE_SECRET_KEY`。
 - [ ] 備份現有內容，部署 Worker，套用日期 migration，完成 EmDash/admin/binding smoke test。
 - [ ] 保留舊 Worker version；正式 smoke test 通過後才切換流量。
 
