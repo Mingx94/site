@@ -42,6 +42,7 @@ npx wrangler dev
 
 ```bash
 npx wrangler d1 execute blog-emdash --local --file migrations/0001-content-dates.sql
+npx wrangler d1 execute blog-emdash --local --file migrations/0002-blog-counters.sql
 ```
 
 ## 正式部署
@@ -49,9 +50,10 @@ npx wrangler d1 execute blog-emdash --local --file migrations/0001-content-dates
 1. 記錄正式 D1 Time Travel bookmark、從 EmDash Admin 下載內容備份，並另外備份 R2 objects。
 2. 記錄目前可回復的 Worker version。
 3. 執行檢查、測試與建置。
-4. 部署 Worker，讓 EmDash 套用內建 migration 與 seed。
-5. 套用 `migrations/0001-content-dates.sql`。
-6. 完成 smoke test 後才切換自訂網域流量。
+4. 先套用 `migrations/0002-blog-counters.sql`。舊 Worker 不會使用新資料表。
+5. 部署 Worker，讓 EmDash 套用內建 migration 與 seed。
+6. 套用 `migrations/0001-content-dates.sql`。
+7. 完成 smoke test 後才切換自訂網域流量。
 
 本次部署前記錄的 production Worker 是 version 57（`57a3324c-8fde-40ae-b02f-a6e04d0aebad`，2026-08-26）。每次部署前仍應再確認一次目前版本。
 
@@ -63,6 +65,7 @@ npm ci
 npm run check
 npm test
 npm run build
+npx wrangler d1 execute blog-emdash --remote --file migrations/0002-blog-counters.sql
 npx wrangler deploy
 npx wrangler d1 execute blog-emdash --remote --file migrations/0001-content-dates.sql
 ```

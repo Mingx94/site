@@ -11,12 +11,6 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   Access-Control-Expose-Headers: Link
 
-# Machine-readable discovery: Link header on the homepage (RFC 8288)
-# pointing at the sitemap and the RSS feed. Clients that fetch `/` can
-# follow these relations without guessing URLs.
-/
-  Link: </sitemap.xml>; rel="sitemap", </rss.xml>; rel="alternate"; type="application/rss+xml"; title="RSS feed"
-
 # Security contact metadata for vulnerability disclosure.
 /.well-known/security.txt
   Content-Type: text/plain; charset=utf-8

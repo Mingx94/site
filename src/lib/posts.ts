@@ -1,5 +1,6 @@
 import { getEmDashCollection, getEmDashEntry } from "emdash";
 import type { PortableTextBlock } from "emdash/client";
+import { getReadingTime } from "./readingTime";
 
 export interface Post {
   id: string;
@@ -36,21 +37,6 @@ function iso(value: Date | string | null | undefined): string {
   return value ? new Date(value).toISOString() : new Date(0).toISOString();
 }
 
-function countReadingTime(content: PortableTextBlock[]): number {
-  const text = content
-    .flatMap((block) => block.children ?? [])
-    .map((span) => span.text ?? "")
-    .join(" ");
-  const cjkPattern =
-    /\p{Script=Han}|\p{Script=Hangul}|\p{Script=Hiragana}|\p{Script=Katakana}/gu;
-  const cjk = text.match(cjkPattern)?.length ?? 0;
-  const words = text
-    .replace(cjkPattern, " ")
-    .split(/\s+/)
-    .filter(Boolean).length;
-  return Math.max(1, Math.ceil(words / 200 + cjk / 500));
-}
-
 function toPost(entry: { id: string; data: unknown }): Post {
   const data = entry.data as EntryData;
   const content = Array.isArray(data.content) ? data.content : [];
@@ -60,7 +46,7 @@ function toPost(entry: { id: string; data: unknown }): Post {
     description: data.excerpt,
     date: iso(data.publishedAt),
     updated: data.updatedAt ? iso(data.updatedAt) : undefined,
-    readingTime: countReadingTime(content),
+    readingTime: getReadingTime(content),
     cover: mediaSrc(data.featured_image),
     content,
     draft: data.status === "draft",

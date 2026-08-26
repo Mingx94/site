@@ -17,7 +17,7 @@ const slug = Astro.params.slug;
 if (!slug) return Astro.redirect("/404");
 const post = await getPost(slug);
 if (!post) return Astro.redirect("/404");
-const views = await getViews(env.BLOG_KV, slug);
+const views = await getViews(env, slug);
 const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".") ?? "";
 ---
 

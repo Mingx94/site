@@ -29,25 +29,36 @@ const SECURITY_HEADERS: Record<string, string> = {
 const BLOG_POST_PATH = /^\/blog\/([^/]+?)\/?$/;
 
 export const onRequest = defineMiddleware(async ({ request, url }, next) => {
-  const slug = BLOG_POST_PATH.exec(url.pathname)?.[1];
+  const matchedSlug = BLOG_POST_PATH.exec(url.pathname)?.[1];
+  const slug = matchedSlug?.endsWith(".md") ? undefined : matchedSlug;
+  let response: Response;
+
   if (slug && prefersMarkdown(request.headers.get("accept"))) {
     const post = await getPost(slug);
-    if (!post) return new Response("Not found", { status: 404 });
-    return new Response(postToMarkdown(post), {
-      headers: {
-        "Content-Type": "text/markdown; charset=utf-8",
-        "Cache-Control": "public, max-age=300, s-maxage=3600",
-        Vary: "Accept",
-      },
-    });
+    response = post
+      ? new Response(postToMarkdown(post), {
+          headers: {
+            "Content-Type": "text/markdown; charset=utf-8",
+            "Cache-Control": "public, max-age=300, s-maxage=3600",
+            Vary: "Accept",
+          },
+        })
+      : new Response("Not found", { status: 404, headers: { Vary: "Accept" } });
+  } else {
+    response = await next();
   }
 
-  const response = await next();
-  if (slug) {
+  if (slug && response.headers.get("Content-Type")?.startsWith("text/html")) {
     response.headers.append("Vary", "Accept");
     response.headers.set(
       "Link",
       `</blog/${encodeURIComponent(slug)}.md>; rel="alternate"; type="text/markdown"`,
+    );
+  }
+  if (url.pathname === "/") {
+    response.headers.append(
+      "Link",
+      '</sitemap.xml>; rel="sitemap", </rss.xml>; rel="alternate"; type="application/rss+xml"; title="RSS feed"',
     );
   }
   for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
