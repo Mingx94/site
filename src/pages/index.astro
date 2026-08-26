@@ -9,5 +9,5 @@ const recentBlogs = posts.slice(0, config.settings.num_posts_on_homepage);
 ---
 
 <Base>
-  <Home data={{ recentBlogs, showMoreLink: posts.length > recentBlogs.length }} client:load />
+  <Home data={{ recentBlogs, showMoreLink: posts.length > recentBlogs.length }} />
 </Base>
