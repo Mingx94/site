@@ -1,0 +1,322 @@
+<div data-table-of-contents hidden>
+  <nav class="desktop-toc" aria-label="文章目錄">
+    <div class="toc-title">目錄</div>
+    <ul class="toc-list" data-toc-list></ul>
+  </nav>
+
+  <button
+    type="button"
+    class="toc-toggle"
+    aria-label="開啟目錄"
+    aria-expanded="false"
+    aria-controls="article-toc-panel"
+    aria-haspopup="dialog"
+    data-toc-open
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <line x1="8" y1="6" x2="21" y2="6"></line>
+      <line x1="8" y1="12" x2="21" y2="12"></line>
+      <line x1="8" y1="18" x2="21" y2="18"></line>
+      <line x1="3" y1="6" x2="3.01" y2="6"></line>
+      <line x1="3" y1="12" x2="3.01" y2="12"></line>
+      <line x1="3" y1="18" x2="3.01" y2="18"></line>
+    </svg>
+  </button>
+
+  <div class="backdrop" data-toc-backdrop hidden></div>
+  <div
+    id="article-toc-panel"
+    class="mobile-toc"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="mobile-toc-title"
+    data-toc-panel
+    hidden
+  >
+    <div class="mobile-head">
+      <span id="mobile-toc-title">目錄</span>
+      <button type="button" class="close" aria-label="關閉目錄" data-toc-close>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <nav aria-label="文章章節">
+      <ul class="mobile-list" data-toc-mobile-list></ul>
+    </nav>
+  </div>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-table-of-contents]");
+  const article = document.querySelector("article");
+
+  if (root && article) {
+    const headings = Array.from(article.querySelectorAll<HTMLElement>("h2, h3"));
+    if (headings.length > 0) {
+      const usedIds = new Set(
+        Array.from(document.querySelectorAll<HTMLElement>("[id]"))
+          .map((element) => element.id)
+          .filter(Boolean),
+      );
+
+      const createId = (text: string, index: number) => {
+        const base =
+          text
+            .normalize("NFKC")
+            .toLocaleLowerCase()
+            .replace(/[^\p{Letter}\p{Number}]+/gu, "-")
+            .replace(/^-|-$/g, "") || `section-${index + 1}`;
+        let id = base;
+        let suffix = 2;
+        while (usedIds.has(id)) id = `${base}-${suffix++}`;
+        usedIds.add(id);
+        return id;
+      };
+
+      const desktopList = root.querySelector<HTMLElement>("[data-toc-list]");
+      const mobileList = root.querySelector<HTMLElement>("[data-toc-mobile-list]");
+      const links: HTMLAnchorElement[] = [];
+
+      headings.forEach((heading, index) => {
+        const text = heading.textContent?.trim() ?? "";
+        heading.id ||= createId(text, index);
+
+        for (const list of [desktopList, mobileList]) {
+          if (!list) continue;
+          const item = document.createElement("li");
+          const link = document.createElement("a");
+          link.href = `#${heading.id}`;
+          link.textContent = text;
+          link.className = list === desktopList ? "toc-link" : "mobile-link";
+          if (heading.tagName === "H3") link.classList.add("subsection");
+          item.appendChild(link);
+          list.appendChild(item);
+          links.push(link);
+        }
+      });
+
+      root.hidden = false;
+
+      const setActive = (id: string) => {
+        for (const link of links) {
+          const active = link.hash === `#${id}`;
+          link.classList.toggle("active", active);
+          if (active) link.setAttribute("aria-current", "location");
+          else link.removeAttribute("aria-current");
+        }
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) setActive(entry.target.id);
+          }
+        },
+        { rootMargin: "-80px 0px -60% 0px" },
+      );
+      headings.forEach((heading) => observer.observe(heading));
+
+      const openButton = root.querySelector<HTMLButtonElement>("[data-toc-open]");
+      const closeButton = root.querySelector<HTMLButtonElement>("[data-toc-close]");
+      const backdrop = root.querySelector<HTMLElement>("[data-toc-backdrop]");
+      const panel = root.querySelector<HTMLElement>("[data-toc-panel]");
+      let previousFocus: HTMLElement | null = null;
+      let inertElements: HTMLElement[] = [];
+      let previousOverflow = "";
+
+      const close = (restoreFocus = true) => {
+        if (!panel || panel.hidden) return;
+        panel.hidden = true;
+        if (backdrop) backdrop.hidden = true;
+        openButton?.setAttribute("aria-expanded", "false");
+        inertElements.forEach((element) => element.removeAttribute("inert"));
+        inertElements = [];
+        document.documentElement.style.overflow = previousOverflow;
+        if (restoreFocus) (previousFocus ?? openButton)?.focus();
+      };
+
+      const open = () => {
+        if (!panel || !backdrop) return;
+        previousFocus = document.activeElement as HTMLElement | null;
+        panel.hidden = false;
+        backdrop.hidden = false;
+        openButton?.setAttribute("aria-expanded", "true");
+        inertElements = [
+          document.querySelector<HTMLElement>("header"),
+          article,
+          document.querySelector<HTMLElement>(".back-links"),
+          document.querySelector<HTMLElement>("footer"),
+          openButton,
+        ].filter(
+          (element): element is HTMLElement =>
+            Boolean(element) && !element?.hasAttribute("inert"),
+        );
+        inertElements.forEach((element) => element.setAttribute("inert", ""));
+        previousOverflow = document.documentElement.style.overflow;
+        document.documentElement.style.overflow = "hidden";
+        closeButton?.focus();
+      };
+
+      openButton?.addEventListener("click", open);
+      closeButton?.addEventListener("click", () => close());
+      backdrop?.addEventListener("click", () => close());
+      mobileList?.addEventListener("click", (event) => {
+        if ((event.target as HTMLElement).closest("a")) close(false);
+      });
+
+      addEventListener("keydown", (event) => {
+        if (!panel || panel.hidden) return;
+        if (event.key === "Escape") {
+          event.preventDefault();
+          close();
+          return;
+        }
+        if (event.key !== "Tab") return;
+        const focusable = Array.from(
+          panel.querySelectorAll<HTMLElement>(
+            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+          ),
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0]!;
+        const last = focusable.at(-1)!;
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      });
+    }
+  }
+</script>
+
+<style>
+  [hidden] { display: none !important; }
+  .desktop-toc { display: none; }
+  .toc-title {
+    margin-bottom: 0.5rem;
+    color: var(--muted-foreground);
+    font-size: 0.6875rem;
+    font-weight: 600;
+  }
+  .toc-list {
+    border-left: 1px solid var(--border);
+    font-size: 0.875rem;
+  }
+  .toc-list :global(li + li) { margin-top: 0.25rem; }
+  :global(.toc-link) {
+    display: block;
+    padding: 0.125rem 0 0.125rem 0.75rem;
+    color: var(--muted-foreground);
+    overflow-wrap: anywhere;
+    transition: color 200ms;
+  }
+  :global(.toc-link:hover),
+  :global(.toc-link.active) { color: var(--foreground); }
+  :global(.toc-link.subsection) { padding-left: 1.5rem; }
+  :global(.toc-link.active) {
+    margin-left: -1px;
+    border-left: 2px solid var(--foreground);
+  }
+  .toc-toggle {
+    position: fixed;
+    z-index: 40;
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    display: flex;
+    width: 3rem;
+    height: 3rem;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-foreground);
+    border-radius: 999px;
+    background: var(--primary);
+    box-shadow: var(--shadow-contact);
+  }
+  .toc-toggle svg,
+  .close svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .backdrop {
+    position: fixed;
+    z-index: 40;
+    inset: 0;
+    background: color-mix(in oklch, var(--foreground) 40%, transparent);
+  }
+  .mobile-toc {
+    position: fixed;
+    z-index: 50;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    max-height: 70vh;
+    overflow-y: auto;
+    border-top: 1px solid var(--border);
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    background: var(--background);
+    box-shadow: var(--shadow-overlay);
+  }
+  .mobile-head {
+    position: sticky;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    color: var(--foreground);
+    border-bottom: 1px solid var(--border);
+    background: var(--background);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  .close {
+    display: flex;
+    width: 2.75rem;
+    height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted-foreground);
+    border-radius: 999px;
+  }
+  .close:hover { color: var(--foreground); background: var(--muted); }
+  .mobile-list {
+    padding: 0.75rem 1.25rem calc(0.75rem + env(safe-area-inset-bottom));
+    font-size: 0.875rem;
+  }
+  .mobile-list :global(li + li) { margin-top: 0.125rem; }
+  :global(.mobile-link) {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    color: var(--muted-foreground);
+    border-radius: var(--radius-md);
+    overflow-wrap: anywhere;
+  }
+  :global(.mobile-link:hover),
+  :global(.mobile-link.active) { color: var(--foreground); background: var(--muted); }
+  :global(.mobile-link.subsection) { padding-left: 1.75rem; }
+  :global(.mobile-link.active) { font-weight: 500; }
+  @media (width >= 96rem) {
+    .desktop-toc {
+      display: block;
+      position: sticky;
+      top: 6rem;
+      width: 100%;
+      max-height: calc(100vh - 8rem);
+      overflow-y: auto;
+      padding-block: 1rem;
+    }
+    .toc-toggle,
+    .backdrop,
+    .mobile-toc { display: none; }
+  }
+</style>

@@ -27,6 +27,6 @@
 - [x] EmDash Forms 取代自訂聯絡表單。
   - [x] 改用 Forms plugin 與 Cloudflare Email provider，移除自訂 API 與 Svelte 表單。
   - [x] Production 建立 `contact` 表單，設定 Turnstile 後驗證投稿與通知。
-- [ ] Sandboxed plugins、Dynamic Workers 與自訂 Portable Text blocks。
-- [ ] 將剩餘 Svelte islands 改成 Astro。
+- [x] 保持 Sandboxed plugins、Dynamic Workers 與自訂 Portable Text blocks 未啟用；目前沒有第三方 plugin 或 custom block 需求。
+- [x] 移除剩餘 Svelte islands；互動改由 Astro 原生腳本處理，Svelte 僅保留伺服器端模板。
 - [ ] 只有量測顯示需要時，才加入 D1 read replicas、KV object cache 或額外搜尋服務。
