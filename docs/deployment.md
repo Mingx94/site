@@ -12,6 +12,8 @@
 
 Production 與 preview 的 D1、R2 和隔離 KV 已建立，resource IDs 記錄在 `wrangler.jsonc`。不要重複建立同名資源。
 
+Preview Worker 已部署至 `https://blog-preview.vartifact.workers.dev`，並使用獨立資源與 `EMDASH_ENCRYPTION_KEY`。
+
 正式環境保留既有的 `BLOG_KV`、`BLOG_RATE`、`SEND_EMAIL` 與 Turnstile bindings。Preview 設定不得重用正式 D1、R2 或可寫入正式資料的 KV。
 
 ## Secrets
