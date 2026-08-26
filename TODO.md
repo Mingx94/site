@@ -32,4 +32,4 @@
 - [x] 通過 `npm run check`、`npm test` 與 `npm run build`。
 - [x] 在桌面與手機尺寸檢查首頁、文章列表、文章頁、About、Contact 與 404；確認鍵盤操作與可存取名稱正常。
 - [x] 確認公開頁面不載入 Svelte runtime，並比較主要頁面的版面與效能。
-- [ ] 經使用者同意後部署，再完成正式站 smoke test。
+- [x] 經使用者同意後部署，再完成正式站 smoke test。
