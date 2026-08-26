@@ -29,4 +29,4 @@
   - [x] Production 建立 `contact` 表單，設定 Turnstile 後驗證投稿與通知。
 - [x] 保持 Sandboxed plugins、Dynamic Workers 與自訂 Portable Text blocks 未啟用；目前沒有第三方 plugin 或 custom block 需求。
 - [x] 移除剩餘 Svelte islands；互動改由 Astro 原生腳本處理，Svelte 僅保留伺服器端模板。
-- [ ] 只有量測顯示需要時，才加入 D1 read replicas、KV object cache 或額外搜尋服務。
+- [x] 目前不加入 D1 read replicas、KV object cache 或額外搜尋服務；正式站量測未顯示需要。
