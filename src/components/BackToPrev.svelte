@@ -1,23 +1,8 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { Button } from "@/components/ui/button";
-
-  let hasSameOriginReferrer = $state(false);
-
-  onMount(() => {
-    hasSameOriginReferrer = document.referrer.includes(window.location.origin);
-  });
-
-  function onClick() {
-    if (hasSameOriginReferrer) {
-      window.history.back();
-    } else {
-      window.location.href = "/blog";
-    }
-  }
 </script>
 
-<Button variant="outline" class="back-button" onclick={onClick}>
+<Button variant="outline" class="back-button" data-back-to-prev>
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -27,7 +12,7 @@
     <line x1="5" y1="12" x2="19" y2="12" class="shaft"></line>
     <polyline points="12 5 5 12 12 19" class="head"></polyline>
   </svg>
-  <span>{hasSameOriginReferrer ? "回上一頁" : "前往文章列表"}</span>
+  <span data-back-label>前往文章列表</span>
 </Button>
 
 <style>

@@ -73,9 +73,79 @@ const imageUrl = new URL(image, Astro.url.origin).href;
   </head>
   <body>
     <a href="#main" class="skip-link">跳到主要內容</a>
-    <Header pathname={Astro.url.pathname} client:load />
+    <Header pathname={Astro.url.pathname} />
     <main id="main"><slot /></main>
-    <Footer client:load />
+    <Footer />
+    <script>
+      import { toggleFont } from "@/lib/font";
+      import { toggleTheme } from "@/lib/theme";
+
+      const themeButtons = document.querySelectorAll<HTMLButtonElement>(
+        "[data-theme-option]",
+      );
+      const storedTheme = localStorage.getItem("theme");
+      const activeTheme =
+        storedTheme === "light" || storedTheme === "dark" ? storedTheme : "system";
+
+      for (const button of themeButtons) {
+        const theme = button.dataset.themeOption;
+        button.setAttribute("aria-pressed", String(theme === activeTheme));
+        button.classList.toggle("active", theme === activeTheme);
+        button.addEventListener("click", () => {
+          if (theme === "system") {
+            localStorage.removeItem("theme");
+            toggleTheme(matchMedia("(prefers-color-scheme: dark)").matches);
+          } else if (theme === "light" || theme === "dark") {
+            localStorage.setItem("theme", theme);
+            toggleTheme(theme === "dark");
+          }
+          for (const option of themeButtons) {
+            const selected = option === button;
+            option.setAttribute("aria-pressed", String(selected));
+            option.classList.toggle("active", selected);
+          }
+        });
+      }
+
+      const fontButton = document.querySelector<HTMLButtonElement>("[data-font-toggle]");
+      if (fontButton) {
+        let font = localStorage.getItem("font") === "sans" ? "sans" : "serif";
+        const updateFontButton = () => {
+          fontButton.setAttribute(
+            "aria-label",
+            `切換閱讀字體，目前是 ${font === "serif" ? "Iansui 襯體" : "Huninn 黑體"}`,
+          );
+          for (const label of fontButton.querySelectorAll<HTMLElement>("[data-font]")) {
+            label.classList.toggle("dimmed", label.dataset.font !== font);
+          }
+        };
+        updateFontButton();
+        fontButton.addEventListener("click", () => {
+          font = font === "serif" ? "sans" : "serif";
+          localStorage.setItem("font", font);
+          toggleFont(font);
+          updateFontButton();
+        });
+      }
+
+      for (const button of document.querySelectorAll<HTMLButtonElement>(
+        "[data-back-to-prev]",
+      )) {
+        const sameOrigin = (() => {
+          try {
+            return new URL(document.referrer).origin === location.origin;
+          } catch {
+            return false;
+          }
+        })();
+        const label = button.querySelector<HTMLElement>("[data-back-label]");
+        if (label) label.textContent = sameOrigin ? "回上一頁" : "前往文章列表";
+        button.addEventListener("click", () => {
+          if (sameOrigin) history.back();
+          else location.href = "/blog";
+        });
+      }
+    </script>
     <script is:inline>
       const updateScrollState = () =>
         document.documentElement.classList.toggle("scrolled", window.scrollY > 0);

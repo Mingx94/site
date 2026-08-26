@@ -13,5 +13,49 @@ const years = Object.keys(posts).toSorted((a, b) => Number(b) - Number(a));
 ---
 
 <Base title="文章 | Vartifact" description="技術隨筆、閱讀筆記，以及其他片段。">
-  <Blog data={{ posts, years }} client:load />
+  <Blog data={{ posts, years }} />
+  <script>
+    const input = document.querySelector<HTMLInputElement>("#blog-search");
+    const results = document.querySelector<HTMLElement>("#blog-results");
+    const status = document.querySelector<HTMLElement>("[data-search-status]");
+    const empty = document.querySelector<HTMLElement>("[data-search-empty]");
+    const displayQuery = document.querySelector<HTMLElement>("[data-search-query]");
+    const clearButton = document.querySelector<HTMLButtonElement>("[data-search-clear]");
+
+    if (input && results && status && empty) {
+      const sections = Array.from(results.querySelectorAll<HTMLElement>(".years > section"));
+      const normalize = (value: string) =>
+        value.trim().normalize("NFKC").toLocaleLowerCase("zh-TW");
+
+      const filterPosts = () => {
+        const query = normalize(input.value);
+        let matches = 0;
+        for (const section of sections) {
+          let sectionMatches = 0;
+          for (const item of section.querySelectorAll<HTMLElement>(".post-list > li")) {
+            const match = query === "" || (item.dataset.searchText ?? "").includes(query);
+            item.hidden = !match;
+            if (match) sectionMatches += 1;
+          }
+          section.hidden = query !== "" && sectionMatches === 0;
+          matches += sectionMatches;
+        }
+
+        const searching = query !== "";
+        status.hidden = !searching;
+        status.textContent = `${matches} ${matches === 1 ? "result" : "results"}`;
+        if (searching) input.setAttribute("aria-describedby", "search-status");
+        else input.removeAttribute("aria-describedby");
+        empty.hidden = !searching || matches > 0;
+        if (displayQuery) displayQuery.textContent = input.value.trim();
+      };
+
+      input.addEventListener("input", filterPosts);
+      clearButton?.addEventListener("click", () => {
+        input.value = "";
+        filterPosts();
+        input.focus();
+      });
+    }
+  </script>
 </Base>

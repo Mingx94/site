@@ -7,41 +7,16 @@
   import type { Post } from "@/lib/posts";
   import RiArrowRightUpLine from "~icons/ri/arrow-right-up-line";
   import RiSearchLine from "~icons/ri/search-line";
-  import { tick } from "svelte";
 
   let { data }: { data: { years: string[]; posts: Record<string, Post[]> } } =
     $props();
 
-  let query = $state("");
-  let searchInput = $state<HTMLInputElement>();
-
   const normalizeSearch = (value: string) =>
     value.trim().normalize("NFKC").toLocaleLowerCase("zh-TW");
-
-  const allPosts = $derived(
-    data.years.flatMap((year) => data.posts[year] as Post[]),
+  const total = data.years.reduce(
+    (count, year) => count + data.posts[year].length,
+    0,
   );
-
-  const total = $derived(allPosts.length);
-  const searchTerm = $derived(normalizeSearch(query));
-  const displayQuery = $derived(query.trim());
-
-  const filtered = $derived(
-    searchTerm === ""
-      ? null
-      : allPosts.filter((post) => {
-          return (
-            normalizeSearch(post.title).includes(searchTerm) ||
-            normalizeSearch(post.description ?? "").includes(searchTerm)
-          );
-        }),
-  );
-
-  const clearSearch = async () => {
-    query = "";
-    await tick();
-    searchInput?.focus();
-  };
 </script>
 
 <Container>
@@ -84,129 +59,79 @@
         <input
           id="blog-search"
           type="search"
-          bind:value={query}
-          bind:this={searchInput}
           placeholder="搜尋..."
           maxlength="100"
           enterkeyhint="search"
           aria-controls="blog-results"
-          aria-describedby={searchTerm ? "search-status" : undefined}
           class="search-input"
         />
-        {#if searchTerm}
-          <span id="search-status" class="result-count" aria-live="polite">
-            {filtered?.length ?? 0}
-            {(filtered?.length ?? 0) === 1 ? "result" : "results"}
-          </span>
-        {/if}
+        <span
+          id="search-status"
+          class="result-count"
+          aria-live="polite"
+          data-search-status
+          hidden
+        ></span>
       </div>
 
       <div id="blog-results">
-        {#if filtered !== null}
-          <!-- Search results -->
-          {#if filtered.length > 0}
-            <h2 class="visually-hidden">搜尋結果</h2>
-            <ol class="post-list">
-              {#each filtered as post, i (post.id)}
-                <li>
-                  <a href="/blog/{post.id}" class="post-link">
-                    <div class="post-cover">
-                      <PostCover
-                        slug={post.id}
-                        src={post.cover}
-                        title={post.title}
-                        frame={String(i + 1).padStart(2, "0")}
-                        compact
-                        ratio="4 / 3"
-                      />
-                    </div>
-                    <span class="post-number">
-                      N°{String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div class="post-copy">
-                      <h3 class="post-title">
-                        {post.title}
-                      </h3>
-                      {#if post.description}
-                        <p class="post-description">
-                          {post.description}
-                        </p>
-                      {/if}
-                      <div class="post-meta">
-                        <FormattedDate date={post.date} />
-                      </div>
-                    </div>
-                    <RiArrowRightUpLine class="post-arrow" aria-hidden="true" />
-                  </a>
-                </li>
-              {/each}
-            </ol>
-          {:else}
-            <div class="empty">
-              <p>
-                找不到「<bdi>{displayQuery}</bdi>」相關文章。
-              </p>
-              <button class="clear-search" type="button" onclick={clearSearch}>
-                清除搜尋
-              </button>
-            </div>
-          {/if}
-        {:else}
-          <!-- Year groups -->
-          <div class="years">
-            {#each data.years as year (year)}
-              <section {@attach staggerIn} class="animate">
-                <div class="year-head">
-                  <h2 class="eyebrow">
-                    · Year · {year}
-                  </h2>
-                  <span class="count">
-                    {data.posts[year].length}
-                    {data.posts[year].length === 1 ? "entry" : "entries"}
-                  </span>
-                </div>
-                <ol class="post-list">
-                  {#each data.posts[year] as post, i (post.id)}
-                    <li>
-                      <a href="/blog/{post.id}" class="post-link">
-                        <div class="post-cover">
-                          <PostCover
-                            slug={post.id}
-                            src={post.cover}
-                            title={post.title}
-                            frame={String(i + 1).padStart(2, "0")}
-                            compact
-                            ratio="4 / 3"
-                          />
-                        </div>
-                        <span class="post-number">
-                          N°{String(i + 1).padStart(2, "0")}
-                        </span>
-                        <div class="post-copy">
-                          <h3 class="post-title">
-                            {post.title}
-                          </h3>
-                          {#if post.description}
-                            <p class="post-description">
-                              {post.description}
-                            </p>
-                          {/if}
-                          <div class="post-meta">
-                            <FormattedDate date={post.date} />
-                          </div>
-                        </div>
-                        <RiArrowRightUpLine
-                          class="post-arrow"
-                          aria-hidden="true"
+        <div class="years">
+          {#each data.years as year (year)}
+            <section {@attach staggerIn} class="animate">
+              <div class="year-head">
+                <h2 class="eyebrow">· Year · {year}</h2>
+                <span class="count">
+                  {data.posts[year].length}
+                  {data.posts[year].length === 1 ? "entry" : "entries"}
+                </span>
+              </div>
+              <ol class="post-list">
+                {#each data.posts[year] as post, i (post.id)}
+                  <li
+                    data-search-text={normalizeSearch(
+                      `${post.title} ${post.description ?? ""}`,
+                    )}
+                  >
+                    <a href="/blog/{post.id}" class="post-link">
+                      <div class="post-cover">
+                        <PostCover
+                          slug={post.id}
+                          src={post.cover}
+                          title={post.title}
+                          frame={String(i + 1).padStart(2, "0")}
+                          compact
+                          ratio="4 / 3"
                         />
-                      </a>
-                    </li>
-                  {/each}
-                </ol>
-              </section>
-            {/each}
-          </div>
-        {/if}
+                      </div>
+                      <span class="post-number">
+                        N°{String(i + 1).padStart(2, "0")}
+                      </span>
+                      <div class="post-copy">
+                        <h3 class="post-title">{post.title}</h3>
+                        {#if post.description}
+                          <p class="post-description">{post.description}</p>
+                        {/if}
+                        <div class="post-meta">
+                          <FormattedDate date={post.date} />
+                        </div>
+                      </div>
+                      <RiArrowRightUpLine
+                        class="post-arrow"
+                        aria-hidden="true"
+                      />
+                    </a>
+                  </li>
+                {/each}
+              </ol>
+            </section>
+          {/each}
+        </div>
+        <div class="empty" data-search-empty hidden>
+          <p>找不到「<bdi data-search-query></bdi>」相關文章。</p>
+          <button class="clear-search" type="button" data-search-clear>
+            清除搜尋
+          </button>
+        </div>
       </div>
     {:else}
       <section

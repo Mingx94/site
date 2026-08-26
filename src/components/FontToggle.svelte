@@ -1,34 +1,13 @@
-<script lang="ts">
-  import { toggleFont } from "@/lib/font";
-  import { onMount } from "svelte";
-
-  let selected = $state<"serif" | "sans">("serif");
-
-  onMount(() => {
-    const stored = localStorage.getItem("font");
-    if (stored === "serif" || stored === "sans") selected = stored;
-  });
-
-  function toggle() {
-    const next = selected === "serif" ? "sans" : "serif";
-    selected = next;
-    localStorage.setItem("font", next);
-    toggleFont(next);
-  }
-</script>
-
 <div class="font-toggle">
   <button
-    onclick={toggle}
+    data-font-toggle
     class="toggle"
-    aria-label="切換閱讀字體，目前是 {selected === 'serif'
-      ? 'Iansui 襯體'
-      : 'Huninn 黑體'}"
+    aria-label="切換閱讀字體，目前是 Iansui 襯體"
     title="切換黑體／襯體"
   >
-    <span class:dimmed={selected !== "serif"} class="serif">襯</span>
+    <span data-font="serif" class="serif">襯</span>
     <span class="divider">/</span>
-    <span class:dimmed={selected !== "sans"} class="sans">黑</span>
+    <span data-font="sans" class="sans dimmed">黑</span>
   </button>
   <!-- Styled tooltip. Positioned BELOW the button because the header
        is `position: fixed; top: 0` (see src/styles/global.css `header`

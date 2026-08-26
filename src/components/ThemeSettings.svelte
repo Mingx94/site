@@ -1,7 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { toggleTheme } from "@/lib/theme";
-
   const themeList = [
     {
       name: "淺色",
@@ -19,31 +16,6 @@
       value: "system",
     },
   ] as const;
-
-  let activeTheme = $state<"light" | "dark" | "system">("system");
-
-  onMount(() => {
-    const stored = localStorage.getItem("theme");
-    if (stored === "light" || stored === "dark") {
-      activeTheme = stored;
-    } else {
-      activeTheme = "system";
-      if (stored !== null) {
-        localStorage.removeItem("theme");
-      }
-    }
-  });
-
-  function onSelectTheme(theme: "light" | "dark" | "system") {
-    activeTheme = theme;
-    if (theme === "system") {
-      toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
-      localStorage.removeItem("theme");
-    } else {
-      toggleTheme(theme === "dark");
-      localStorage.setItem("theme", theme);
-    }
-  }
 </script>
 
 <div class="theme-settings" role="group" aria-label="色彩主題">
@@ -54,11 +26,11 @@
     {/if}
     <button
       type="button"
-      onclick={() => onSelectTheme(theme.value)}
-      aria-pressed={activeTheme === theme.value}
+      data-theme-option={theme.value}
+      aria-pressed={theme.value === "system"}
       aria-label="{theme.name}主題"
       title="切換為{theme.name}主題"
-      class:active={activeTheme === theme.value}
+      class:active={theme.value === "system"}
       class="theme-option"
     >
       {theme.shortName}

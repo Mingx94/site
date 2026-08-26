@@ -6,7 +6,7 @@ import Container from "@/components/Container.svelte";
 import FormattedDate from "@/components/FormattedDate.svelte";
 import PostCover from "@/components/PostCover.svelte";
 import ReactionBar from "@/components/ReactionBar.svelte";
-import TableOfContents from "@/components/TableOfContents.svelte";
+import TableOfContents from "@/components/TableOfContents.astro";
 import Base from "@/layouts/Base.astro";
 import { getPost } from "@/lib/posts";
 import { getViews } from "@/lib/server/blog";
@@ -28,7 +28,7 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
   type="article"
   markdown={`/blog/${slug}.md`}
 >
-  <ArticleClient slug={slug} readingTime={post.readingTime} draft={post.draft} client:load />
+  <ArticleClient slug={slug} readingTime={post.readingTime} draft={post.draft} />
   <Container>
     <div class="article-layout">
       <article>
@@ -54,19 +54,135 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
         <div class="animate content">
           <PortableText value={post.content} />
         </div>
-        <ReactionBar slug={slug} client:load />
+        <ReactionBar slug={slug} />
         <div class="colophon">
           <span>Filed {formatStamp(post.date)}</span>
           {post.updated && <span>Revised {formatStamp(post.updated)}</span>}
         </div>
       </article>
-      <TableOfContents client:load />
+      <TableOfContents />
     </div>
     <div class="back-links animate">
-      <BackToPrev client:load />
+      <BackToPrev />
       <BackToTop />
     </div>
   </Container>
+  <script>
+    const progressRoot = document.querySelector<HTMLElement>("[data-article-progress]");
+    if (progressRoot) {
+      const progress = progressRoot.querySelector<HTMLElement>(".progress");
+      const slug = progressRoot.dataset.slug ?? "";
+      const minSeconds = Number(progressRoot.dataset.minSeconds ?? 10);
+      const draft = progressRoot.dataset.draft === "true";
+      let counted = false;
+      let visibleSeconds = 0;
+      let maxScroll = 0;
+
+      const countView = async () => {
+        if (draft || counted || visibleSeconds < minSeconds || maxScroll < 0.6) return;
+        counted = true;
+        try {
+          const response = await fetch(`/api/blog/${encodeURIComponent(slug)}/views`, {
+            method: "POST",
+          });
+          if (!response.ok) counted = false;
+        } catch {
+          counted = false;
+        }
+      };
+
+      const updateProgress = () => {
+        const scrollable = document.documentElement.scrollHeight - innerHeight;
+        const ratio = scrollable > 0 ? Math.min(1, scrollY / scrollable) : 0;
+        if (progress) progress.style.transform = `scaleX(${ratio})`;
+        maxScroll = Math.max(maxScroll, ratio);
+        void countView();
+      };
+
+      updateProgress();
+      addEventListener("scroll", updateProgress, { passive: true });
+      if (!draft) {
+        setInterval(() => {
+          if (!document.hidden) {
+            visibleSeconds += 1;
+            void countView();
+          }
+        }, 1000);
+      }
+    }
+
+    const reactionsRoot = document.querySelector<HTMLElement>("[data-reactions]");
+    if (reactionsRoot) {
+      const slug = reactionsRoot.dataset.slug ?? "";
+      const buttons = Array.from(
+        reactionsRoot.querySelectorAll<HTMLButtonElement>("[data-reaction]"),
+      );
+      let reacted = new Set<string>();
+      let reactions: Record<string, number> = {};
+
+      try {
+        const stored = JSON.parse(localStorage.getItem(`reactions:${slug}`) ?? "[]");
+        if (Array.isArray(stored)) {
+          reacted = new Set(stored.filter((value): value is string => typeof value === "string"));
+        }
+      } catch {}
+
+      const render = (loading = false) => {
+        for (const button of buttons) {
+          const key = button.dataset.reaction ?? "";
+          const label = button.dataset.label ?? "";
+          const count = reactions[key] ?? 0;
+          const countElement = button.querySelector<HTMLElement>(".count");
+          button.disabled = loading;
+          button.classList.toggle("loading", loading);
+          button.classList.toggle("reacted", reacted.has(key));
+          button.setAttribute("aria-label", count ? `${label}，${count} 個` : label);
+          if (countElement) {
+            countElement.textContent = String(count);
+            countElement.hidden = count === 0;
+          }
+        }
+      };
+
+      const loadReactions = async () => {
+        render(true);
+        try {
+          const response = await fetch(`/api/blog/${encodeURIComponent(slug)}/reactions`);
+          if (response.ok) reactions = await response.json();
+        } finally {
+          render(false);
+        }
+      };
+
+      for (const button of buttons) {
+        button.addEventListener("click", async () => {
+          const emoji = button.dataset.reaction ?? "";
+          const action = reacted.has(emoji) ? "remove" : "add";
+          render(true);
+          try {
+            const response = await fetch(
+              `/api/blog/${encodeURIComponent(slug)}/reactions`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ emoji, action }),
+              },
+            );
+            if (!response.ok) return;
+            reactions = await response.json();
+            if (action === "add") reacted.add(emoji);
+            else reacted.delete(emoji);
+            localStorage.setItem(`reactions:${slug}`, JSON.stringify([...reacted]));
+          } catch {
+          } finally {
+            render(false);
+          }
+        });
+      }
+
+      void loadReactions();
+    }
+  </script>
 </Base>
 
 <style>

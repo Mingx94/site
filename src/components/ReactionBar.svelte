@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   interface Props {
     slug: string;
   }
@@ -14,69 +12,20 @@
     bulb: { emoji: "\u{1F4A1}", label: "啟發" },
     party: { emoji: "\u{1F389}", label: "慶祝" },
   };
-
-  let reacted = $state<Set<string>>(new Set());
-  let reactions = $state<Record<string, number>>({});
-  let loading = $state(true);
-
-  // Load reacted set from localStorage
-  onMount(async () => {
-    try {
-      const stored = localStorage.getItem(`reactions:${slug}`);
-      if (stored) reacted = new Set(JSON.parse(stored));
-    } catch {
-      // ignore
-    }
-    try {
-      const response = await fetch(`/api/blog/${encodeURIComponent(slug)}/reactions`);
-      if (response.ok) reactions = await response.json();
-    } finally {
-      loading = false;
-    }
-  });
-
-  async function react(emoji: string) {
-    const action = reacted.has(emoji) ? "remove" : "add";
-    loading = true;
-    try {
-      const response = await fetch(
-        `/api/blog/${encodeURIComponent(slug)}/reactions`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ emoji, action }),
-        },
-      );
-      if (!response.ok) return;
-      reactions = await response.json();
-      if (action === "add") reacted.add(emoji);
-      else reacted.delete(emoji);
-      reacted = new Set(reacted);
-      localStorage.setItem(`reactions:${slug}`, JSON.stringify([...reacted]));
-    } catch {
-      // ignore
-    } finally {
-      loading = false;
-    }
-  }
 </script>
 
-<div class="reactions">
+<div class="reactions" data-reactions data-slug={slug}>
   {#each Object.entries(EMOJI_MAP) as [key, { emoji, label }] (key)}
     <button
-      onclick={() => react(key)}
-      disabled={loading}
-      aria-label="{label}{reactions[key]
-        ? `，${reactions[key]} 個`
-        : ''}"
+      data-reaction={key}
+      data-label={label}
+      disabled
+      aria-label={label}
       title={label}
-      class:reacted={reacted.has(key)}
-      class:loading
+      class="loading"
     >
       <span class="emoji" aria-hidden="true">{emoji}</span>
-      {#if reactions[key]}
-        <span class="count">{reactions[key]}</span>
-      {/if}
+      <span class="count" hidden></span>
     </button>
   {/each}
 </div>
