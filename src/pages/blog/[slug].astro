@@ -31,27 +31,42 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
   <ArticleClient slug={slug} readingTime={post.readingTime} draft={post.draft} />
   <Container>
     <div class="article-layout">
+      <TableOfContents />
       <article>
-        <div class="strip animate">
-          <span>· Essay · {formatStamp(post.date)}</span>
-          {post.draft && <span class="draft">Draft</span>}
-        </div>
-        <div class="title-block">
-          <h1 class="page-title animate">{post.title}</h1>
-          {post.description && <p class="introduction animate">{post.description}</p>}
-        </div>
-        <div class="byline animate">
-          <span>By Michael Tsai</span>
-          <div class="byline-meta">
-            <FormattedDate date={post.date} />
-            <span aria-hidden="true">·</span>
-            <span>{post.readingTime} min read</span>
-            <span aria-hidden="true">·</span>
-            <span>{views} views</span>
+        <div class="article-lede">
+          <div class="title-block">
+            <h1 class="page-title animate">{post.title}</h1>
+            {post.description && <p class="introduction animate">{post.description}</p>}
+          </div>
+          <div class="article-proof animate">
+            <PostCover title={post.title} src={post.cover} frame="01" ratio="16 / 9" priority />
+            <dl class="article-ledger" aria-label="文章資訊">
+              <div>
+                <dt>Author</dt>
+                <dd>Michael Tsai</dd>
+              </div>
+              <div>
+                <dt>Date</dt>
+                <dd><FormattedDate date={post.date} /></dd>
+              </div>
+              <div>
+                <dt>Read time</dt>
+                <dd>{post.readingTime} min read</dd>
+              </div>
+              <div>
+                <dt>Views</dt>
+                <dd>{views} views</dd>
+              </div>
+              {post.draft && (
+                <div>
+                  <dt>Status</dt>
+                  <dd class="draft">Draft</dd>
+                </div>
+              )}
+            </dl>
           </div>
         </div>
-        <PostCover title={post.title} src={post.cover} priority />
-        <div class="animate content">
+        <div class="animate content no-drop-cap" id="article-content">
           <PortableText value={post.content} />
         </div>
         <ReactionBar slug={slug} />
@@ -60,7 +75,6 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
           {post.updated && <span>Revised {formatStamp(post.updated)}</span>}
         </div>
       </article>
-      <TableOfContents />
     </div>
     <div class="back-links animate">
       <BackToPrev />
@@ -187,33 +201,57 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
 
 <style>
   article { min-width: 0; padding-top: 1rem; }
-  .strip {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-    color: var(--muted-foreground);
-    font: 11px var(--font-mono);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+  .article-lede {
+    display: grid;
+    gap: 2rem;
+    padding-block: 1rem 2.5rem;
+    border-bottom: 1px solid var(--border);
   }
   .draft { color: var(--destructive); }
-  .title-block { margin-block: 2rem 2.5rem; }
+  .title-block {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: 1rem;
+  }
   .title-block > * + * { margin-top: 1.5rem; }
   .page-title {
     color: var(--foreground);
-    font: 500 clamp(2.25rem, 6vw, 4.5rem)/1.05 var(--font-serif);
+    font: 500 clamp(2.75rem, 4vw, 3.75rem)/1.08 var(--font-serif);
     letter-spacing: -0.025em;
     text-wrap: balance;
   }
   .introduction {
-    max-width: 42rem;
+    max-width: 30rem;
     color: var(--muted-foreground);
-    font: 1.125rem/1.625 var(--font-serif);
+    font: 1.125rem/1.7 var(--font-serif);
   }
-  .byline,
+  .article-proof { min-width: 0; }
+  .article-ledger {
+    margin-top: 1rem;
+    border-top: 1px solid var(--border);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .article-ledger > div {
+    display: grid;
+    grid-template-columns: minmax(6.5rem, 0.7fr) minmax(0, 1.3fr);
+    border-bottom: 1px solid var(--border);
+  }
+  .article-ledger dt,
+  .article-ledger dd { padding: 0.45rem 0.75rem; }
+  .article-ledger dt {
+    color: var(--muted-foreground);
+    border-right: 1px solid var(--border);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .article-ledger dd { margin: 0; letter-spacing: 0.04em; text-transform: uppercase; }
   .colophon {
     display: flex;
     flex-wrap: wrap;
@@ -224,15 +262,7 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
     letter-spacing: 0.2em;
     text-transform: uppercase;
   }
-  .byline {
-    gap: 0.5rem 1.5rem;
-    margin-bottom: 3rem;
-    padding-block: 0.75rem;
-    border-block: 1px solid var(--border);
-    font-size: 11px;
-  }
-  .byline-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 1rem; }
-  .content { margin-top: 3rem; }
+  .content { margin-top: 2.5rem; }
   .colophon {
     row-gap: 0.5rem;
     margin-top: 4rem;
@@ -242,17 +272,36 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
   }
   .back-links { display: flex; margin-top: 3rem; }
   @media (width >= 48rem) {
-    article { padding-top: 2rem; }
-    .title-block { margin-block: 3rem 3.5rem; }
     .introduction { font-size: 1.25rem; }
-    .byline { margin-bottom: 4rem; }
+    .article-lede {
+      grid-template-columns: minmax(18rem, 0.9fr) minmax(20rem, 1.1fr);
+      align-items: start;
+      gap: 2rem;
+    }
+    .title-block { min-height: 100%; padding-block: 2rem; }
   }
-  @media (width >= 96rem) {
+  @media (width >= 48rem) and (width < 64rem) {
+    .page-title { font-size: clamp(2.25rem, 5vw, 2.5rem); }
+  }
+  @media (width >= 64rem) {
+    .article-lede {
+      grid-template-columns: minmax(20rem, 0.9fr) minmax(26rem, 1.1fr);
+      gap: clamp(2rem, 4vw, 4rem);
+    }
+  }
+  @media (width >= 72rem) {
     .article-layout {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 14rem;
-      gap: 2rem;
+      grid-template-columns: minmax(8rem, 10rem) minmax(0, 1fr);
+      gap: clamp(2rem, 3vw, 3rem);
       align-items: start;
     }
+  }
+  @media (width < 48rem) {
+    .article-lede { gap: 1rem; padding-top: 0.5rem; }
+    .title-block { padding-block: 0.5rem; }
+    .page-title { font-size: clamp(2.25rem, 10.75vw, 2.75rem); }
+    .article-ledger dt,
+    .article-ledger dd { padding-inline: 0.5rem; }
   }
 </style>
