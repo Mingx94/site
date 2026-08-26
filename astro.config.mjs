@@ -17,7 +17,6 @@ export default defineConfig({
       database: d1({ binding: "DB" }),
       storage: r2({ binding: "MEDIA" }),
       siteUrl: "https://vartifact.cc",
-      fonts: false,
     }),
   ],
   vite: {
