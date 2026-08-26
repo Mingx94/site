@@ -88,18 +88,21 @@
           "binding": "DB",
           "database_name": "blog-emdash-preview",
           "database_id": "74dc908b-e831-45ff-9274-e6f1f450b4bc",
+          "remote": true,
         },
       ],
       "r2_buckets": [
         {
           "binding": "MEDIA",
           "bucket_name": "blog-emdash-media-preview",
+          "remote": true,
         },
       ],
       "kv_namespaces": [
         {
           "binding": "BLOG_KV",
           "id": "3da827c525f747e4b283a48247569624",
+          "remote": true,
         },
       ],
     },
