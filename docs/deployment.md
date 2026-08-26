@@ -7,16 +7,10 @@
 - Node.js 22 或更新版本
 - `npm ci`
 - `npx wrangler login`
-- 將 Cloudflare 建立指令回傳的 resource ID 寫入 `wrangler.jsonc`
 
-## 建立資源
+## Cloudflare 資源
 
-```bash
-npx wrangler d1 create blog-emdash
-npx wrangler r2 bucket create blog-emdash-media
-npx wrangler d1 create blog-emdash-preview
-npx wrangler r2 bucket create blog-emdash-media-preview
-```
+Production 與 preview 的 D1、R2 和隔離 KV 已建立，resource IDs 記錄在 `wrangler.jsonc`。不要重複建立同名資源。
 
 正式環境保留既有的 `BLOG_KV`、`BLOG_RATE`、`SEND_EMAIL` 與 Turnstile bindings。Preview 設定不得重用正式 D1、R2 或可寫入正式資料的 KV。
 
@@ -27,8 +21,9 @@ npx wrangler r2 bucket create blog-emdash-media-preview
 ```bash
 npx emdash secrets generate
 npx wrangler secret put EMDASH_ENCRYPTION_KEY
-npx wrangler secret put TURNSTILE_SECRET_KEY
 ```
+
+Production 已有 `TURNSTILE_SECRET_KEY`。Preview Worker 首次部署後，再以 `--env preview` 設定同一把 `EMDASH_ENCRYPTION_KEY`；只有要測試 preview 聯絡表單時，才另外設定 preview Turnstile secret。
 
 本機 secret 放在未追蹤的 `.dev.vars`。
 
@@ -55,6 +50,8 @@ npx wrangler d1 execute blog-emdash --local --file migrations/0001-content-dates
 4. 部署 Worker，讓 EmDash 套用內建 migration 與 seed。
 5. 套用 `migrations/0001-content-dates.sql`。
 6. 完成 smoke test 後才切換自訂網域流量。
+
+本次遷移前記錄的 production Worker 是 version 46（`9767dce3-0d46-4ba4-b6e8-9c3a5ef83e81`，2026-08-20）。部署前仍應再確認一次目前版本。
 
 ```bash
 npx wrangler d1 export blog-emdash --remote --output backup-before-emdash.sql
