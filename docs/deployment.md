@@ -4,7 +4,7 @@
 
 ## 前置需求
 
-- Node.js 22.12 或更新版本
+- Node.js 22.19 或更新版本
 - `npm ci`
 - `npx wrangler login`
 
