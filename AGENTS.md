@@ -1,11 +1,14 @@
 # Agent instructions
 
-Vartifact is an Astro 7 and EmDash personal blog that runs on Cloudflare Workers. Svelte 5 is used only for interactive islands.
+Vartifact is an Astro 7 and EmDash personal blog on Cloudflare Workers, with Svelte 5 for interactive islands.
 
-Use `npm run check` for type and accessibility checks. Use `npm run build` for a production build.
+Use ASD-STE100 Simplified Technical English. Run `npm run check` for type and accessibility checks.
 
-Follow these task-specific guides:
+Follow the guide that applies to the task:
 
-- [Writing](docs/agents/writing.md)
+- [Scope and decisions](docs/agents/scope-and-decisions.md)
 - [Engineering](docs/agents/engineering.md)
+- [Reviews](docs/agents/reviews.md)
+- [Testing](docs/agents/testing.md)
+- [Writing](docs/agents/writing.md)
 - [Git workflow](docs/agents/git-workflow.md)
