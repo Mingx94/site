@@ -1,5 +1,3 @@
-import "unplugin-icons/types/svelte";
-
 declare global {
   interface Window {
     turnstile?: {
@@ -17,7 +15,6 @@ declare global {
       remove: (widgetId: string) => void;
     };
   }
-
 }
 
 export {};

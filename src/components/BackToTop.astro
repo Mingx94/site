@@ -1,7 +1,7 @@
 <a href="#top" id="back-to-top" class="back-button">
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-    <line x1="5" y1="12" x2="19" y2="12" class="shaft" />
-    <polyline points="12 5 5 12 12 19" class="head" />
+    <line x1="5" y1="12" x2="19" y2="12" class="shaft"></line>
+    <polyline points="12 5 5 12 12 19" class="head"></polyline>
   </svg>
   <span>回到頂端</span>
 </a>
@@ -19,19 +19,10 @@
     color: var(--foreground);
     text-decoration: none;
   }
-  svg {
-    width: 1rem;
-    height: 1rem;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2;
-    transform: rotate(90deg);
-  }
-  .shaft,
-  .head { transition: transform 300ms ease-in-out; }
+  svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 2; transform: rotate(90deg); }
+  .shaft, .head { transition: transform 300ms ease-in-out; }
   .shaft { transform: translateX(0.5rem) scaleX(0); }
   .head { transform: translateX(0.25rem); }
-  .back-button:hover .shaft,
-  .back-button:hover .head { transform: none; }
+  .back-button:hover .shaft, .back-button:hover .head { transform: none; }
   span { font-size: 0.875rem; }
 </style>

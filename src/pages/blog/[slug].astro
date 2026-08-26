@@ -1,11 +1,11 @@
 ---
-import ArticleClient from "@/components/ArticleClient.svelte";
-import BackToPrev from "@/components/BackToPrev.svelte";
-import BackToTop from "@/components/BackToTop.svelte";
-import Container from "@/components/Container.svelte";
-import FormattedDate from "@/components/FormattedDate.svelte";
-import PostCover from "@/components/PostCover.svelte";
-import ReactionBar from "@/components/ReactionBar.svelte";
+import ArticleClient from "@/components/ArticleClient.astro";
+import BackToPrev from "@/components/BackToPrev.astro";
+import BackToTop from "@/components/BackToTop.astro";
+import Container from "@/components/Container.astro";
+import FormattedDate from "@/components/FormattedDate.astro";
+import PostCover from "@/components/PostCover.astro";
+import ReactionBar from "@/components/ReactionBar.astro";
 import TableOfContents from "@/components/TableOfContents.astro";
 import Base from "@/layouts/Base.astro";
 import { getPost } from "@/lib/posts";
@@ -50,7 +50,7 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
             <span>{views} views</span>
           </div>
         </div>
-        <PostCover slug={slug} title={post.title} src={post.cover} priority />
+        <PostCover title={post.title} src={post.cover} priority />
         <div class="animate content">
           <PortableText value={post.content} />
         </div>

@@ -1,0 +1,37 @@
+---
+import config from "@/config";
+import Container from "./Container.astro";
+import Link from "./Link.astro";
+import ThemeSettings from "./ThemeSettings.astro";
+---
+
+<footer class="animate">
+  <Container>
+    <div class="footer-inner">
+      <nav class="links" aria-label="頁尾導覽">
+        <Link href="/blog" underline={false} class="footer-link">Writing</Link>
+        <Link href="/rss.xml" external underline={false} class="footer-link" aria-label="RSS 訂閱">RSS</Link>
+        <Link href="/about" underline={false} class="footer-link">About</Link>
+        <Link href="/contact" underline={false} class="footer-link">Contact</Link>
+      </nav>
+      <div class="bottom-row">
+        <span class="copyright">{config.params.copyright}</span>
+        <ThemeSettings />
+      </div>
+    </div>
+  </Container>
+</footer>
+
+<style>
+  footer { padding-bottom: 1.5rem; }
+  .footer-inner { padding-top: 1.25rem; border-top: 1px solid var(--border); }
+  .bottom-row, .links { display: flex; }
+  .links { align-items: baseline; gap: 1.25rem; margin-bottom: 1rem; color: var(--muted-foreground); font: 600 10px var(--font-sans); letter-spacing: 0.14em; text-transform: uppercase; }
+  :global(.footer-link) { color: var(--muted-foreground) !important; }
+  :global(.footer-link:hover) { color: var(--foreground) !important; }
+  .bottom-row { flex-wrap: wrap; align-items: center; justify-content: space-between; row-gap: 0.5rem; font-size: 0.875rem; }
+  .copyright { color: var(--muted-foreground); }
+  @media (width < 64rem), (pointer: coarse) {
+    :global(.footer-link) { display: inline-flex !important; min-width: 2.75rem; min-height: 2.75rem; align-items: center; justify-content: center; }
+  }
+</style>
