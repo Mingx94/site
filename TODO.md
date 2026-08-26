@@ -1,32 +1,35 @@
-# Astro + EmDash 遷移狀態
+# 移除 Svelte
 
-## Repository
+## 技術決定
 
-- [x] 將 SvelteKit app shell 改成 Astro 7 server output。
-- [x] 整合 EmDash、React、Svelte islands、D1、R2 與 scheduled handler。
-- [x] 保留公開 routes、樣式、SEO、Markdown、RSS、sitemap、robots、llms 與 security headers。
-- [x] 將文章 schema、Portable Text、日期修正與封面媒體寫成可重複套用的 seed/migration。
-- [x] 將 views、reactions 與 contact 改成 Astro API routes，保留既有 KV keys、rate limit、Turnstile 與 email。
-- [x] 移除未使用的 SvelteKit、mdsvex、自訂文章元件與 build-time OG 程式碼。
-- [x] 更新 README、PRODUCT、部署指南與 AGENTS。
-- [x] 通過 seed validation、Astro check、Vitest、production build 與本機 Worker route smoke test。
+- 公開網站改用 Astro 元件輸出 HTML 與 CSS。
+- 互動沿用 Astro 頁面中的原生 `<script>`。
+- 現在不加入 Web Components 或另一套前端框架。只有可重用互動需要獨立生命週期時，才評估 Web Components。
+- EmDash 管理介面仍需要 React；本次不移除 React。
 
-## Cloudflare activation
+## 1. 共用元件
 
-以下步驟需要有效的 Cloudflare 登入，且會變更正式帳號資源：
+- [ ] 將 Header、Footer、Container、Logo、Link、FontToggle 與 ThemeSettings 改成 Astro 元件。
+- [ ] 將 BackToTop、BackToPrev、PostCover、FormattedDate、ArticleClient 與 ReactionBar 改成 Astro 元件。
+- [ ] 用 `Intl.DateTimeFormat` 取代 `date-fns`。
 
-- [x] 建立 production 與 preview 的 D1/R2、隔離 preview KV，將 resource IDs 寫入 `wrangler.jsonc`。
-- [x] 產生並備份 `EMDASH_ENCRYPTION_KEY`，設定 production 與 preview secrets；production 已保留既有的 `TURNSTILE_SECRET_KEY`。
-- [x] 備份現有內容，部署 Worker，套用日期 migration，完成 EmDash/admin/binding smoke test。
-- [x] 保留舊 Worker version；正式 smoke test 通過後才切換流量。
+## 2. 頁面
 
-完整指令與回復順序見 `docs/deployment.md`。
+- [ ] 將首頁、文章列表、About 與 404 的 Svelte 頁面模板改成 Astro。
+- [ ] 更新文章頁與 Base layout 的元件 imports。
+- [ ] 保留現有主題、字體、搜尋、閱讀進度、目錄、瀏覽次數與 reactions 行為。
 
-## 延後項目
+## 3. 清理
 
-- [x] EmDash Forms 取代自訂聯絡表單。
-  - [x] 改用 Forms plugin 與 Cloudflare Email provider，移除自訂 API 與 Svelte 表單。
-  - [x] Production 建立 `contact` 表單，設定 Turnstile 後驗證投稿與通知。
-- [x] 保持 Sandboxed plugins、Dynamic Workers 與自訂 Portable Text blocks 未啟用；目前沒有第三方 plugin 或 custom block 需求。
-- [x] 移除剩餘 Svelte islands；互動改由 Astro 原生腳本處理，Svelte 僅保留伺服器端模板。
-- [x] 目前不加入 D1 read replicas、KV object cache 或額外搜尋服務；正式站量測未顯示需要。
+- [ ] 刪除未使用的 ArrowCard、Social、tabs、popover 與 Svelte button 元件。
+- [ ] 刪除其餘 `.svelte` 檔案與不再使用的 `src/routes` 目錄。
+- [ ] 從 Astro 設定移除 Svelte integration，並將 icons compiler 改成 Astro。
+- [ ] 移除 `@astrojs/svelte`、Svelte、Svelte Check、Svelte Prettier plugin、Bits UI、`date-fns` 與 `clsx`。
+
+## 4. 驗證
+
+- [ ] 確認程式碼、設定與 lockfile 不再包含網站使用的 Svelte runtime 或 `.svelte` imports。
+- [ ] 通過 `npm run check`、`npm test` 與 `npm run build`。
+- [ ] 在桌面與手機尺寸檢查首頁、文章列表、文章頁、About、Contact 與 404；確認鍵盤操作與可存取名稱正常。
+- [ ] 確認公開頁面不載入 Svelte runtime，並比較主要頁面的版面與效能。
+- [ ] 經使用者同意後部署，再完成正式站 smoke test。
