@@ -26,8 +26,7 @@ export function getReadingTime(text: string): number {
   const withoutCjk = stripped.replace(CJK_RANGE, " ");
   const words = withoutCjk.match(WORD_RANGE)?.length ?? 0;
 
-  const minutes =
-    cjkChars / CJK_CHARS_PER_MINUTE + words / WORDS_PER_MINUTE;
+  const minutes = cjkChars / CJK_CHARS_PER_MINUTE + words / WORDS_PER_MINUTE;
 
   return Math.max(1, Math.ceil(minutes));
 }

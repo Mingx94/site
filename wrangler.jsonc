@@ -3,29 +3,27 @@
  * https://developers.cloudflare.com/workers/wrangler/configuration/
  */
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "blog",
-	"main": "./src/worker.ts",
-	"compatibility_date": "2026-04-07",
-	"compatibility_flags": [
-		"nodejs_compat"
-	],
-	"d1_databases": [
-		{
-			"binding": "DB",
-			"database_name": "blog-emdash",
-			"database_id": "3c199b92-6b7c-45da-8d01-669ebdb3bc20"
-		}
-	],
-	"r2_buckets": [
-		{
-			"binding": "MEDIA",
-			"bucket_name": "blog-emdash-media"
-		}
-	],
-	"triggers": {
-		"crons": ["* * * * *", "*/2 * * * *"]
-	},
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "blog",
+  "main": "./src/worker.ts",
+  "compatibility_date": "2026-04-07",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "blog-emdash",
+      "database_id": "3c199b92-6b7c-45da-8d01-669ebdb3bc20",
+    },
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "blog-emdash-media",
+    },
+  ],
+  "triggers": {
+    "crons": ["* * * * *", "*/2 * * * *"],
+  },
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1,
@@ -33,82 +31,82 @@
       "enabled": true,
       "head_sampling_rate": 1,
       "persist": true,
-      "invocation_logs": true
+      "invocation_logs": true,
     },
     "traces": {
       "enabled": true,
       "persist": true,
-      "head_sampling_rate": 1
-    }
+      "head_sampling_rate": 1,
+    },
   },
-	/**
+  /**
    * Smart Placement
    * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
    */
-	// "placement": {  "mode": "smart" }
-	/**
+  // "placement": {  "mode": "smart" }
+  /**
    * Bindings
    * https://developers.cloudflare.com/workers/runtime-apis/bindings/
    */
-	"kv_namespaces": [
-		{
-			"binding": "BLOG_KV",
-			"id": "8f933e166b8044e9af33e4ed03f1de39"
-		},
-	],
-	/**
-	 * Rate limit binding used by Astro API routes to cap per-IP abuse on
-	 * trackView / addReaction / removeReaction.
-	 * limit=30/period=60s chosen conservatively — a real reader won't
-	 * hit 30 counter-writes in a minute; a script will.
-	 */
-	"ratelimits": [
-		{
-			"name": "BLOG_RATE",
-			"namespace_id": "1001",
-			"simple": { "limit": 30, "period": 60 }
-		}
-	],
-	"send_email": [
-		{
-			"name": "SEND_EMAIL",
-			"destination_address": "mingxcv@gmail.com"
-		},
-	],
-	/**
+  "kv_namespaces": [
+    {
+      "binding": "BLOG_KV",
+      "id": "8f933e166b8044e9af33e4ed03f1de39",
+    },
+  ],
+  /**
+   * Rate limit binding used by Astro API routes to cap per-IP abuse on
+   * trackView / addReaction / removeReaction.
+   * limit=30/period=60s chosen conservatively — a real reader won't
+   * hit 30 counter-writes in a minute; a script will.
+   */
+  "ratelimits": [
+    {
+      "name": "BLOG_RATE",
+      "namespace_id": "1001",
+      "simple": { "limit": 30, "period": 60 },
+    },
+  ],
+  "send_email": [
+    {
+      "name": "SEND_EMAIL",
+      "destination_address": "mingxcv@gmail.com",
+    },
+  ],
+  /**
    * Environment Variables
    * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
    * Note: Use secrets to store sensitive data via `wrangler secret put`.
    */
-	"vars": {
-		"TURNSTILE_SITE_KEY": "0x4AAAAAAC9uFe71dDNfqvcZ",
-	},
-	"env": {
-		"preview": {
-			"d1_databases": [
-				{
-					"binding": "DB",
-					"database_name": "blog-emdash-preview",
-					"database_id": "74dc908b-e831-45ff-9274-e6f1f450b4bc"
-				}
-			],
-			"r2_buckets": [
-				{
-					"binding": "MEDIA",
-					"bucket_name": "blog-emdash-media-preview"
-				}
-			],
-			"kv_namespaces": [
-				{
-					"binding": "BLOG_KV",
-					"id": "3da827c525f747e4b283a48247569624"
-				}
-			]
-		}
-	},
-	/**
+  "vars": {
+    "TURNSTILE_SITE_KEY": "0x4AAAAAAC9uFe71dDNfqvcZ",
+  },
+  "env": {
+    "preview": {
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "blog-emdash-preview",
+          "database_id": "74dc908b-e831-45ff-9274-e6f1f450b4bc",
+        },
+      ],
+      "r2_buckets": [
+        {
+          "binding": "MEDIA",
+          "bucket_name": "blog-emdash-media-preview",
+        },
+      ],
+      "kv_namespaces": [
+        {
+          "binding": "BLOG_KV",
+          "id": "3da827c525f747e4b283a48247569624",
+        },
+      ],
+    },
+  },
+  /**
    * Secrets (set via `wrangler secret put`):
-	 * - TURNSTILE_SECRET_KEY
-	 * - EMDASH_ENCRYPTION_KEY
+   * - TURNSTILE_SECRET_KEY
+   * - EMDASH_ENCRYPTION_KEY
    */
 }

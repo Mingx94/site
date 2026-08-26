@@ -44,7 +44,10 @@ function countReadingTime(content: PortableTextBlock[]): number {
   const cjkPattern =
     /\p{Script=Han}|\p{Script=Hangul}|\p{Script=Hiragana}|\p{Script=Katakana}/gu;
   const cjk = text.match(cjkPattern)?.length ?? 0;
-  const words = text.replace(cjkPattern, " ").split(/\s+/).filter(Boolean).length;
+  const words = text
+    .replace(cjkPattern, " ")
+    .split(/\s+/)
+    .filter(Boolean).length;
   return Math.max(1, Math.ceil(words / 200 + cjk / 500));
 }
 
@@ -79,7 +82,8 @@ export async function getPost(slug: string): Promise<Post | null> {
     if (error) throw error;
     return entry ? toPost(entry) : null;
   } catch (error) {
-    if (error instanceof Error && error.name === "LiveEntryNotFoundError") return null;
+    if (error instanceof Error && error.name === "LiveEntryNotFoundError")
+      return null;
     throw error;
   }
 }

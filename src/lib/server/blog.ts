@@ -30,7 +30,8 @@ export async function getViews(kv: KVNamespace | undefined, slug: string) {
 export async function trackView(env: Env, slug: string, ip: string) {
   const kv = env.BLOG_KV;
   if (!kv) return 0;
-  if (!(await rateLimitOk(env.BLOG_RATE, `view:${ip}`))) return getViews(kv, slug);
+  if (!(await rateLimitOk(env.BLOG_RATE, `view:${ip}`)))
+    return getViews(kv, slug);
   if (await dedupHit(kv, `dedup:view:${ip}:${slug}`)) return getViews(kv, slug);
   const next = (await getViews(kv, slug)) + 1;
   await kv.put(`views:${slug}`, String(next));

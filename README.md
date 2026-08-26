@@ -6,7 +6,7 @@
 
 - Astro 7 server output + Cloudflare Workers
 - EmDash CMS，D1 儲存內容，R2 儲存媒體
-- Svelte 5 interactive islands
+- Astro components with native browser scripts
 - Native CSS
 - Cloudflare KV、Rate Limiting、Email Routing 與 Turnstile
 
@@ -36,7 +36,9 @@ npm run dev
 | 指令 | 用途 |
 | --- | --- |
 | `npm run dev` | 啟動 Astro 開發伺服器 |
-| `npm run check` | 型別與無障礙檢查 |
+| `npm run check` | 格式、lint、型別與無障礙檢查 |
+| `npm run format` | 用 Oxfmt 格式化支援的檔案 |
+| `npm run lint` | 用 Oxlint 檢查程式碼 |
 | `npm test` | 執行 Vitest |
 | `npm run build` | 建立 production Worker |
 | `npm run cf-typegen` | 產生 Cloudflare binding 型別 |
@@ -54,13 +56,15 @@ Cloudflare 資源、備份、部署與回復步驟請見 [部署指南](docs/dep
 .emdash/seed.json       初始 schema 與遷移內容
 migrations/             專案資料修正 migration
 public/                 靜態資產
-src/components/         Svelte islands
+src/components/         Astro 元件
 src/layouts/            Astro layout
 src/lib/                內容與 Cloudflare helper
 src/pages/              Astro 頁面與 API routes
 src/live.config.ts      EmDash live collection
 src/worker.ts           Astro + EmDash Worker entry
 ```
+
+Oxfmt 目前不支援 `.astro` 檔案，因此格式化指令會跳過這些檔案。`npm run check` 仍會用 Astro 檢查其 TypeScript 與無障礙問題。
 
 ## License
 
