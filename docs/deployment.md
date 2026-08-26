@@ -46,17 +46,19 @@ npx wrangler d1 execute blog-emdash --local --file migrations/0001-content-dates
 
 ## 正式部署
 
-1. 匯出正式 D1、從 EmDash Admin 下載內容備份，並另外備份 R2 objects。
+1. 記錄正式 D1 Time Travel bookmark、從 EmDash Admin 下載內容備份，並另外備份 R2 objects。
 2. 記錄目前可回復的 Worker version。
 3. 執行檢查、測試與建置。
 4. 部署 Worker，讓 EmDash 套用內建 migration 與 seed。
 5. 套用 `migrations/0001-content-dates.sql`。
 6. 完成 smoke test 後才切換自訂網域流量。
 
-本次遷移前記錄的 production Worker 是 version 46（`9767dce3-0d46-4ba4-b6e8-9c3a5ef83e81`，2026-08-20）。部署前仍應再確認一次目前版本。
+本次部署前記錄的 production Worker 是 version 57（`57a3324c-8fde-40ae-b02f-a6e04d0aebad`，2026-08-26）。每次部署前仍應再確認一次目前版本。
+
+EmDash 使用 FTS5 virtual tables，因此 Wrangler 目前無法匯出完整 D1 SQL。部署前必須記錄 Time Travel bookmark，並保留 EmDash 與 R2 備份。
 
 ```bash
-npx wrangler d1 export blog-emdash --remote --output backup-before-emdash.sql
+npx wrangler d1 time-travel info blog-emdash --json
 npm ci
 npm run check
 npm test
