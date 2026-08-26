@@ -1,0 +1,133 @@
+{
+  "$schema": "https://emdashcms.com/seed.schema.json",
+  "version": "1",
+  "defaultLocale": "zh-TW",
+  "meta": {
+    "name": "Vartifact",
+    "description": "Michael Tsai 的個人部落格",
+    "author": "Michael Tsai"
+  },
+  "settings": {
+    "title": "Vartifact",
+    "tagline": "Michael Tsai 的個人部落格，分享技術與生活。",
+    "postsPerPage": 10
+  },
+  "collections": [
+    {
+      "slug": "posts",
+      "label": "文章",
+      "labelSingular": "文章",
+      "description": "Vartifact 公開文章",
+      "icon": "file-text",
+      "supports": ["drafts", "revisions", "preview", "scheduling", "search", "seo"],
+      "fields": [
+        {
+          "slug": "title",
+          "label": "標題",
+          "type": "string",
+          "required": true,
+          "searchable": true
+        },
+        {
+          "slug": "excerpt",
+          "label": "摘要",
+          "type": "text",
+          "searchable": true
+        },
+        {
+          "slug": "featured_image",
+          "label": "封面圖片",
+          "type": "image"
+        },
+        {
+          "slug": "content",
+          "label": "正文",
+          "type": "portableText",
+          "required": true,
+          "searchable": true
+        }
+      ]
+    }
+  ],
+  "bylines": [
+    {
+      "id": "michael-tsai",
+      "slug": "michael-tsai",
+      "displayName": "Michael Tsai",
+      "websiteUrl": "https://vartifact.cc/about"
+    }
+  ],
+  "content": {
+    "posts": [
+      {
+        "id": "why-astro",
+        "slug": "why-astro",
+        "status": "published",
+        "bylines": [{ "byline": "michael-tsai" }],
+        "data": {
+          "title": "初次使用 Astro.js",
+          "excerpt": "為什麼使用 Astro.js 來打造部落格",
+          "featured_image": {
+            "$media": {
+              "url": "https://raw.githubusercontent.com/Mingx94/site/015d9869469152b860f28eac95d65a04fdf71147/src/content/posts/why-astro/cover.jpg",
+              "alt": "初次使用 Astro.js",
+              "filename": "why-astro-cover.jpg"
+            }
+          },
+          "content": [
+            {
+              "_type": "block",
+              "_key": "intro",
+              "style": "normal",
+              "markDefs": [
+                { "_key": "jamstack", "_type": "link", "href": "https://jamstack.org/generators/" },
+                { "_key": "sveltekit", "_type": "link", "href": "https://svelte.dev/docs/kit/introduction" },
+                { "_key": "mdsvex", "_type": "link", "href": "https://github.com/pngwn/MDsveX" }
+              ],
+              "children": [
+                { "_type": "span", "_key": "intro-1", "text": "2025 年已經有許多成熟的 ", "marks": [] },
+                { "_type": "span", "_key": "intro-2", "text": "JAMStack", "marks": ["jamstack"] },
+                { "_type": "span", "_key": "intro-3", "text": "，原本是使用 ", "marks": [] },
+                { "_type": "span", "_key": "intro-4", "text": "SvelteKit", "marks": ["sveltekit"] },
+                { "_type": "span", "_key": "intro-5", "text": " 來開發網站。但是在實際開發中，SvelteKit 並不是專門為了生成靜態網頁而設計的，如果需要生成靜態網頁，則需要再手動加入一些工具，例如 ", "marks": [] },
+                { "_type": "span", "_key": "intro-6", "text": "MDsveX", "marks": ["mdsvex"] },
+                { "_type": "span", "_key": "intro-7", "text": " 等來轉換 Markdown 文件渲染為 HTML。", "marks": [] }
+              ]
+            },
+            {
+              "_type": "block",
+              "_key": "astro-heading",
+              "style": "h2",
+              "markDefs": [],
+              "children": [{ "_type": "span", "_key": "astro-heading-text", "text": "Astro", "marks": [] }]
+            },
+            {
+              "_type": "block",
+              "_key": "astro-intro",
+              "style": "normal",
+              "markDefs": [{ "_key": "astro-link", "_type": "link", "href": "https://astro.build/" }],
+              "children": [
+                { "_type": "span", "_key": "astro-intro-1", "text": "Astro", "marks": ["astro-link"] },
+                { "_type": "span", "_key": "astro-intro-2", "text": " 是個 web 框架，用於打造以內容為中心的網站，例如部落格、行銷、電商網站。Astro 以開創全新的前端架構聞名，相較其他框架使用更少 JavaScript，複雜度更低。", "marks": [] }
+              ]
+            },
+            {
+              "_type": "block",
+              "_key": "frameworks",
+              "style": "normal",
+              "markDefs": [],
+              "children": [{ "_type": "span", "_key": "frameworks-text", "text": "最吸引我的地方在於 Astro 可以支援各種前端框架，如 Vue、React、Svelte、Preact、SolidJS 等，並且可以很方便的透過 Markdown 文件來生成靜態網頁。", "marks": [] }]
+            },
+            {
+              "_type": "block",
+              "_key": "ecosystem",
+              "style": "normal",
+              "markDefs": [],
+              "children": [{ "_type": "span", "_key": "ecosystem-text", "text": "Astro 的生態系也很完整，並且他是建構在 Vite 之上，因此可以很方便的透過 Vite 插件來擴展功能。基本上就是一個開箱即用的工具。", "marks": [] }]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

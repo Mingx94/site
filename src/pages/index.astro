@@ -1,0 +1,13 @@
+---
+import Home from "@/routes/+page.svelte";
+import config from "@/config";
+import { getPosts } from "@/lib/posts";
+import Base from "@/layouts/Base.astro";
+
+const posts = await getPosts();
+const recentBlogs = posts.slice(0, config.settings.num_posts_on_homepage);
+---
+
+<Base>
+  <Home data={{ recentBlogs, showMoreLink: posts.length > recentBlogs.length }} />
+</Base>

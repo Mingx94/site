@@ -4,6 +4,7 @@ build/
 .cloudflare/
 
 # generated
+.astro/
 .content-collections/
 .svelte-kit/
 .wrangler/
@@ -36,5 +37,5 @@ dogfood-output/
 .playwright-cli/
 .impeccable/questions/
 
-# OG images generated at build time (scripts/gen-og.ts → static/og/)
-static/og/*.png
+# Old build-time OG output. Article pages now use the EmDash featured image.
+public/og/*.png

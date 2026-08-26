@@ -1,0 +1,17 @@
+---
+import Blog from "@/routes/blog/+page.svelte";
+import { getPosts } from "@/lib/posts";
+import Base from "@/layouts/Base.astro";
+
+const allPosts = await getPosts();
+const posts = allPosts.reduce<Record<string, typeof allPosts>>((groups, post) => {
+  const year = String(new Date(post.date).getFullYear());
+  (groups[year] ??= []).push(post);
+  return groups;
+}, {});
+const years = Object.keys(posts).toSorted((a, b) => Number(b) - Number(a));
+---
+
+<Base title="文章 | Vartifact" description="技術隨筆、閱讀筆記，以及其他片段。">
+  <Blog data={{ posts, years }} client:load />
+</Base>

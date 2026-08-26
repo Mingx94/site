@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getReactions, addReaction, removeReaction } from "@/lib/blog.remote";
+  import { onMount } from "svelte";
 
   interface Props {
     slug: string;
@@ -15,49 +15,48 @@
     party: { emoji: "\u{1F389}", label: "慶祝" },
   };
 
-  // Anchor query to reactive context — addReaction calls refresh() → auto-updates
-  const reactionsQuery = $derived(getReactions(slug));
-
   let reacted = $state<Set<string>>(new Set());
+  let reactions = $state<Record<string, number>>({});
+  let loading = $state(true);
 
   // Load reacted set from localStorage
-  $effect(() => {
+  onMount(async () => {
     try {
       const stored = localStorage.getItem(`reactions:${slug}`);
       if (stored) reacted = new Set(JSON.parse(stored));
     } catch {
       // ignore
     }
+    try {
+      const response = await fetch(`/api/blog/${encodeURIComponent(slug)}/reactions`);
+      if (response.ok) reactions = await response.json();
+    } finally {
+      loading = false;
+    }
   });
 
   async function react(emoji: string) {
-    if (reacted.has(emoji)) {
-      reacted.delete(emoji);
-      try {
-        localStorage.setItem(`reactions:${slug}`, JSON.stringify([...reacted]));
-      } catch {
-        // ignore
-      }
-      try {
-        await removeReaction({ slug, emoji });
-      } catch {
-        // ignore
-      }
-      return;
-    }
-
-    reacted.add(emoji);
-
+    const action = reacted.has(emoji) ? "remove" : "add";
+    loading = true;
     try {
+      const response = await fetch(
+        `/api/blog/${encodeURIComponent(slug)}/reactions`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ emoji, action }),
+        },
+      );
+      if (!response.ok) return;
+      reactions = await response.json();
+      if (action === "add") reacted.add(emoji);
+      else reacted.delete(emoji);
+      reacted = new Set(reacted);
       localStorage.setItem(`reactions:${slug}`, JSON.stringify([...reacted]));
     } catch {
       // ignore
-    }
-
-    try {
-      await addReaction({ slug, emoji });
-    } catch {
-      // ignore
+    } finally {
+      loading = false;
     }
   }
 </script>
@@ -66,17 +65,17 @@
   {#each Object.entries(EMOJI_MAP) as [key, { emoji, label }] (key)}
     <button
       onclick={() => react(key)}
-      disabled={reactionsQuery.loading}
-      aria-label="{label}{reactionsQuery.current?.[key]
-        ? `，${reactionsQuery.current[key]} 個`
+      disabled={loading}
+      aria-label="{label}{reactions[key]
+        ? `，${reactions[key]} 個`
         : ''}"
       title={label}
       class:reacted={reacted.has(key)}
-      class:loading={reactionsQuery.loading}
+      class:loading
     >
       <span class="emoji" aria-hidden="true">{emoji}</span>
-      {#if reactionsQuery.current?.[key]}
-        <span class="count">{reactionsQuery.current[key]}</span>
+      {#if reactions[key]}
+        <span class="count">{reactions[key]}</span>
       {/if}
     </button>
   {/each}

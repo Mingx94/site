@@ -4,13 +4,13 @@
   import FormattedDate from "@/components/FormattedDate.svelte";
   import Link from "@/components/Link.svelte";
   import PostCover from "@/components/PostCover.svelte";
-  import Seo from "@/components/Seo.svelte";
   import config from "@/config";
   import { staggerIn } from "@/lib/domEvent";
   import RiArrowRightUpLine from "~icons/ri/arrow-right-up-line";
-  import type { PageProps } from "./$types";
+  import type { Post } from "@/lib/posts";
 
-  let { data }: PageProps = $props();
+  let { data }: { data: { recentBlogs: Post[]; showMoreLink: boolean } } =
+    $props();
   const featured = $derived(data.recentBlogs[0]);
 
   const elsewhere = [
@@ -25,8 +25,6 @@
   ].filter((item) => item.href);
 </script>
 
-<Seo />
-
 <Container>
   <div class="home">
     {#if featured}
@@ -35,6 +33,7 @@
           <a href="/blog/{featured.id}" aria-label="閱讀：{featured.title}">
             <PostCover
               slug={featured.id}
+              src={featured.cover}
               title={featured.title}
               frame="01"
               priority
@@ -89,6 +88,7 @@
                 <div class="frame-cover">
                   <PostCover
                     slug={post.id}
+                    src={post.cover}
                     title={post.title}
                     frame={String(index + 1).padStart(2, "0")}
                     compact

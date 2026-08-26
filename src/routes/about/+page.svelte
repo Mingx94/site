@@ -3,7 +3,6 @@
   import BackToTop from "@/components/BackToTop.svelte";
   import Container from "@/components/Container.svelte";
   import Link from "@/components/Link.svelte";
-  import Seo from "@/components/Seo.svelte";
   import config from "@/config";
   import { staggerIn } from "@/lib/domEvent";
   import RiArrowRightUpLine from "~icons/ri/arrow-right-up-line";
@@ -38,11 +37,6 @@
     { label: "Also", value: "攝影、閱讀" },
   ];
 </script>
-
-<Seo
-  title="關於 | Vartifact"
-  description="關於 Michael Tsai — 前端工程師，Vartifact 部落格的作者。"
-/>
 
 <Container>
   <div class="about">
@@ -95,7 +89,7 @@
         <p>
           工作上主要使用 React 與 Next.js 開發 Web 應用，
           對效能優化、無障礙設計與使用者體驗有持續的關注。 這個部落格本身是用
-          SvelteKit 打造的—— 邊探索邊實作，把新框架當作素材來思考。
+          Astro 與 EmDash 打造的—— 邊探索邊實作，把新框架當作素材來思考。
         </p>
         <p>
           出門一定帶相機。部落格裡的圖片幾乎都是自己拍的。

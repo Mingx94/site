@@ -12,7 +12,7 @@ describe("security discovery files", () => {
   it("publishes security.txt under the well-known path", () => {
     const securityTxtPath = resolve(
       repoRoot,
-      "static/.well-known/security.txt",
+      "public/.well-known/security.txt",
     );
 
     expect(existsSync(securityTxtPath)).toBe(true);
@@ -27,7 +27,7 @@ describe("security discovery files", () => {
   });
 
   it("serves security.txt with explicit text headers", () => {
-    const headers = readProjectFile("_headers");
+    const headers = readProjectFile("public/_headers");
 
     expect(headers).toMatch(
       /\/\.well-known\/security\.txt\r?\n\s+Content-Type: text\/plain; charset=utf-8\r?\n\s+Cache-Control: public, max-age=300, s-maxage=3600/,

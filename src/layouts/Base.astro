@@ -1,0 +1,101 @@
+---
+import Header from "@/components/Header.svelte";
+import Footer from "@/components/Footer.svelte";
+import config from "@/config";
+import "@/styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  noindex?: boolean;
+  type?: "website" | "article";
+  markdown?: string;
+}
+
+const {
+  title = config.site.title,
+  description = config.metadata.meta_description,
+  image = "/og.jpg",
+  noindex = false,
+  type = "website",
+  markdown,
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.url.origin).href;
+const imageUrl = new URL(image, Astro.url.origin).href;
+---
+
+<!doctype html>
+<html lang="zh-Hant" id="top">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={config.metadata.meta_author} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    <link rel="icon" type="image/svg+xml" href={config.site.favicon} />
+    <link rel="icon" type="image/svg+xml" href={config.site.favicon_dark} media="(prefers-color-scheme: dark)" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Huninn&family=Iansui&display=swap" rel="stylesheet" />
+    <link rel="alternate" type="application/rss+xml" title="Vartifact RSS" href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap.xml" />
+    {markdown && <link rel="alternate" type="text/markdown" href={markdown} />}
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={config.site.title} />
+    <meta property="article:author" content={config.metadata.meta_author} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content={config.metadata.meta_author} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+    <script is:inline>
+      try {
+        const theme = localStorage.getItem("theme");
+        document.documentElement.classList.toggle(
+          "dark",
+          theme === "dark" ||
+            (theme !== "light" && matchMedia("(prefers-color-scheme: dark)").matches),
+        );
+        document.documentElement.classList.toggle(
+          "reading-sans",
+          localStorage.getItem("font") === "sans",
+        );
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <a href="#main" class="skip-link">跳到主要內容</a>
+    <Header pathname={Astro.url.pathname} client:load />
+    <main id="main"><slot /></main>
+    <Footer client:load />
+    <script is:inline>
+      const updateScrollState = () =>
+        document.documentElement.classList.toggle("scrolled", window.scrollY > 0);
+      updateScrollState();
+      addEventListener("scroll", updateScrollState, { passive: true });
+    </script>
+    <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"c617e67a33d54b69bae259d6a61d45b3"}'></script>
+  </body>
+</html>
+
+<style is:global>
+  .skip-link {
+    position: fixed;
+    z-index: 100;
+    top: 0.5rem;
+    left: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--foreground);
+    color: var(--background);
+    transform: translateY(-150%);
+  }
+  .skip-link:focus { transform: none; }
+</style>

@@ -1,22 +1,20 @@
 <script lang="ts">
   import Container from "@/components/Container.svelte";
   import Link from "@/components/Link.svelte";
-  import Seo from "@/components/Seo.svelte";
   import { staggerIn } from "@/lib/domEvent";
-  import { page } from "$app/state";
-</script>
 
-<Seo title="{page.status} | Vartifact" noindex />
+  let { status = 404 }: { status?: number } = $props();
+</script>
 
 <Container>
   <div {@attach staggerIn} class="error animate">
     <h1>
-      {page.status}
+      {status}
     </h1>
     <p>
-      {#if page.status === 404}
+      {#if status === 404}
         找不到這個頁面，它可能已被移動或刪除。
-      {:else if page.status >= 500}
+      {:else if status >= 500}
         伺服器發生了一些問題，請稍後再試。
       {:else}
         發生了一些問題，請稍後再試。
