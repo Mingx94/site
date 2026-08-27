@@ -56,7 +56,15 @@ const normalizeSearch = (value: string) =>
                         <li data-search-text={normalizeSearch(`${post.title} ${post.description ?? ""}`)}>
                           <a href={`/blog/${post.id}`} class="post-link">
                             <div class="post-cover">
-                              <PostCover src={post.cover} title={post.title} frame={String(index + 1).padStart(2, "0")} compact ratio="4 / 3" />
+                              <PostCover
+                                src={post.cover}
+                                alt={post.coverAlt}
+                                title={post.title}
+                                frame={String(index + 1).padStart(2, "0")}
+                                ratio="4 / 3"
+                                sizes="(min-width: 72rem) 21rem, (min-width: 48rem) 15rem, (min-width: 40rem) 38vw, calc(100vw - 2rem)"
+                                compact
+                              />
                             </div>
                             <span class="post-number">N°{String(index + 1).padStart(2, "0")}</span>
                             <div class="post-copy">

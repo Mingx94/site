@@ -203,6 +203,11 @@
 
 <style>
   [hidden] { display: none !important; }
+  [data-table-of-contents] {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 1rem;
+  }
   .desktop-toc { display: none; }
   .toc-title {
     margin-bottom: 1rem;
@@ -236,10 +241,6 @@
     color: var(--primary);
   }
   .toc-toggle {
-    position: fixed;
-    z-index: 40;
-    right: max(1rem, env(safe-area-inset-right));
-    bottom: max(1rem, env(safe-area-inset-bottom));
     display: flex;
     width: 3rem;
     height: 3rem;
@@ -324,6 +325,8 @@
     [data-table-of-contents] {
       position: sticky;
       top: 6rem;
+      display: block;
+      padding-top: 0;
     }
     .desktop-toc {
       display: block;

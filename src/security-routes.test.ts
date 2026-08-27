@@ -33,4 +33,20 @@ describe("security discovery files", () => {
       /\/\.well-known\/security\.txt\r?\n\s+Content-Type: text\/plain; charset=utf-8\r?\n\s+Cache-Control: public, max-age=300, s-maxage=3600/,
     );
   });
+
+  it("allows the Cloudflare Web Analytics script and beacon endpoints", () => {
+    const cspSources = [
+      readProjectFile("src/middleware.ts"),
+      readProjectFile("public/_headers"),
+    ];
+
+    for (const source of cspSources) {
+      expect(source).toMatch(
+        /script-src[^;\r\n]*https:\/\/static\.cloudflareinsights\.com/,
+      );
+      expect(source).toMatch(
+        /connect-src[^;\r\n]*https:\/\/cloudflareinsights\.com/,
+      );
+    }
+  });
 });

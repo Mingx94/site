@@ -56,6 +56,79 @@ typography:
     fontWeight: 600
     lineHeight: 1.25
     letterSpacing: "0.14em"
+  article-headline-mobile:
+    fontFamily: "Iansui, serif"
+    fontSize: "clamp(2.25rem, 10.75vw, 2.75rem)"
+    fontWeight: 500
+    lineHeight: 1.08
+    letterSpacing: "-0.025em"
+  article-headline-tablet:
+    fontFamily: "Iansui, serif"
+    fontSize: "clamp(2.25rem, 5vw, 2.5rem)"
+    fontWeight: 500
+    lineHeight: 1.08
+    letterSpacing: "-0.025em"
+  article-headline-desktop:
+    fontFamily: "Iansui, serif"
+    fontSize: "clamp(2.75rem, 4vw, 3.75rem)"
+    fontWeight: 500
+    lineHeight: 1.08
+    letterSpacing: "-0.025em"
+  article-introduction:
+    fontFamily: "Iansui, serif"
+    fontSize: "1.125rem"
+    fontWeight: 400
+    lineHeight: 1.7
+  article-introduction-wide:
+    fontFamily: "Iansui, serif"
+    fontSize: "1.25rem"
+    fontWeight: 400
+    lineHeight: 1.7
+  article-section:
+    fontFamily: "Iansui, serif"
+    fontSize: "1.5rem"
+    fontWeight: 600
+    letterSpacing: "-0.025em"
+  article-section-wide:
+    fontFamily: "Iansui, serif"
+    fontSize: "1.875rem"
+    fontWeight: 600
+    letterSpacing: "-0.025em"
+  article-subheading:
+    fontFamily: "Iansui, serif"
+    fontSize: "1.25rem"
+    fontWeight: 600
+    letterSpacing: "-0.025em"
+  article-subheading-wide:
+    fontFamily: "Iansui, serif"
+    fontSize: "1.5rem"
+    fontWeight: 600
+    letterSpacing: "-0.025em"
+  article-quote:
+    fontFamily: "Iansui, serif"
+    fontSize: "1.25rem"
+    fontWeight: 500
+    lineHeight: 1.6
+  article-quote-wide:
+    fontFamily: "Iansui, serif"
+    fontSize: "1.5rem"
+    fontWeight: 500
+    lineHeight: 1.6
+  article-metadata:
+    fontFamily: "Huninn, sans-serif"
+    fontSize: "0.75rem"
+    fontWeight: 400
+    letterSpacing: "0.04em"
+  article-micro-label:
+    fontFamily: "Huninn, sans-serif"
+    fontSize: "0.625rem"
+    fontWeight: 600
+    letterSpacing: "0.16em"
+  article-folio:
+    fontFamily: "Huninn, sans-serif"
+    fontSize: "10px"
+    fontWeight: 400
+    letterSpacing: "0.2em"
 rounded:
   square: "0px"
   tight: "2px"
@@ -184,11 +257,24 @@ The light theme resembles warm photographic proof paper; the dark theme becomes 
 - **Interface:** Navigation, buttons, utility links, controls, and compact values.
 - **Label:** Uppercase English metadata, dates, frame numbers, counts, and eyebrow text.
 
+### Article Reading Scale
+
+- **Article headline:** Iansui at weight 500, line-height 1.08, and -0.025em tracking. Use 2.25–2.75rem below 48rem, 2.25–2.5rem from 48rem to 64rem, and 2.75–3.75rem from 64rem.
+- **Introduction:** Iansui at 1.125rem and line-height 1.7. Increase it to 1.25rem from 48rem.
+- **Body:** Iansui at 1rem and line-height 1.9, with a maximum measure of 65ch.
+- **Section heading:** Iansui at weight 600 and -0.025em tracking. Use 1.5rem below 48rem and 1.875rem from 48rem.
+- **Subheading:** Iansui at weight 600 and -0.025em tracking. Use 1.25rem below 48rem and 1.5rem from 48rem.
+- **Pull quote:** Iansui at weight 500 and line-height 1.6. Use 1.25rem below 48rem and 1.5rem from 48rem.
+- **Reading utilities:** Use Huninn at 0.875rem for the table of contents and reaction counts, 0.75rem for ledger values, 0.6875rem for index labels, 0.625rem for ledger labels and film captions, and 10px for the colophon.
+- **Inline code:** Use Huninn at 0.9em. The mono token aliases Huninn and does not introduce a third family.
+
 ### Named Rules
 
 **The Two Families Rule.** Use Iansui for authored reading and Huninn for interface structure. Do not add a display or monospaced family.
 
 **The Caption Discipline Rule.** Widely tracked uppercase labels stay small and brief; they support the reading hierarchy rather than becoming body copy.
+
+**The Reading Toggle Rule.** The reading-font toggle changes article prose, list items, blockquotes, and the introduction to Huninn. Article titles and section headings remain Iansui so the authored hierarchy stays stable.
 
 ## Layout
 

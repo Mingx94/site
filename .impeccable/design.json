@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-19T22:16:12.1541299+08:00",
+  "generatedAt": "2026-08-27T10:08:17.8043124+08:00",
   "title": "Design System: Vartifact",
   "extensions": {
     "colorMeta": {
@@ -329,6 +329,62 @@
       "label": {
         "displayName": "Film Label",
         "purpose": "Frame numbers, dates, counts, and eyebrow text."
+      },
+      "article-headline-mobile": {
+        "displayName": "Article Headline Mobile",
+        "purpose": "Article headlines below the reading breakpoint."
+      },
+      "article-headline-tablet": {
+        "displayName": "Article Headline Tablet",
+        "purpose": "Article headlines from 48rem to 64rem."
+      },
+      "article-headline-desktop": {
+        "displayName": "Article Headline Desktop",
+        "purpose": "Article headlines from 64rem."
+      },
+      "article-introduction": {
+        "displayName": "Article Introduction",
+        "purpose": "Article introductions below 48rem."
+      },
+      "article-introduction-wide": {
+        "displayName": "Article Introduction Wide",
+        "purpose": "Article introductions from 48rem."
+      },
+      "article-section": {
+        "displayName": "Article Section",
+        "purpose": "Level-two article headings below 48rem."
+      },
+      "article-section-wide": {
+        "displayName": "Article Section Wide",
+        "purpose": "Level-two article headings from 48rem."
+      },
+      "article-subheading": {
+        "displayName": "Article Subheading",
+        "purpose": "Level-three article headings below 48rem."
+      },
+      "article-subheading-wide": {
+        "displayName": "Article Subheading Wide",
+        "purpose": "Level-three article headings from 48rem."
+      },
+      "article-quote": {
+        "displayName": "Article Pull Quote",
+        "purpose": "Article blockquotes below 48rem."
+      },
+      "article-quote-wide": {
+        "displayName": "Article Pull Quote Wide",
+        "purpose": "Article blockquotes from 48rem."
+      },
+      "article-metadata": {
+        "displayName": "Article Metadata",
+        "purpose": "Values in the article ledger."
+      },
+      "article-micro-label": {
+        "displayName": "Article Micro Label",
+        "purpose": "Ledger labels and film captions."
+      },
+      "article-folio": {
+        "displayName": "Article Folio",
+        "purpose": "Filed and revised colophon text."
       }
     },
     "shadows": [

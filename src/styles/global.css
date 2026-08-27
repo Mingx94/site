@@ -32,7 +32,7 @@
     position: fixed;
     z-index: -1;
     inset: 0;
-    background: url("/design/proof-paper.png") center / 1024px repeat;
+    background: url("/design/proof-paper.webp") center / 1024px repeat;
     content: "";
     opacity: 0.14;
     pointer-events: none;
