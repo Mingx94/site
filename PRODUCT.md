@@ -23,7 +23,7 @@ Visitors read the public website without an account. They can browse and search 
 - Astro 7 renders the site on Cloudflare Workers.
 - EmDash stores content in D1 and media in R2.
 - Native browser scripts provide public interactions without a client framework.
-- Cloudflare KV preserves article views, reactions, and contact submissions.
+- Cloudflare KV preserves article views and contact submissions.
 - Cloudflare Rate Limiting protects counter writes.
 - The contact form uses Turnstile and an email binding.
 - Existing public routes and article slugs must remain stable.

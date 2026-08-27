@@ -1,11 +1,3 @@
-export const ALLOWED_EMOJIS = [
-  "thumbsup",
-  "heart",
-  "fire",
-  "bulb",
-  "party",
-] as const;
-
 const DEDUP_TTL_SECONDS = 24 * 60 * 60;
 const VIEW_METRIC = "views";
 
@@ -16,11 +8,6 @@ export const COUNTER_CHANGE_SQL = `INSERT INTO site_counters (slug, metric, valu
      RETURNING value`;
 
 type CounterRow = { value: number };
-type MetricCounterRow = CounterRow & { metric: string };
-
-function reactionMetric(emoji: string) {
-  return `reaction:${emoji}`;
-}
 
 function count(value: string | number | null | undefined) {
   const parsed =
@@ -87,55 +74,4 @@ export async function trackView(env: Env, slug: string, ip: string) {
   if (await dedupHit(kv, `dedup:view:${ip}:${slug}`))
     return getViews(env, slug);
   return changeCounter(env, slug, VIEW_METRIC, `views:${slug}`, 1);
-}
-
-export async function getReactions(env: Env, slug: string) {
-  const metrics = ALLOWED_EMOJIS.map(reactionMetric);
-  const placeholders = metrics.map(() => "?").join(", ");
-  const { results } = await env.DB.prepare(
-    `SELECT metric, value FROM site_counters
-     WHERE slug = ? AND metric IN (${placeholders})`,
-  )
-    .bind(slug, ...metrics)
-    .all<MetricCounterRow>();
-  const stored = new Map(results.map((row) => [row.metric, count(row.value)]));
-  const entries = await Promise.all(
-    ALLOWED_EMOJIS.map(async (emoji) => {
-      const value = stored.get(reactionMetric(emoji));
-      return [
-        emoji,
-        value ??
-          (await legacyCounter(env.BLOG_KV, `reactions:${slug}:${emoji}`)),
-      ] as const;
-    }),
-  );
-  return Object.fromEntries(entries);
-}
-
-export async function changeReaction(
-  env: Env,
-  slug: string,
-  emoji: string,
-  action: "add" | "remove",
-  ip: string,
-) {
-  if (!ALLOWED_EMOJIS.includes(emoji as (typeof ALLOWED_EMOJIS)[number])) {
-    return getReactions(env, slug);
-  }
-  const kv = env.BLOG_KV;
-  if (!(await rateLimitOk(env.BLOG_RATE, `react:${ip}`))) {
-    return getReactions(env, slug);
-  }
-
-  const dedupKey = `dedup:react:${ip}:${slug}:${emoji}`;
-  const legacyKey = `reactions:${slug}:${emoji}`;
-  if (action === "add") {
-    if (!(await dedupHit(kv, dedupKey))) {
-      await changeCounter(env, slug, reactionMetric(emoji), legacyKey, 1);
-    }
-  } else if (await kv.get(dedupKey)) {
-    await changeCounter(env, slug, reactionMetric(emoji), legacyKey, -1);
-    await kv.delete(dedupKey);
-  }
-  return getReactions(env, slug);
 }

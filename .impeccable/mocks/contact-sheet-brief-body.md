@@ -38,7 +38,7 @@ Do not literalize invented comp details. Render only real articles, real dates, 
 | Frame metadata | Semantic HTML/CSS | Real index, date, reading time; sans tabular numerals |
 | Contact strip | Semantic HTML/CSS plus existing covers | Real posts only; horizontal scroll on small screens |
 | Recent writing index | Semantic HTML/CSS plus existing covers | Strong row hierarchy, no equal-size card grid |
-| Search, theme, font, reactions, contact form | Existing interactive components restyled | Preserve behavior and accessible states |
+| Search, theme, font, contact form | Existing interactive components restyled | Preserve behavior and accessible states |
 | Crop and registration marks | CSS pseudo-elements | Sparse oxide-red marks; no decorative overload |
 
 ## Motion

@@ -15,7 +15,7 @@ Use a desktop editorial ledger. Put a narrow article index at the left. Put the 
 
 Keep the article body near 65 characters per line. Keep the table of contents secondary to the text. The desktop index can stay visible while the article scrolls. The title, cover, and metadata must scroll with the article and must not stay fixed in the viewport. On small screens, remove the ledger geometry. Stack the title, cover, metadata, and article body in reading order. Keep a compact table-of-contents control instead of the desktop margin index.
 
-Use only real article content, dates, author data, cover images, and existing interactions. Preserve reading progress, views, reactions, theme controls, font controls, Markdown content, and accessible labels.
+Use only real article content, dates, author data, cover images, and existing interactions. Preserve reading progress, views, theme controls, font controls, Markdown content, and accessible labels.
 
 ## Grammar
 
@@ -49,4 +49,4 @@ Use only real article content, dates, author data, cover images, and existing in
 
 ## Motion
 
-Keep the article content visible by default. Use only existing restrained transitions. Do not animate reading, scrolling, reactions, or direct controls.
+Keep the article content visible by default. Use only existing restrained transitions. Do not animate reading, scrolling, or direct controls.

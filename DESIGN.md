@@ -174,12 +174,6 @@ components:
     typography: "{typography.title}"
     rounded: "{rounded.square}"
     padding: "24px 0"
-  reaction-chip:
-    backgroundColor: "transparent"
-    textColor: "{colors.silver-gelatin}"
-    typography: "{typography.interface}"
-    rounded: "{rounded.pill}"
-    padding: "6px 12px"
 ---
 
 # Design System: Vartifact
@@ -265,7 +259,7 @@ The light theme resembles warm photographic proof paper; the dark theme becomes 
 - **Section heading:** Iansui at weight 600 and -0.025em tracking. Use 1.5rem below 48rem and 1.875rem from 48rem.
 - **Subheading:** Iansui at weight 600 and -0.025em tracking. Use 1.25rem below 48rem and 1.5rem from 48rem.
 - **Pull quote:** Iansui at weight 500 and line-height 1.6. Use 1.25rem below 48rem and 1.5rem from 48rem.
-- **Reading utilities:** Use Huninn at 0.875rem for the table of contents and reaction counts, 0.75rem for ledger values, 0.6875rem for index labels, 0.625rem for ledger labels and film captions, and 10px for the colophon.
+- **Reading utilities:** Use Huninn at 0.875rem for the table of contents, 0.75rem for ledger values, 0.6875rem for index labels, 0.625rem for ledger labels and film captions, and 10px for the colophon.
 - **Inline code:** Use Huninn at 0.9em. The mono token aliases Huninn and does not introduce a third family.
 
 ### Named Rules
@@ -303,7 +297,7 @@ The world is flat by default. Paper texture, film fields, borders, and tonal shi
 
 ## Shapes
 
-The core language is square and photographic. Article images and contact sheets have square edges; horizontal rules and frame borders do the structural work. Standard controls use compact four-pixel corners. Two-pixel corners are limited to tight inline treatments. Pills are reserved for reactions and circular icon controls.
+The core language is square and photographic. Article images and contact sheets have square edges; horizontal rules and frame borders do the structural work. Standard controls use compact four-pixel corners. Two-pixel corners are limited to tight inline treatments. Pills are reserved for circular icon controls.
 
 Registration crosses, frame numbers, dashed metadata rows, and film captions are signature details. Use them where content behaves like selected material, not as decoration on every section.
 
@@ -332,10 +326,6 @@ Registration crosses, frame numbers, dashed metadata rows, and film captions are
 ### Navigation
 
 The sticky header sits on a lightly blurred page-colored surface. The wordmark is compact and bold. Route links use Huninn; the active route turns oxide red and gains a thin underline. The reading-font toggle shows the Iansui/Huninn choice directly.
-
-### Reaction Chips
-
-Reaction controls are the intentional pill exception. They use a hairline border, compact padding, an emoji, and an optional count; hover and selected states receive a quiet oxide tint.
 
 ### Article Content
 
