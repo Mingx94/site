@@ -70,7 +70,7 @@ npx wrangler deploy
 npx wrangler d1 execute blog-emdash --remote --file migrations/0001-content-dates.sql
 ```
 
-Smoke test 必須涵蓋 EmDash setup/login、文章編輯與發布、D1/R2、views/reactions、聯絡表單、公開頁面、Markdown、RSS、sitemap、robots、llms 與 security.txt。
+Smoke test 必須涵蓋 EmDash setup/login、文章編輯與發布、D1/R2、views、聯絡表單、公開頁面、Markdown、RSS、sitemap、robots、llms 與 security.txt。
 
 ## 回復
 
