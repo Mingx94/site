@@ -1,9 +1,13 @@
 ---
+import { imageConfig } from "astro:assets";
+
 interface Props {
   title: string;
   src?: string;
+  alt?: string;
   frame?: string;
   ratio?: string;
+  sizes?: string;
   priority?: boolean;
   compact?: boolean;
 }
@@ -11,11 +15,21 @@ interface Props {
 const {
   title,
   src,
+  alt,
   frame = "01",
   ratio = "3 / 2",
+  sizes = "100vw",
   priority = false,
   compact = false,
 } = Astro.props;
+
+const responsiveWidths = [320, 480, 640, 750, 960, 1280, 1600, 1920];
+const imageSrc = src ? new URL(src, Astro.site ?? Astro.url).href : undefined;
+const imageAlt = alt ?? (title.trim() || "文章");
+const responsiveSrc = (width: number) => {
+  const params = new URLSearchParams({ href: imageSrc!, w: String(width), f: "webp" });
+  return `${imageConfig.endpoint.route}?${params}`;
+};
 ---
 
 <figure class:list={["film-frame", { compact }]} style={`--frame-ratio:${ratio}`}>
@@ -24,12 +38,15 @@ const {
   <div class="registration bottom-left" aria-hidden="true"></div>
   <div class="registration bottom-right" aria-hidden="true"></div>
   {
-    src ? (
+    imageSrc ? (
       <img
-        src={src}
-        alt={title.trim() || "文章"}
+        src={responsiveSrc(1280)}
+        srcset={responsiveWidths.map((width) => `${responsiveSrc(width)} ${width}w`).join(", ")}
+        sizes={sizes}
+        alt={imageAlt}
         fetchpriority={priority ? "high" : "auto"}
         loading={priority ? "eager" : "lazy"}
+        decoding="async"
         class="image"
       />
     ) : (

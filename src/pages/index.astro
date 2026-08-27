@@ -29,7 +29,14 @@ const elsewhere = [
             <section class="feature" aria-labelledby="feature-title">
               <div class="animate feature-image">
                 <a href={`/blog/${featured.id}`} aria-label={`閱讀：${featured.title}`}>
-                  <PostCover src={featured.cover} title={featured.title} frame="01" priority />
+                  <PostCover
+                    src={featured.cover}
+                    alt={featured.coverAlt}
+                    title={featured.title}
+                    frame="01"
+                    sizes="(min-width: 92rem) 56rem, (min-width: 46rem) 64vw, calc(100vw - 2rem)"
+                    priority
+                  />
                 </a>
               </div>
               <div class="animate feature-copy">
@@ -51,7 +58,15 @@ const elsewhere = [
                     <a href={`/blog/${post.id}`} class="frame" aria-label={`閱讀：${post.title}`}>
                       <span class="frame-number">{String(index + 1).padStart(2, "0")}</span>
                       <div class="frame-cover">
-                        <PostCover src={post.cover} title={post.title} frame={String(index + 1).padStart(2, "0")} compact ratio="4 / 3" />
+                        <PostCover
+                          src={post.cover}
+                          alt={post.coverAlt}
+                          title={post.title}
+                          frame={String(index + 1).padStart(2, "0")}
+                          ratio="4 / 3"
+                          sizes="18rem"
+                          compact
+                        />
                       </div>
                     </a>
                   ))}

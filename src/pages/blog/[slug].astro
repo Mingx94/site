@@ -39,7 +39,15 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
             {post.description && <p class="introduction animate">{post.description}</p>}
           </div>
           <div class="article-proof animate">
-            <PostCover title={post.title} src={post.cover} frame="01" ratio="16 / 9" priority />
+            <PostCover
+              title={post.title}
+              src={post.cover}
+              alt={post.coverAlt}
+              frame="01"
+              ratio="16 / 9"
+              sizes="(min-width: 92rem) 38rem, (min-width: 48rem) 50vw, calc(100vw - 2rem)"
+              priority
+            />
             <dl class="article-ledger" aria-label="文章資訊">
               <div>
                 <dt>Author</dt>
@@ -296,6 +304,7 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
       gap: clamp(2rem, 3vw, 3rem);
       align-items: start;
     }
+    .article-layout > article { grid-column: 2; }
   }
   @media (width < 48rem) {
     .article-lede { gap: 1rem; padding-top: 0.5rem; }

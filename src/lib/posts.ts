@@ -10,6 +10,7 @@ export interface Post {
   updated?: string;
   readingTime: number;
   cover?: string;
+  coverAlt?: string;
   content: PortableTextBlock[];
   draft?: boolean;
 }
@@ -24,13 +25,16 @@ type EntryData = {
   status?: string;
 };
 
-function mediaSrc(value: unknown): string | undefined {
-  if (!value || typeof value !== "object") return undefined;
+function media(value: unknown): Pick<Post, "cover" | "coverAlt"> {
+  if (!value || typeof value !== "object") return {};
   const image = value as Record<string, unknown>;
-  if (typeof image.src === "string") return image.src;
+  const coverAlt = typeof image.alt === "string" ? image.alt : undefined;
+  if (typeof image.src === "string") return { cover: image.src, coverAlt };
   const meta = image.meta as Record<string, unknown> | undefined;
   const key = meta?.storageKey ?? image.id;
-  return typeof key === "string" ? `/_emdash/api/media/file/${key}` : undefined;
+  return typeof key === "string"
+    ? { cover: `/_emdash/api/media/file/${key}`, coverAlt }
+    : {};
 }
 
 function iso(value: Date | string | null | undefined): string {
@@ -47,7 +51,7 @@ function toPost(entry: { id: string; data: unknown }): Post {
     date: iso(data.publishedAt),
     updated: data.updatedAt ? iso(data.updatedAt) : undefined,
     readingTime: getReadingTime(content),
-    cover: mediaSrc(data.featured_image),
+    ...media(data.featured_image),
     content,
     draft: data.status === "draft",
   };

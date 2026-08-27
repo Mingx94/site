@@ -2,12 +2,14 @@
   <button
     data-font-toggle
     class="toggle"
-    aria-label="切換閱讀字體，目前是 Iansui 襯體"
     title="切換黑體／襯體"
   >
     <span data-font="serif" class="serif">襯</span>
     <span class="divider">/</span>
     <span data-font="sans" class="sans dimmed">黑</span>
+    <span class="visually-hidden" data-font-status aria-live="polite">
+      閱讀字體切換，目前是 Iansui 襯體
+    </span>
   </button>
   <div class="tooltip" aria-hidden="true">
     閱讀字體：<span class="sans">Huninn 黑體</span> /
@@ -35,6 +37,14 @@
   .sans { font-family: var(--font-sans); }
   .dimmed { opacity: 0.4; }
   .divider { color: var(--border); }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
   .tooltip {
     position: absolute;
     inset: 100% 0 auto auto;
