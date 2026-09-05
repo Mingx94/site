@@ -90,7 +90,7 @@ const elsewhere = [
               <h2 id="writing">Recent Writing</h2>
               {posts.length > recentBlogs.length && <Link href="/blog" underline={false} class="index-link">Full index →</Link>}
             </div>
-            <ol class="post-list">
+            <ol class="post-list" role="list">
               {recentBlogs.map((post, index) => (
                 <li>
                   <a href={`/blog/${post.id}`} class="post-link">
@@ -119,7 +119,7 @@ const elsewhere = [
         elsewhere.length > 0 && (
           <section aria-labelledby="elsewhere" class="animate elsewhere">
             <div class="section-head"><h2 id="elsewhere">Elsewhere</h2></div>
-            <ul>
+            <ul role="list">
               {elsewhere.map((item) => (
                 <li>
                   <Link href={item.href} external underline={false} class="elsewhere-link">

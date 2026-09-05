@@ -40,8 +40,8 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
 
 <style>
   .bar, nav { display: flex; align-items: center; }
-  .bar { justify-content: space-between; gap: 1rem; padding-bottom: 0.9rem; border-bottom: 1px solid color-mix(in srgb, var(--foreground) 72%, transparent); }
-  nav { gap: clamp(0.1rem, 1vw, 1.25rem); }
+  .bar { flex-wrap: wrap; justify-content: space-between; gap: 1rem; padding-bottom: 0.9rem; border-bottom: 1px solid color-mix(in srgb, var(--foreground) 72%, transparent); }
+  nav { flex-wrap: wrap; gap: clamp(0.1rem, 1vw, 1.25rem); }
   :global(.home-link) { color: var(--foreground) !important; }
   :global(.nav-link) { position: relative; padding: 0.35rem 0.45rem; color: var(--muted-foreground) !important; font-size: 0.9rem; font-weight: 500; transition: color 200ms; }
   :global(.nav-link:hover) { color: var(--foreground) !important; }
