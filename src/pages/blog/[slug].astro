@@ -203,9 +203,9 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
     margin-top: 120px;
     padding-top: 1rem;
     border-top: 1px solid var(--border);
-    font-size: 10px;
+    font-size: 0.625rem;
   }
-  .back-links { display: flex; margin-top: 3rem; }
+  .back-links { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 3rem; }
   @media (width >= 48rem) {
     .introduction { font-size: 1.25rem; }
     .article-lede {

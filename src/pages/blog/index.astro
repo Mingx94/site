@@ -41,7 +41,8 @@ const normalizeSearch = (value: string) =>
               <RiSearchLine class="search-icon" aria-hidden="true" />
               <label for="blog-search" class="visually-hidden">搜尋文章</label>
               <input id="blog-search" type="search" placeholder="搜尋..." maxlength="100" enterkeyhint="search" aria-controls="blog-results" class="search-input" />
-              <span id="search-status" class="result-count" aria-live="polite" data-search-status hidden></span>
+              <span id="search-status" class="result-count" data-search-status hidden></span>
+              <span class="visually-hidden" role="status" aria-atomic="true" data-search-announcement></span>
             </div>
             <div id="blog-results">
               <div class="years">
@@ -51,7 +52,7 @@ const normalizeSearch = (value: string) =>
                       <h2 class="eyebrow">· Year · {year}</h2>
                       <span class="count">{posts[year]!.length} {posts[year]!.length === 1 ? "entry" : "entries"}</span>
                     </div>
-                    <ol class="post-list">
+                    <ol class="post-list" role="list">
                       {posts[year]!.map((post, index) => (
                         <li data-search-text={normalizeSearch(`${post.title} ${post.description ?? ""}`)}>
                           <a href={`/blog/${post.id}`} class="post-link">
@@ -102,11 +103,14 @@ const normalizeSearch = (value: string) =>
     const input = document.querySelector<HTMLInputElement>("#blog-search");
     const results = document.querySelector<HTMLElement>("#blog-results");
     const status = document.querySelector<HTMLElement>("[data-search-status]");
+    const announcement = document.querySelector<HTMLElement>("[data-search-announcement]");
     const empty = document.querySelector<HTMLElement>("[data-search-empty]");
     const displayQuery = document.querySelector<HTMLElement>("[data-search-query]");
     const clearButton = document.querySelector<HTMLButtonElement>("[data-search-clear]");
 
     if (input && results && status && empty) {
+      let composing = false;
+      let announcementTimer: ReturnType<typeof setTimeout> | undefined;
       const sections = Array.from(results.querySelectorAll<HTMLElement>(".years > section"));
       const normalize = (value: string) => value.trim().normalize("NFKC").toLocaleLowerCase("zh-TW");
       const filterPosts = () => {
@@ -129,8 +133,24 @@ const normalizeSearch = (value: string) =>
         else input.removeAttribute("aria-describedby");
         empty.hidden = !searching || matches > 0;
         if (displayQuery) displayQuery.textContent = input.value.trim();
+        clearTimeout(announcementTimer);
+        announcementTimer = setTimeout(() => {
+          if (announcement) announcement.textContent = searching
+            ? `搜尋「${input.value.trim()}」，找到 ${matches} 篇文章`
+            : `顯示全部 ${matches} 篇文章`;
+        }, 300);
       };
-      input.addEventListener("input", filterPosts);
+      input.addEventListener("compositionstart", () => {
+        composing = true;
+        clearTimeout(announcementTimer);
+      });
+      input.addEventListener("compositionend", () => {
+        composing = false;
+        filterPosts();
+      });
+      input.addEventListener("input", (event) => {
+        if (!composing && !event.isComposing) filterPosts();
+      });
       clearButton?.addEventListener("click", () => {
         input.value = "";
         filterPosts();
@@ -155,7 +175,7 @@ const normalizeSearch = (value: string) =>
     padding-top: 1rem;
     border-top: 1px solid var(--border);
     color: var(--muted-foreground);
-    font: 11px var(--font-mono);
+    font: 0.6875rem var(--font-mono);
     letter-spacing: 0.2em;
     text-transform: uppercase;
   }
@@ -239,7 +259,7 @@ const normalizeSearch = (value: string) =>
     top: 50%;
     inset-inline-end: 0;
     color: var(--muted-foreground);
-    font: 10px var(--font-mono);
+    font: 0.625rem var(--font-mono);
     letter-spacing: 0.2em;
     text-transform: uppercase;
     transform: translateY(-50%);
@@ -275,7 +295,7 @@ const normalizeSearch = (value: string) =>
     grid-area: number;
     padding-top: 0.25rem;
     color: var(--muted-foreground);
-    font: 12px var(--font-mono);
+    font: 0.75rem var(--font-mono);
     font-variant-numeric: tabular-nums;
   }
   .post-copy {
@@ -310,7 +330,7 @@ const normalizeSearch = (value: string) =>
   .post-meta {
     padding-top: 0.25rem;
     color: var(--muted-foreground);
-    font: 10px var(--font-mono);
+    font: 0.625rem var(--font-mono);
     letter-spacing: 0.2em;
     text-transform: uppercase;
   }
@@ -387,14 +407,26 @@ const normalizeSearch = (value: string) =>
     text-transform: uppercase;
   }
   .eyebrow {
-    font-size: 11px;
+    font-size: 0.6875rem;
   }
   .count {
-    font-size: 10px;
+    font-size: 0.625rem;
   }
   .back-top {
     display: flex;
     margin-top: 3rem;
+  }
+  @media (width < 30rem) {
+    .search-input { padding-inline-end: 0.5rem; }
+    :global(.search-icon) { top: 1.75rem; }
+    .result-count {
+      position: static;
+      display: block;
+      padding-bottom: 0.75rem;
+      text-align: end;
+      transform: none;
+    }
+    .result-count[hidden] { display: none; }
   }
   @media (width >= 40rem) {
     .post-link {

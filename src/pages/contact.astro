@@ -35,6 +35,48 @@ import Container from "@/components/Container.astro";
   </Container>
 </Base>
 
+<script>
+  // Keep EmDash's submission and validation flow; supplement its field metadata.
+  for (const form of document.querySelectorAll<HTMLFormElement>(".form-shell [data-ec-form]")) {
+    for (const [index, field] of Array.from(form.querySelectorAll<HTMLElement>(".ec-form-field")).entries()) {
+      const controls = Array.from(field.querySelectorAll<HTMLElement>(
+        'input:not([type="hidden"]), textarea, select',
+      ));
+      if (controls.length === 0 || field.closest('[aria-hidden="true"]')) continue;
+      const help = field.querySelector<HTMLElement>(".ec-form-help");
+      const error = field.querySelector<HTMLElement>("[data-error-for]");
+      const prefix = `${form.dataset.formId}-field-${index}`;
+      if (help) help.id ||= `${prefix}-help`;
+      if (error) error.id ||= `${prefix}-error`;
+
+      for (const control of controls) {
+        const descriptions = new Set((control.getAttribute("aria-describedby") ?? "").split(/\s+/).filter(Boolean));
+        if (help) descriptions.add(help.id);
+        if (error) descriptions.add(error.id);
+        if (descriptions.size) control.setAttribute("aria-describedby", [...descriptions].join(" "));
+        if (control instanceof HTMLInputElement && !control.hasAttribute("autocomplete")) {
+          if (control.type === "email") control.autocomplete = "email";
+          else if (control.type === "tel") control.autocomplete = "tel";
+          else if (control.type === "text" && control.name === "name") control.autocomplete = "name";
+        }
+      }
+
+      if (error) {
+        const syncError = () => {
+          for (const control of controls) {
+            if (error.textContent?.trim()) control.setAttribute("aria-invalid", "true");
+            else control.removeAttribute("aria-invalid");
+          }
+        };
+        syncError();
+        // EmDash writes server errors here and clears them when the user edits.
+        new MutationObserver(syncError).observe(error, { childList: true, characterData: true, subtree: true });
+        form.addEventListener("reset", () => { error.textContent = ""; });
+      }
+    }
+  }
+</script>
+
 <style is:global>
   @import "@emdash-cms/plugin-forms/styles";
 </style>
@@ -48,13 +90,14 @@ import Container from "@/components/Container.astro";
   }
   .strip {
     display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
     justify-content: space-between;
     gap: 1rem;
     padding-top: 1rem;
     border-top: 1px solid var(--border);
     color: var(--muted-foreground);
-    font: 11px var(--font-mono);
+    font: 0.6875rem var(--font-mono);
     letter-spacing: 0.2em;
     text-transform: uppercase;
   }
@@ -111,7 +154,7 @@ import Container from "@/components/Container.astro";
   }
   .form-shell :global(.ec-form-label) {
     color: var(--muted-foreground);
-    font: 10px var(--font-mono);
+    font: 0.625rem var(--font-mono);
     letter-spacing: 0.2em;
     text-transform: uppercase;
   }
