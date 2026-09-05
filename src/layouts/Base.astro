@@ -77,7 +77,6 @@ const imageUrl = new URL(image, Astro.url.origin).href;
     <main id="main"><slot /></main>
     <Footer />
     <script>
-      import { toggleFont } from "@/lib/font";
       import { toggleTheme } from "@/lib/theme";
 
       const themeButtons = document.querySelectorAll<HTMLButtonElement>(
@@ -122,7 +121,7 @@ const imageUrl = new URL(image, Astro.url.origin).href;
         fontButton.addEventListener("click", () => {
           font = font === "serif" ? "sans" : "serif";
           localStorage.setItem("font", font);
-          toggleFont(font);
+          document.documentElement.classList.toggle("reading-sans", font === "sans");
           updateFontButton();
         });
       }

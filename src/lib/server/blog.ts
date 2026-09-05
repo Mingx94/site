@@ -1,10 +1,10 @@
 const DEDUP_TTL_SECONDS = 24 * 60 * 60;
 const VIEW_METRIC = "views";
 
-export const COUNTER_CHANGE_SQL = `INSERT INTO site_counters (slug, metric, value)
-     VALUES (?, ?, MAX(0, ? + ?))
+export const INCREMENT_VIEWS_SQL = `INSERT INTO site_counters (slug, metric, value)
+     VALUES (?, 'views', ? + 1)
      ON CONFLICT (slug, metric) DO UPDATE
-     SET value = MAX(0, site_counters.value + ?)
+     SET value = site_counters.value + 1
      RETURNING value`;
 
 type CounterRow = { value: number };
@@ -47,8 +47,8 @@ export async function trackView(env: Env, slug: string, ip: string) {
   if (await dedupHit(kv, `dedup:view:${ip}:${slug}`))
     return getViews(env, slug);
   const legacyValue = count(await kv.get(`views:${slug}`));
-  const row = await env.DB.prepare(COUNTER_CHANGE_SQL)
-    .bind(slug, VIEW_METRIC, legacyValue, 1, 1)
+  const row = await env.DB.prepare(INCREMENT_VIEWS_SQL)
+    .bind(slug, legacyValue)
     .first<CounterRow>();
   return count(row?.value);
 }

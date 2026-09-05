@@ -1,10 +1,10 @@
 import { readFileSync } from "node:fs";
 import { DatabaseSync } from "node:sqlite";
 import { describe, expect, it } from "vitest";
-import { COUNTER_CHANGE_SQL } from "./blog";
+import { INCREMENT_VIEWS_SQL } from "./blog";
 
 describe("blog counters", () => {
-  it("seeds legacy values and updates one row without going below zero", () => {
+  it("seeds legacy views once and increments existing counts", () => {
     const database = new DatabaseSync(":memory:");
     database.exec(
       readFileSync(
@@ -12,12 +12,11 @@ describe("blog counters", () => {
         "utf8",
       ),
     );
-    const change = database.prepare(COUNTER_CHANGE_SQL);
+    const increment = database.prepare(INCREMENT_VIEWS_SQL);
 
-    expect(change.get("post", "views", 5, 1, 1)).toEqual({ value: 6 });
-    expect(change.get("post", "views", 5, 1, 1)).toEqual({ value: 7 });
-    expect(change.get("post", "views", 5, -1, -1)).toEqual({ value: 6 });
-    expect(change.get("empty", "views", 0, -1, -1)).toEqual({ value: 0 });
+    expect(increment.get("post", 5)).toEqual({ value: 6 });
+    expect(increment.get("post", 100)).toEqual({ value: 7 });
+    expect(increment.get("empty", 0)).toEqual({ value: 1 });
 
     database.close();
   });
