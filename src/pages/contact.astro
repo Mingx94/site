@@ -1,10 +1,11 @@
 ---
 import { Form } from "@emdash-cms/plugin-forms/ui";
 import Base from "@/layouts/Base.astro";
+import Container from "@/components/Container.astro";
 ---
 
 <Base title="聯絡 | Vartifact" description="合作、提問、或打個招呼——請留下訊息。">
-  <div class="container">
+  <Container>
     <div class="contact">
       <div class="strip">
         <span>· Correspondence · Contact</span>
@@ -31,7 +32,7 @@ import Base from "@/layouts/Base.astro";
       </svg>
       <span>前往文章列表</span>
     </a>
-  </div>
+  </Container>
 </Base>
 
 <style is:global>
@@ -39,15 +40,6 @@ import Base from "@/layouts/Base.astro";
 </style>
 
 <style>
-  .container {
-    --container-gutter: clamp(1rem, 4vw, 3.25rem);
-
-    inline-size: 100%;
-    max-inline-size: 92rem;
-    margin-inline: auto;
-    padding-inline: max(var(--container-gutter), env(safe-area-inset-left))
-      max(var(--container-gutter), env(safe-area-inset-right));
-  }
   .contact {
     display: flex;
     flex-direction: column;

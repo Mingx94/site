@@ -25,13 +25,3 @@ export function toggleTheme(dark: boolean) {
   void window.getComputedStyle(css).opacity;
   document.head.removeChild(css);
 }
-
-export function initTheme() {
-  const userTheme = localStorage.getItem("theme");
-
-  if (userTheme === "light" || userTheme === "dark") {
-    toggleTheme(userTheme === "dark");
-  } else {
-    toggleTheme(window.matchMedia("(prefers-color-scheme: dark)").matches);
-  }
-}

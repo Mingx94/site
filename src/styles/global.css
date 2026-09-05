@@ -91,23 +91,6 @@
     opacity: 1;
     transform: none;
   }
-  .motion-ready .animate:not(.show) {
-    opacity: 0;
-    transform: translateY(0.5rem);
-  }
-  .animate.show {
-    transition:
-      opacity 520ms cubic-bezier(0.16, 1, 0.3, 1),
-      transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .contact-label {
-    color: var(--muted-foreground);
-    font-family: var(--font-sans);
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
   .reading-sans .content,
   .reading-sans .content :where(p, li, blockquote),
   .reading-sans .prose,
@@ -124,11 +107,6 @@
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
-  }
-  .animate,
-  .motion-ready .animate:not(.show) {
-    opacity: 1;
-    transform: none;
   }
 }
 
