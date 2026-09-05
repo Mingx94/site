@@ -1,14 +1,16 @@
-# Agent instructions
+Write in Traditional Chinese with Taiwan usage. Use short sentences, common words, and clear verbs. Preserve code, identifiers, API names, and required technical terms.
+Use `zhtw-mcp` to check uncertain regional terms. If unavailable, use known Taiwan terms and continue.
 
-Vartifact is an Astro 7 and EmDash personal blog on Cloudflare Workers, with native browser scripts for public interactions.
+---
 
-Use ASD-STE100 Simplified Technical English. Run `npm run check` for formatting, lint, type, and accessibility checks. Oxfmt does not format `.astro` files.
+Use Computer Use only when the user explicitly requests it.
 
-Follow the guide that applies to the task:
+---
 
-- [Scope and decisions](docs/agents/scope-and-decisions.md)
-- [Engineering](docs/agents/engineering.md)
-- [Reviews](docs/agents/reviews.md)
-- [Testing](docs/agents/testing.md)
-- [Writing](docs/agents/writing.md)
-- [Git workflow](docs/agents/git-workflow.md)
+Match verification effort to the risk of the change.
+
+For small, reversible UI or implementation changes,
+do not create tests merely to mirror the implementation.
+
+Run the smallest meaningful verification first.
+Broaden testing only when failures, risk, or uncertainty justify it.
