@@ -15,37 +15,14 @@ function count(value: string | number | null | undefined) {
   return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : 0;
 }
 
-async function legacyCounter(kv: KVNamespace, key: string) {
-  return count(await kv.get(key));
-}
-
-async function getCounter(
-  env: Env,
-  slug: string,
-  metric: string,
-  legacyKey: string,
-) {
+export async function getViews(env: Env, slug: string) {
   const row = await env.DB.prepare(
     "SELECT value FROM site_counters WHERE slug = ? AND metric = ?",
   )
-    .bind(slug, metric)
+    .bind(slug, VIEW_METRIC)
     .first<CounterRow>();
   // KV remains the read fallback until this counter receives its first D1 write.
-  return row ? count(row.value) : legacyCounter(env.BLOG_KV, legacyKey);
-}
-
-async function changeCounter(
-  env: Env,
-  slug: string,
-  metric: string,
-  legacyKey: string,
-  delta: 1 | -1,
-) {
-  const legacyValue = await legacyCounter(env.BLOG_KV, legacyKey);
-  const row = await env.DB.prepare(COUNTER_CHANGE_SQL)
-    .bind(slug, metric, legacyValue, delta, delta)
-    .first<CounterRow>();
-  return count(row?.value);
+  return row ? count(row.value) : count(await env.BLOG_KV.get(`views:${slug}`));
 }
 
 async function rateLimitOk(rateLimit: RateLimit | undefined, key: string) {
@@ -63,15 +40,15 @@ async function dedupHit(kv: KVNamespace, key: string) {
   return false;
 }
 
-export async function getViews(env: Env, slug: string) {
-  return getCounter(env, slug, VIEW_METRIC, `views:${slug}`);
-}
-
 export async function trackView(env: Env, slug: string, ip: string) {
   const kv = env.BLOG_KV;
   if (!(await rateLimitOk(env.BLOG_RATE, `view:${ip}`)))
     return getViews(env, slug);
   if (await dedupHit(kv, `dedup:view:${ip}:${slug}`))
     return getViews(env, slug);
-  return changeCounter(env, slug, VIEW_METRIC, `views:${slug}`, 1);
+  const legacyValue = count(await kv.get(`views:${slug}`));
+  const row = await env.DB.prepare(COUNTER_CHANGE_SQL)
+    .bind(slug, VIEW_METRIC, legacyValue, 1, 1)
+    .first<CounterRow>();
+  return count(row?.value);
 }
