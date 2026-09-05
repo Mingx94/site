@@ -82,9 +82,15 @@ const imageUrl = new URL(image, Astro.url.origin).href;
       const themeButtons = document.querySelectorAll<HTMLButtonElement>(
         "[data-theme-option]",
       );
-      const storedTheme = localStorage.getItem("theme");
-      const activeTheme =
+      let storedTheme: string | null = null;
+      try { storedTheme = localStorage.getItem("theme"); } catch {}
+      let activeTheme =
         storedTheme === "light" || storedTheme === "dark" ? storedTheme : "system";
+      const systemTheme = matchMedia("(prefers-color-scheme: dark)");
+      systemTheme.addEventListener("change", () => {
+        if (activeTheme === "system") toggleTheme(systemTheme.matches);
+      });
+      toggleTheme(activeTheme === "dark" || (activeTheme === "system" && systemTheme.matches));
 
       for (const button of themeButtons) {
         const theme = button.dataset.themeOption;
@@ -92,10 +98,12 @@ const imageUrl = new URL(image, Astro.url.origin).href;
         button.classList.toggle("active", theme === activeTheme);
         button.addEventListener("click", () => {
           if (theme === "system") {
-            localStorage.removeItem("theme");
-            toggleTheme(matchMedia("(prefers-color-scheme: dark)").matches);
+            activeTheme = theme;
+            try { localStorage.removeItem("theme"); } catch {}
+            toggleTheme(systemTheme.matches);
           } else if (theme === "light" || theme === "dark") {
-            localStorage.setItem("theme", theme);
+            activeTheme = theme;
+            try { localStorage.setItem("theme", theme); } catch {}
             toggleTheme(theme === "dark");
           }
           for (const option of themeButtons) {
@@ -108,7 +116,7 @@ const imageUrl = new URL(image, Astro.url.origin).href;
 
       const fontButton = document.querySelector<HTMLButtonElement>("[data-font-toggle]");
       if (fontButton) {
-        let font = localStorage.getItem("font") === "sans" ? "sans" : "serif";
+        let font = document.documentElement.classList.contains("reading-sans") ? "sans" : "serif";
         const updateFontButton = () => {
           const status = fontButton.querySelector<HTMLElement>("[data-font-status]");
           if (status)
@@ -120,7 +128,7 @@ const imageUrl = new URL(image, Astro.url.origin).href;
         updateFontButton();
         fontButton.addEventListener("click", () => {
           font = font === "serif" ? "sans" : "serif";
-          localStorage.setItem("font", font);
+          try { localStorage.setItem("font", font); } catch {}
           document.documentElement.classList.toggle("reading-sans", font === "sans");
           updateFontButton();
         });
@@ -149,6 +157,12 @@ const imageUrl = new URL(image, Astro.url.origin).href;
         document.documentElement.classList.toggle("scrolled", window.scrollY > 0);
       updateScrollState();
       addEventListener("scroll", updateScrollState, { passive: true });
+      const header = document.querySelector("header");
+      if (header) {
+        new ResizeObserver(() => {
+          document.documentElement.style.setProperty("--header-height", `${header.getBoundingClientRect().height}px`);
+        }).observe(header);
+      }
     </script>
     <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"c617e67a33d54b69bae259d6a61d45b3"}'></script>
   </body>
