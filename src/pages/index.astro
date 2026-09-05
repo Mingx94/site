@@ -68,6 +68,7 @@ const elsewhere = [
                           compact
                         />
                       </div>
+                      <span class="frame-title">{post.title}</span>
                     </a>
                   ))}
                 </div>
@@ -256,6 +257,15 @@ const elsewhere = [
     display: block;
     padding: 0.25rem 0.25rem 0.5rem;
     color: var(--film-accent);
+  }
+  .frame-title {
+    display: block;
+    max-inline-size: 18rem;
+    padding: 0.5rem 0.25rem;
+    color: var(--film-foreground);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
   }
   .frame:hover {
     color: var(--film-accent);

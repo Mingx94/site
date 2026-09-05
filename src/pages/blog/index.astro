@@ -124,7 +124,7 @@ const normalizeSearch = (value: string) =>
         }
         const searching = query !== "";
         status.hidden = !searching;
-        status.textContent = `${matches} ${matches === 1 ? "result" : "results"}`;
+        status.textContent = `找到 ${matches} 篇文章`;
         if (searching) input.setAttribute("aria-describedby", "search-status");
         else input.removeAttribute("aria-describedby");
         empty.hidden = !searching || matches > 0;

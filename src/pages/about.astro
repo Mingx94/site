@@ -130,7 +130,7 @@ const facts = [
   }
   .fact {
     display: grid;
-    grid-template-columns: 7rem 1fr;
+    grid-template-columns: minmax(0, 7rem) minmax(0, 1fr);
     align-items: baseline;
     gap: 1.5rem;
     padding-block: 1rem;
@@ -146,6 +146,7 @@ const facts = [
     text-transform: uppercase;
   }
   dd {
+    overflow-wrap: anywhere;
     color: var(--foreground);
   }
   .narrative {
@@ -252,7 +253,7 @@ const facts = [
       font-size: 1.5rem;
     }
     .fact {
-      grid-template-columns: 10rem 1fr;
+      grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
     }
     dd,
     .prose {
