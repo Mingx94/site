@@ -326,14 +326,19 @@
   :global(.mobile-link) {
     display: block;
     padding: 0.5rem 0.75rem;
+    padding-inline-start: calc(0.75rem - 2px);
     color: var(--muted-foreground);
+    border-inline-start: 2px solid transparent;
     border-radius: var(--radius-md);
     overflow-wrap: anywhere;
   }
   :global(.mobile-link:hover),
   :global(.mobile-link.active) { color: var(--foreground); background: var(--muted); }
-  :global(.mobile-link.subsection) { padding-left: 1.75rem; }
-  :global(.mobile-link.active) { font-weight: 500; }
+  :global(.mobile-link.subsection) { padding-inline-start: calc(1.75rem - 2px); }
+  :global(.mobile-link.active) {
+    border-inline-start-color: var(--primary);
+    font-weight: 500;
+  }
   @media (width >= 72rem) {
     [data-table-of-contents] {
       position: sticky;

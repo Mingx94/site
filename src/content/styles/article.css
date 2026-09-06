@@ -77,6 +77,9 @@
     margin: 0;
     line-height: inherit;
   }
+  .content blockquote p + p {
+    margin-block-start: 1em;
+  }
   .content hr {
     margin-block: 4rem;
     border: 0;
@@ -142,7 +145,7 @@
     color: var(--accent-foreground);
     text-decoration: underline
       color-mix(in oklch, var(--primary) 30%, transparent);
-    text-underline-offset: 2px;
+    text-underline-offset: 0.22em;
     transition:
       color 300ms ease-in-out,
       text-decoration-color 300ms ease-in-out;
