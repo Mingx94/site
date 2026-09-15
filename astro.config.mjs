@@ -33,7 +33,7 @@ export default defineConfig({
   vite: {
     plugins: [Icons({ compiler: "astro" })],
     optimizeDeps: {
-      include: ["astro/app/manifest"],
+      include: ["astro/app/manifest", "astro/logger/console"],
     },
   },
   devToolbar: { enabled: false },
