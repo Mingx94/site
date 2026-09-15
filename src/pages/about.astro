@@ -5,7 +5,6 @@ import Container from "@/components/Container.astro";
 import Link from "@/components/Link.astro";
 import config from "@/config";
 import Base from "@/layouts/Base.astro";
-import RiArrowRightUpLine from "~icons/ri/arrow-right-up-line";
 
 const elsewhere = [
   { label: "GitHub", href: config.social.github, handle: "Mingx94" },
@@ -24,39 +23,44 @@ const facts = [
 <Base title="關於 | Vartifact" description="關於 Michael Tsai — 前端工程師，Vartifact 部落格的作者。">
   <Container>
     <div class="about">
-      <div class="animate strip"><span>· Colophon · About</span><span>N°02</span></div>
-      <div class="title-block">
-        <h1 class="animate page-title">關於<span class="accent">.</span></h1>
-        <p class="animate introduction">
-          我是 Michael Tsai<span class="accent">.</span>
-          <span class="muted">前端工程師，在台灣工作。 對效能、無障礙設計與細節有持續的關注， 也在用程式碼以外的方式觀察世界。</span>
+      <header class="about-header">
+        <p class="eyebrow">About</p>
+        <h1>關於<span aria-hidden="true">。</span></h1>
+        <p class="introduction">
+          我是 Michael Tsai。<span>前端工程師，在台灣工作。關注效能、無障礙設計與產品細節，也用攝影和閱讀觀察世界。</span>
         </p>
-      </div>
-      <section class="animate">
+      </header>
+
+      <section aria-labelledby="profile-title">
+        <h2 class="section-label" id="profile-title">Profile</h2>
         <dl class="facts">
-          {facts.map(({ label, value }) => <div class="fact"><dt class="eyebrow">{label}</dt><dd>{value}</dd></div>)}
+          {facts.map(({ label, value }) => (
+            <div>
+              <dt>{label}</dt>
+              <dd>{value}</dd>
+            </div>
+          ))}
         </dl>
       </section>
-      <section class="animate narrative">
-        <div class="section-head"><h2 class="eyebrow">· Notes</h2></div>
+
+      <section class="narrative" aria-labelledby="notes-title">
+        <h2 class="section-label" id="notes-title">Notes</h2>
         <div class="prose">
-          <p>工作上主要使用 React 與 Next.js 開發 Web 應用， 對效能優化、無障礙設計與使用者體驗有持續的關注。 這個部落格本身是用 Astro 與 EmDash 打造的—— 邊探索邊實作，把新框架當作素材來思考。</p>
-          <p>出門一定帶相機。部落格裡的圖片幾乎都是自己拍的。 拍攝對我來說是一種思考方式， 構圖和寫程式有點像——都在尋找最精簡、最有力量的表達。</p>
+          <p>工作上主要使用 React 與 Next.js 開發 Web 應用。這個部落格則用 Astro 與 EmDash 打造，邊探索邊實作，把新框架當作思考與整理的素材。</p>
+          <p>出門時常帶著相機。部落格裡的圖片大多是自己拍的。拍攝和寫程式有點像，都在尋找更精簡、更有力量的表達。</p>
         </div>
       </section>
+
       {
         elsewhere.length > 0 && (
-          <section class="animate">
-            <div class="section-head elsewhere-head"><h2 class="eyebrow">· Elsewhere · 其他地方</h2></div>
-            <ul class="elsewhere-list">
-              {elsewhere.map((link) => (
+          <section aria-labelledby="elsewhere-title">
+            <h2 class="section-label" id="elsewhere-title">Elsewhere</h2>
+            <ul class="elsewhere-list" role="list">
+              {elsewhere.map((item) => (
                 <li>
-                  <Link href={link.href} external underline={false} class="elsewhere-link">
-                    <span class="elsewhere-label">{link.label}</span>
-                    <span class="elsewhere-meta">
-                      <span class="handle">/ {link.handle}</span>
-                      <RiArrowRightUpLine class="arrow" aria-hidden="true" />
-                    </span>
+                  <Link href={item.href} external underline={false} class="elsewhere-link">
+                    <span>{item.label}</span>
+                    <small>{item.handle} ↗</small>
                   </Link>
                 </li>
               ))}
@@ -65,180 +69,79 @@ const facts = [
         )
       }
     </div>
-    <div class="animate back-links"><BackToPrev /><BackToTop /></div>
+    <div class="back-links"><BackToPrev /><BackToTop /></div>
   </Container>
 </Base>
 
 <style>
-  .about {
-    display: flex;
-    flex-direction: column;
-    gap: 4rem;
-    padding-block: 1rem 2rem;
-  }
-  .strip,
-  .section-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-  }
-  .strip {
-    gap: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
+  .about { display: grid; gap: clamp(4rem, 10vw, 6rem); }
+  .eyebrow,
+  .section-label,
+  dt,
+  small {
     color: var(--muted-foreground);
-    font: 0.6875rem var(--font-mono);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-  .title-block {
-    margin-top: -2.5rem;
-  }
-  .title-block > * + * {
-    margin-top: 1.5rem;
-  }
-  .page-title {
-    color: var(--foreground);
-    font-size: clamp(3rem, 10vw, 6rem);
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
     font-weight: 500;
-    letter-spacing: -0.035em;
-    line-height: 0.95;
+    letter-spacing: 0.1em;
   }
-  .accent {
-    color: var(--primary);
-  }
-  .introduction {
-    max-width: 42rem;
+  .eyebrow,
+  .section-label,
+  dt { text-transform: uppercase; }
+  .about-header h1 {
+    margin-top: 1rem;
     color: var(--foreground);
-    font-size: 1.25rem;
-    line-height: 1.625;
-    font-family: var(--font-serif);
+    font: 500 clamp(2.5rem, 9vw, 4.25rem)/1.05 var(--font-serif);
+    letter-spacing: -0.04em;
   }
-  .muted {
-    color: var(--muted-foreground);
+  .about-header h1 span { color: var(--primary); }
+  .introduction {
+    max-width: 39rem;
+    margin-top: 1.25rem;
+    color: var(--foreground);
+    font-size: clamp(1.15rem, 3vw, 1.4rem);
+    line-height: 1.7;
   }
-  .facts {
-    border-block: 1px solid var(--border);
-  }
-  .fact {
+  .introduction span { color: var(--muted-foreground); }
+  .section-label { margin-bottom: 1.5rem; }
+  .facts { border-block: 1px solid var(--border); }
+  .facts div {
     display: grid;
-    grid-template-columns: minmax(0, 7rem) minmax(0, 1fr);
+    grid-template-columns: minmax(6rem, 8rem) minmax(0, 1fr);
     align-items: baseline;
     gap: 1.5rem;
-    padding-block: 1rem;
-    border-top: 1px solid var(--border);
+    padding-block: 0.9rem;
   }
-  .fact:first-child {
-    border-top: 0;
-  }
-  .eyebrow {
-    color: var(--muted-foreground);
-    font: 0.6875rem var(--font-mono);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-  dd {
-    overflow-wrap: anywhere;
-    color: var(--foreground);
-  }
-  .narrative {
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-  }
-  .section-head {
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-  }
+  .facts div + div { border-top: 1px solid var(--border); }
+  dd { color: var(--foreground); overflow-wrap: anywhere; }
   .prose {
-    max-width: 42rem;
+    max-width: 40rem;
     color: var(--foreground);
-    line-height: 1.8;
-    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    line-height: 1.85;
   }
-  .prose > * + * {
-    margin-top: 1.5rem;
-  }
-  .elsewhere-head {
-    margin-bottom: 1rem;
-  }
-  .elsewhere-list li {
-    border-top: 1px solid var(--border);
-  }
-  .elsewhere-list li:first-child {
-    border-top: 0;
-  }
+  .prose p + p { margin-top: 1.5rem; }
+  .elsewhere-list { padding: 0; border-block: 1px solid var(--border); list-style: none; }
+  .elsewhere-list li + li { border-top: 1px solid var(--border); }
   :global(.elsewhere-link) {
     display: flex !important;
     align-items: baseline;
     justify-content: space-between;
-    padding-block: 1rem;
+    gap: 1rem;
+    padding-block: 0.9rem;
     color: var(--foreground) !important;
+    font-size: 1.0625rem;
   }
-  .elsewhere-label {
-    font-size: 1.125rem;
-    font-weight: 500;
-    transition: color 300ms;
+  :global(.elsewhere-link:hover) { color: var(--primary) !important; }
+  small {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    letter-spacing: 0;
+    text-align: right;
   }
-  :global(.elsewhere-link:hover) .elsewhere-label {
-    color: var(--primary);
-  }
-  .elsewhere-meta {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-  .handle {
-    display: none;
-    color: var(--muted-foreground);
-    font: 0.75rem var(--font-mono);
-  }
-  :global(.arrow) {
-    width: 1rem;
-    height: 1rem;
-    transition:
-      transform 300ms,
-      color 300ms;
-  }
-  :global(.elsewhere-link .arrow) {
-    color: var(--muted-foreground);
-  }
-  :global(.elsewhere-link:hover .arrow) {
-    color: var(--primary);
-    transform: translate(0.125rem, -0.125rem);
-  }
-  .back-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 2rem;
-  }
-  @media (width >= 40rem) {
-    .handle {
-      display: inline;
-    }
-  }
-  @media (width >= 48rem) {
-    .about {
-      gap: 5rem;
-      padding-top: 2rem;
-    }
-    .title-block {
-      margin-top: -3.5rem;
-    }
-    .introduction {
-      font-size: 1.5rem;
-    }
-    .fact {
-      grid-template-columns: minmax(0, 10rem) minmax(0, 1fr);
-    }
-    dd,
-    .prose {
-      font-size: 1.125rem;
-    }
-    .elsewhere-head {
-      margin-bottom: 1.5rem;
-    }
+  .back-links { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 3rem; }
+  @media (width < 32rem) {
+    .facts div { grid-template-columns: 5.5rem minmax(0, 1fr); gap: 1rem; }
+    small { max-width: 55%; }
   }
 </style>

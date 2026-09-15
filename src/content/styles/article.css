@@ -1,16 +1,20 @@
 @layer components {
   .content {
-    max-width: 65ch;
-    margin-inline: auto;
     color: var(--foreground);
-    counter-reset: section;
     font-family: var(--font-serif);
   }
   .content :where(p, ul, ol, pre, table, blockquote) {
     margin-block: 1.25em;
   }
   .content p {
-    line-height: 1.9;
+    line-height: 1.85;
+  }
+  .content > p {
+    font-size: 1.09375rem;
+    line-height: 1.75;
+  }
+  .content > p + p {
+    text-indent: 1.5em;
   }
   .content:not(.no-drop-cap) > p:first-of-type::first-letter {
     float: left;
@@ -30,48 +34,21 @@
     letter-spacing: -0.025em;
   }
   .content h2 {
-    position: relative;
-    margin-block: 4rem 1rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border);
-    font-size: 1.5rem;
-    counter-increment: section;
-  }
-  .content h2::before {
-    content: "§ " counter(section, decimal-leading-zero);
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--muted-foreground);
-    font: normal 0.6875rem var(--font-mono);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+    margin-block: 3.75rem 1rem;
+    font-size: 1.625rem;
   }
   .content h3 {
     margin-block: 2.5rem 0.75rem;
     font-size: 1.25rem;
   }
   .content blockquote {
-    position: relative;
     margin-block: 2.5rem;
-    padding-block: 1rem;
-    color: var(--foreground);
-    border: 0;
-    font-size: 1.25rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 1.6;
-  }
-  .content blockquote::before {
-    content: "\201C";
-    position: absolute;
-    top: -1rem;
-    left: -1rem;
-    color: color-mix(in oklch, var(--primary) 25%, transparent);
-    font:
-      4.5rem/1 "Schibsted Grotesk",
-      serif;
-    pointer-events: none;
-    user-select: none;
+    padding: 0.25rem 0 0.25rem 1.25rem;
+    border-left: 2px solid var(--primary);
+    color: var(--muted-foreground);
+    font-size: 1.125rem;
+    font-style: italic;
+    line-height: 1.7;
   }
   .content blockquote p {
     margin: 0;
@@ -129,7 +106,9 @@
   .content pre {
     overflow-x: auto;
     padding: 1.25rem 1.5rem;
+    border: 1px solid var(--border);
     border-radius: var(--radius-md);
+    background: var(--card);
   }
   .content table {
     width: 100%;
@@ -139,7 +118,7 @@
   .content td {
     padding: 0.5rem 0.75rem;
     border: 1px solid var(--border);
-    text-align: left;
+    text-align: start;
   }
   .content a:not([data-slot="button"]) {
     color: var(--accent-foreground);
@@ -237,6 +216,12 @@
     .content h3,
     .content blockquote {
       font-size: 1.5rem;
+    }
+  }
+  @media (width < 30rem) {
+    .content > p {
+      font-size: 1rem;
+      line-height: 1.7;
     }
   }
 }

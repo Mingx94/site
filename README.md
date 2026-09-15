@@ -67,6 +67,10 @@ src/worker.ts           Astro + EmDash Worker entry
 
 Oxfmt 目前不支援 `.astro` 檔案，因此格式化指令會跳過這些檔案。`npm run check` 仍會用 Astro 檢查其 TypeScript 與無障礙問題。
 
+## 設計來源
+
+網站的窄版編輯排版、文章時間軸與部分視覺語彙改編自 [Astro Sienna](https://github.com/anjay-goel/astro-sienna)，參考版本為 `c5ea7eed5b1bab37ac1b730da32387355fdefdf2`。本專案保留原有的 Astro Server、Cloudflare Workers、EmDash、路由與內容模型。第三方授權聲明見 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
 ## License
 
 [MIT](LICENSE) © Michael Tsai

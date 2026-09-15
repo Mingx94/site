@@ -1,511 +1,222 @@
 ---
 import BackToTop from "@/components/BackToTop.astro";
 import Container from "@/components/Container.astro";
-import FormattedDate from "@/components/FormattedDate.astro";
 import Link from "@/components/Link.astro";
-import PostCover from "@/components/PostCover.astro";
 import config from "@/config";
 import { getPosts } from "@/lib/posts";
 import Base from "@/layouts/Base.astro";
-import RiArrowRightUpLine from "~icons/ri/arrow-right-up-line";
 
 const posts = await getPosts();
 const recentBlogs = posts.slice(0, config.settings.num_posts_on_homepage);
-const featured = recentBlogs[0];
 const elsewhere = [
-  { label: "GitHub", href: config.social.github, handle: "Mingx94" },
-  { label: "LinkedIn", href: config.social.linkedin, handle: "ming-hsuan-tsai94" },
-  { label: "Bluesky", href: config.social.bluesky, handle: "vartifact.cc" },
-  { label: "X", href: config.social.twitter, handle: "mingx94" },
+  { label: "GitHub", href: config.social.github },
+  { label: "LinkedIn", href: config.social.linkedin },
+  { label: "X", href: config.social.twitter },
 ].filter((item) => item.href);
+const formatRailDate = (value: string) =>
+  new Intl.DateTimeFormat("zh-TW", { month: "numeric", day: "numeric" }).format(new Date(value));
 ---
 
 <Base>
   <Container>
     <div class="home">
-      {
-        featured && (
-          <>
-            <section class="feature" aria-labelledby="feature-title">
-              <div class="animate feature-image">
-                <a href={`/blog/${featured.id}`} aria-label={`閱讀：${featured.title}`}>
-                  <PostCover
-                    src={featured.cover}
-                    alt={featured.coverAlt}
-                    title={featured.title}
-                    frame="01"
-                    sizes="(min-width: 92rem) 56rem, (min-width: 46rem) 64vw, calc(100vw - 2rem)"
-                    priority
-                  />
-                </a>
-              </div>
-              <div class="animate feature-copy">
-                <p class="feature-label">Latest writing</p>
-                <h1 id="feature-title"><a href={`/blog/${featured.id}`}>{featured.title}</a></h1>
-                <p class="author">Michael Tsai</p>
-                <dl class="feature-meta">
-                  <div><dt>Frame</dt><dd>01 / {String(recentBlogs.length).padStart(2, "0")}</dd></div>
-                  <div><dt>Date</dt><dd><FormattedDate date={featured.date} /></dd></div>
-                  {featured.readingTime && <div><dt>Read</dt><dd>{featured.readingTime} min</dd></div>}
-                </dl>
-                {featured.description && <p class="feature-description">{featured.description}</p>}
-              </div>
-            </section>
-            {recentBlogs.length > 1 && (
-              <section class="animate contact-sheet" aria-label="文章接觸表">
-                <div class="frames">
-                  {recentBlogs.map((post, index) => (
-                    <a href={`/blog/${post.id}`} class="frame" aria-label={`閱讀：${post.title}`}>
-                      <span class="frame-number">{String(index + 1).padStart(2, "0")}</span>
-                      <div class="frame-cover">
-                        <PostCover
-                          src={post.cover}
-                          alt={post.coverAlt}
-                          title={post.title}
-                          frame={String(index + 1).padStart(2, "0")}
-                          ratio="4 / 3"
-                          sizes="18rem"
-                          compact
-                        />
-                      </div>
-                      <span class="frame-title">{post.title}</span>
-                    </a>
-                  ))}
-                </div>
-                <div class="roll-meta">
-                  <span>Roll Vartifact</span>
-                  <span>{recentBlogs.length} exposed frames</span>
-                  <span>Reading room</span>
-                </div>
-              </section>
-            )}
-          </>
-        )
-      }
+      <section class="hero" aria-labelledby="home-title">
+        <p class="eyebrow">Michael Tsai · Taiwan</p>
+        <h1 id="home-title">分享技術及生活<span aria-hidden="true">。</span></h1>
+        <p class="introduction">
+          前端工程師的個人書寫空間。記錄程式、設計、閱讀，以及日常裡值得留下的片段。
+        </p>
+        {
+          elsewhere.length > 0 && (
+            <ul class="socials" role="list" aria-label="其他平台">
+              {elsewhere.map((item) => (
+                <li><Link href={item.href} external>{item.label}</Link></li>
+              ))}
+              <li><Link href="/rss.xml" external aria-label="RSS 訂閱">RSS</Link></li>
+            </ul>
+          )
+        }
+      </section>
 
       {
         recentBlogs.length > 0 ? (
-          <section aria-labelledby="writing" class="animate writing">
-            <div class="section-head">
-              <h2 id="writing">Recent Writing</h2>
-              {posts.length > recentBlogs.length && <Link href="/blog" underline={false} class="index-link">Full index →</Link>}
-            </div>
-            <ol class="post-list" role="list">
+          <section class="writing" aria-labelledby="writing-title">
+            <h2 class="section-label" id="writing-title">Writing</h2>
+            <ol class="timeline" role="list">
               {recentBlogs.map((post, index) => (
-                <li>
-                  <a href={`/blog/${post.id}`} class="post-link">
-                    <span class="post-number">{String(index + 1).padStart(2, "0")}</span>
-                    <div class="post-copy">
-                      <h3>{post.title}</h3>
-                      {post.description && <p>{post.description}</p>}
-                    </div>
-                    <div class="post-meta"><FormattedDate date={post.date} /></div>
-                    <RiArrowRightUpLine class="post-arrow" aria-hidden="true" />
-                  </a>
+                <li class:list={["post", { featured: index === 0 }]}>
+                  <div class="post-rail">
+                    <time datetime={new Date(post.date).toISOString()}>{formatRailDate(post.date)}</time>
+                    <span class="post-dot" aria-hidden="true"></span>
+                  </div>
+                  <div class="post-body">
+                    {index === 0 && <p class="post-stamp">Latest</p>}
+                    <h3><a href={`/blog/${post.id}`}>{post.title}</a></h3>
+                    {post.description && <p class="post-description">{post.description}</p>}
+                    <p class="post-meta">{post.readingTime} 分鐘閱讀</p>
+                  </div>
                 </li>
               ))}
             </ol>
+            {posts.length > recentBlogs.length && (
+              <p class="archive-link">
+                <Link href="/blog">查看全部 {posts.length} 篇文章 →</Link>
+              </p>
+            )}
           </section>
         ) : (
-          <section aria-labelledby="empty-title" class="animate empty-writing">
-            <h1 id="empty-title">目前沒有公開文章</h1>
-            <p>你可以先查看作者介紹，或從其他平台找到 Michael。</p>
-            <Link href="/about" underline={false} class="empty-link">關於 Michael →</Link>
-          </section>
-        )
-      }
-
-      {
-        elsewhere.length > 0 && (
-          <section aria-labelledby="elsewhere" class="animate elsewhere">
-            <div class="section-head"><h2 id="elsewhere">Elsewhere</h2></div>
-            <ul role="list">
-              {elsewhere.map((item) => (
-                <li>
-                  <Link href={item.href} external underline={false} class="elsewhere-link">
-                    <span class="elsewhere-name">{item.label}</span>
-                    <span class="handle">{item.handle}</span>
-                    <RiArrowRightUpLine class="elsewhere-arrow" aria-hidden="true" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          <section class="empty-writing" aria-labelledby="empty-title">
+            <p class="eyebrow">Writing</p>
+            <h2 id="empty-title">目前沒有公開文章</h2>
+            <p>新的文章會出現在這裡。你也可以先認識作者。</p>
+            <Link href="/about">關於 Michael →</Link>
           </section>
         )
       }
     </div>
-    <div class="animate back-top"><BackToTop /></div>
+    <div class="back-top"><BackToTop /></div>
   </Container>
 </Base>
 
 <style>
-  .home {
-    display: flex;
-    flex-direction: column;
-    padding-block: 1rem 2rem;
-  }
-  .feature + .contact-sheet {
-    margin-top: clamp(1.5rem, 3vw, 3rem);
-  }
-  .contact-sheet + .writing,
-  .feature + .writing,
-  .writing + .elsewhere,
-  .empty-writing + .elsewhere {
-    margin-top: clamp(4.5rem, 9vw, 8rem);
-  }
-  .feature {
-    display: grid;
-    align-items: stretch;
-    gap: clamp(1.5rem, 4vw, 3rem);
-  }
-  .feature-image a {
-    display: block;
-  }
-  .feature-copy {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding-block: 0.25rem;
-  }
-  .feature-label,
-  dt,
-  .frame-number,
-  .roll-meta,
+  .home { padding-block: 0 1rem; }
+  .hero { margin-bottom: clamp(4.5rem, 10vw, 7rem); }
+  .eyebrow,
+  .section-label,
+  .post-stamp,
   .post-meta {
+    color: var(--muted-foreground);
     font-family: var(--font-sans);
-    font-size: 0.6875rem;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0.14em;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
-  .feature-label {
-    margin-bottom: 1.25rem;
-    color: var(--primary);
-  }
-  h1,
-  h2,
-  h3 {
-    font-family: var(--font-serif);
-    font-weight: 500;
-  }
-  h1 {
-    max-width: 10ch;
-    font-size: clamp(3rem, 7vw, 5.75rem);
-    line-height: 1.03;
+  .hero h1 {
+    max-width: 14ch;
+    margin-top: 1rem;
+    color: var(--foreground);
+    font: 500 clamp(2.25rem, 8vw, 3.75rem)/1.1 var(--font-serif);
     letter-spacing: -0.035em;
-    overflow-wrap: anywhere;
     text-wrap: balance;
   }
-  h1 a {
-    text-decoration: none;
-  }
-  h1 a:hover {
-    color: var(--primary);
-  }
-  .author {
-    margin-top: 1.5rem;
-    font-size: 1.05rem;
-    font-weight: 500;
-  }
-  .feature-meta {
-    width: 100%;
-    margin-top: 1.5rem;
-    border-top: 1px solid var(--border);
-  }
-  .feature-meta div {
-    display: grid;
-    grid-template-columns: 5rem 1fr;
-    gap: 1rem;
-    padding-block: 0.75rem;
-    border-bottom: 1px dashed color-mix(in srgb, var(--border) 70%, transparent);
-  }
-  dt {
-    color: var(--muted-foreground);
-  }
-  dd {
-    font-size: 0.8rem;
-    font-variant-numeric: tabular-nums;
-  }
-  .feature-description {
-    max-width: 34rem;
+  .hero h1 span { color: var(--primary); }
+  .introduction {
+    max-width: 35rem;
     margin-top: 1.25rem;
     color: var(--muted-foreground);
-    font-family: var(--font-serif);
+    font-size: clamp(1.0625rem, 2.5vw, 1.1875rem);
     line-height: 1.75;
-    overflow-wrap: anywhere;
   }
-  .contact-sheet {
-    padding: 0.75rem;
-    background: var(--film);
-    color: var(--film-foreground);
-  }
-  .frames {
-    display: flex;
-    gap: 0.75rem;
-    overflow-x: auto;
-    padding: 0.5rem;
-    scrollbar-color: var(--primary) var(--film);
-  }
-  .frame {
-    position: relative;
-    display: block;
-    min-width: min(72vw, 18rem);
-    text-decoration: none;
-  }
-  .frame-number {
-    display: block;
-    padding: 0.25rem 0.25rem 0.5rem;
-    color: var(--film-accent);
-  }
-  .frame-title {
-    display: block;
-    max-inline-size: 18rem;
-    padding: 0.5rem 0.25rem;
-    color: var(--film-foreground);
-    font-size: 0.875rem;
-    line-height: 1.5;
-    overflow-wrap: anywhere;
-  }
-  .frame:hover {
-    color: var(--film-accent);
-  }
-  .roll-meta {
+  .socials {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 0.5rem 1rem;
-    padding: 0.75rem 0.5rem 0;
-    color: color-mix(in srgb, var(--film-foreground) 75%, transparent);
+    gap: 0.4rem 1.1rem;
+    margin-top: 1.25rem;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
   }
-  .section-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--foreground);
+  .socials :global(a) {
+    color: var(--muted-foreground);
+    text-decoration-color: color-mix(in srgb, var(--muted-foreground) 45%, transparent);
   }
-  .section-head h2 {
-    font-size: clamp(2rem, 4vw, 3rem);
-    letter-spacing: -0.025em;
-  }
-  :global(.index-link) {
-    color: var(--muted-foreground) !important;
-    font-size: 0.8rem;
-  }
-  :global(.index-link:hover) {
-    color: var(--primary) !important;
-  }
-  .post-list li,
-  .elsewhere li {
-    border-top: 1px solid var(--border);
-  }
-  .post-list,
-  .elsewhere ul {
-    padding-left: 0;
+  .socials :global(a:hover) { color: var(--primary); }
+  .section-label { margin-bottom: 2rem; }
+  .timeline {
+    --rail-width: 6.5rem;
+    --rail-gap: 2rem;
+    position: relative;
+    display: grid;
+    gap: 0;
+    padding: 0;
     list-style: none;
   }
-  .post-link {
+  .timeline::before {
+    position: absolute;
+    top: 0.45rem;
+    bottom: 0.45rem;
+    left: calc(var(--rail-width) - 1px);
+    width: 1px;
+    background: var(--border);
+    content: "";
+  }
+  .post {
     display: grid;
-    grid-template-columns: 2.25rem minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 1rem;
-    padding-block: 1.5rem;
-    text-decoration: none;
+    grid-template-columns: var(--rail-width) minmax(0, 1fr);
+    column-gap: var(--rail-gap);
   }
-  .post-number {
-    color: var(--primary);
-    font-variant-numeric: tabular-nums;
-  }
-  .post-copy h3 {
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    line-height: 1.25;
-    overflow-wrap: anywhere;
-  }
-  .post-copy p {
-    margin-top: 0.4rem;
-    color: var(--muted-foreground);
-    font-family: var(--font-serif);
-    line-height: 1.6;
-    overflow-wrap: anywhere;
-  }
-  .post-meta {
-    display: none;
-    color: var(--muted-foreground);
-  }
-  :global(.post-arrow) {
-    width: 1.1rem;
-    height: 1.1rem;
-    transition:
-      transform 220ms ease-out,
-      color 220ms ease-out;
-  }
-  .post-link:hover h3,
-  .post-link:hover :global(.post-arrow) {
-    color: var(--primary);
-  }
-  .post-link:hover :global(.post-arrow) {
-    transform: translate(0.15rem, -0.15rem);
-  }
-  :global(.elsewhere-link) {
-    display: flex !important;
-    justify-content: space-between;
-    gap: 1rem;
-    padding-block: 1rem;
-    color: var(--foreground) !important;
-    font-family: var(--font-serif);
-    text-decoration: none !important;
-  }
-  :global(.elsewhere-link:hover) {
-    color: var(--primary) !important;
-  }
-  .elsewhere-name {
-    font-size: 1.125rem;
-    line-height: 1.3;
-  }
-  .handle {
+  .post-rail {
+    position: relative;
+    padding-top: 0.2rem;
+    padding-right: 1.25rem;
     color: var(--muted-foreground);
     font-family: var(--font-sans);
-    font-size: 0.8rem;
-    min-inline-size: 0;
-    overflow-wrap: anywhere;
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
     text-align: right;
   }
-  :global(.elsewhere-arrow) {
-    display: none;
+  .post-dot {
+    position: absolute;
+    z-index: 1;
+    top: 0.6rem;
+    right: -0.3rem;
+    width: 0.625rem;
+    height: 0.625rem;
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+    background: var(--background);
+    transition: border-color 180ms ease, background-color 180ms ease;
   }
-  .back-top {
-    display: flex;
-    margin-top: 3rem;
+  .post-body { padding-bottom: 2.5rem; }
+  .post-stamp { margin-bottom: 0.5rem; color: var(--primary); font-size: 0.6875rem; }
+  .post h3 {
+    color: var(--foreground);
+    font: 500 1.25rem/1.35 var(--font-serif);
+    letter-spacing: -0.018em;
+    text-wrap: balance;
   }
-  .empty-writing {
-    max-width: 46rem;
-    padding-block: clamp(4rem, 12vw, 9rem);
-    border-block: 1px solid var(--foreground);
+  .post.featured h3 { font-size: clamp(1.6rem, 4vw, 2rem); }
+  .post h3 a { text-decoration: none; }
+  .post h3 a:hover { color: var(--primary); }
+  .post:has(h3 a:hover) .post-dot {
+    border-color: var(--primary);
+    background: var(--primary);
   }
-  .empty-writing h1 {
-    max-width: none;
-    font-size: clamp(2.25rem, 6vw, 4.5rem);
-  }
-  .empty-writing p {
-    max-width: 38rem;
-    margin-top: 1.25rem;
+  .post-description {
+    max-width: 36rem;
+    margin-top: 0.5rem;
     color: var(--muted-foreground);
-    font-family: var(--font-serif);
-    font-size: 1rem;
-    line-height: 1.75;
+    font-size: 0.975rem;
+    line-height: 1.65;
   }
-  :global(.empty-link) {
-    display: inline-flex !important;
-    min-height: 2.75rem;
-    align-items: center;
-    margin-top: 1.5rem;
-    color: var(--foreground) !important;
-    font-weight: 600;
+  .post.featured .post-description { font-size: 1.0625rem; }
+  .post-meta { margin-top: 0.65rem; font-size: 0.6875rem; letter-spacing: 0.06em; text-transform: none; }
+  .archive-link {
+    margin-top: 0.25rem;
+    margin-left: calc(var(--rail-width) + var(--rail-gap));
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
   }
-  :global(.empty-link:hover) {
-    color: var(--primary) !important;
+  .archive-link :global(a) { color: var(--muted-foreground); }
+  .archive-link :global(a:hover) { color: var(--primary); }
+  .empty-writing {
+    padding-block: 2rem;
+    border-block: 1px solid var(--border);
   }
-  @media (width < 46rem) {
-    .feature {
-      gap: 0;
-    }
-    .feature-copy {
-      padding: 1.25rem 1rem 1.5rem;
-      border-inline: 0.75rem solid var(--film);
-      border-bottom: 0.75rem solid var(--film);
-      background: var(--card);
-    }
+  .empty-writing h2 {
+    margin-block: 0.75rem;
+    font: 500 clamp(1.75rem, 5vw, 2.5rem)/1.2 var(--font-serif);
   }
-  @media (width >= 46rem) {
-    .feature {
-      grid-template-columns: minmax(0, 1.65fr) minmax(17rem, 0.8fr);
-    }
-    .post-link {
-      grid-template-columns: 3rem minmax(0, 1fr) auto auto;
-      gap: 2rem;
-    }
-    .post-meta {
-      display: block;
-    }
-    .frame {
-      min-width: 15rem;
-    }
-    .elsewhere ul {
-      display: grid;
-      grid-template-columns: repeat(
-        auto-fit,
-        minmax(min(100%, 13rem), 1fr)
-      );
-      gap: 0 clamp(2rem, 4vw, 4rem);
-    }
-    :global(.elsewhere-link) {
-      display: grid !important;
-      min-height: 5.5rem;
-      grid-template-areas:
-        "name arrow"
-        "handle arrow";
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
-      justify-content: initial;
-      gap: 0.25rem 1rem;
-    }
-    .elsewhere-name {
-      grid-area: name;
-      font-size: 1.25rem;
-    }
-    .handle {
-      grid-area: handle;
-      text-align: left;
-    }
-    :global(.elsewhere-arrow) {
-      display: block;
-      width: 1.1rem;
-      height: 1.1rem;
-      grid-area: arrow;
-      transition:
-        color 220ms ease-out,
-        transform 220ms ease-out;
-    }
-    :global(.elsewhere-link:hover .elsewhere-arrow) {
-      transform: translate(0.15rem, -0.15rem);
-    }
-  }
-  @media (width < 40rem) {
-    .contact-sheet + .writing,
-    .feature + .writing,
-    .writing + .elsewhere,
-    .empty-writing + .elsewhere {
-      margin-top: 3.5rem;
-    }
-    .feature-label {
-      margin-bottom: 1rem;
-    }
-    .feature-copy {
-      border-inline-width: 0.5rem;
-      border-bottom-width: 0.5rem;
-    }
-    .feature-description {
-      margin-top: 1rem;
-    }
-    .roll-meta {
-      display: grid;
-      grid-template-columns: 1fr auto;
-    }
-    .roll-meta span:last-child {
-      grid-column: 1 / -1;
-    }
-    .section-head {
-      align-items: flex-end;
-    }
-    .post-link {
-      gap: 0.75rem;
-    }
-    :global(.elsewhere-link) {
-      min-height: 2.75rem;
-      align-items: center;
-    }
+  .empty-writing p:not(.eyebrow) { margin-bottom: 1rem; color: var(--muted-foreground); }
+  .back-top { display: flex; margin-top: 3rem; }
+  @media (width < 34rem) {
+    .timeline { --rail-width: 4.75rem; --rail-gap: 1.15rem; }
+    .post-rail { padding-right: 0.8rem; font-size: 0.6875rem; }
+    .post-body { padding-bottom: 2rem; }
+    .post h3 { font-size: 1.125rem; }
+    .post.featured h3 { font-size: 1.45rem; }
+    .post-description { font-size: 0.9375rem; }
   }
 </style>

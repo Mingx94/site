@@ -1,5 +1,6 @@
 <div class="font-toggle">
   <button
+    type="button"
     data-font-toggle
     class="toggle"
     title="切換黑體／襯體"
@@ -24,15 +25,15 @@
     align-items: center;
     gap: 0.125rem;
     border: 1px solid transparent;
-    border-radius: var(--radius-md);
+    border-radius: 999px;
     padding: 0.25rem 0.5rem;
     background: transparent;
     color: var(--muted-foreground);
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     line-height: 1.25rem;
     transition: color 200ms;
   }
-  .toggle:hover { color: var(--foreground); }
+  .toggle:hover { color: var(--primary); background: color-mix(in oklch, var(--primary) 10%, transparent); }
   .serif { font-family: var(--font-serif); }
   .sans { font-family: var(--font-sans); }
   .dimmed { opacity: 0.4; }

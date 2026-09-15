@@ -1,20 +1,24 @@
 ---
 import ArticleClient from "@/components/ArticleClient.astro";
-import BackToPrev from "@/components/BackToPrev.astro";
-import BackToTop from "@/components/BackToTop.astro";
 import Container from "@/components/Container.astro";
 import FormattedDate from "@/components/FormattedDate.astro";
 import PostCover from "@/components/PostCover.astro";
-import TableOfContents from "@/components/TableOfContents.astro";
+import { getPost, getPosts } from "@/lib/posts";
 import Base from "@/layouts/Base.astro";
-import { getPost } from "@/lib/posts";
 import { PortableText } from "emdash/ui";
 
 const slug = Astro.params.slug;
 if (!slug) return Astro.redirect("/404");
 const post = await getPost(slug);
 if (!post) return Astro.redirect("/404");
-const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".") ?? "";
+
+const sortedPosts = await getPosts();
+const currentIndex = sortedPosts.findIndex((item) => item.id === post.id);
+const newerPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : undefined;
+const olderPost =
+  currentIndex >= 0 && currentIndex < sortedPosts.length - 1
+    ? sortedPosts[currentIndex + 1]
+    : undefined;
 ---
 
 <Base
@@ -26,178 +30,175 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
 >
   <ArticleClient />
   <Container>
-    <div class="article-layout">
-      <article>
-        <div class="article-lede">
-          <div class="title-block">
-            <h1 class="page-title animate">{post.title}</h1>
-            {post.description && <p class="introduction animate">{post.description}</p>}
-          </div>
-          <div class="article-proof animate">
+    <article class="post">
+      <header class="post-header">
+        <p class="eyebrow">Writing <span aria-hidden="true">·</span> <FormattedDate date={post.date} /></p>
+        {post.draft && <p class="draft">草稿</p>}
+        <h1>{post.title}</h1>
+        <p class="byline">
+          <span>Michael Tsai</span>
+          <span aria-hidden="true">·</span>
+          <span>{post.readingTime} 分鐘閱讀</span>
+          {post.updated && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>更新於 <FormattedDate date={post.updated} /></span>
+            </>
+          )}
+        </p>
+      </header>
+
+      {
+        post.cover ? (
+          <div class="cover">
             <PostCover
               title={post.title}
               src={post.cover}
               alt={post.coverAlt}
-              frame="01"
               ratio="16 / 9"
-              sizes="(min-width: 92rem) 38rem, (min-width: 48rem) 50vw, calc(100vw - 2rem)"
+              sizes="(max-width: 51.5rem) calc(100vw - 2rem), 47.5rem"
               priority
             />
-            <dl class="article-ledger" aria-label="文章資訊">
-              <div>
-                <dt>Author</dt>
-                <dd>Michael Tsai</dd>
-              </div>
-              <div>
-                <dt>Date</dt>
-                <dd><FormattedDate date={post.date} /></dd>
-              </div>
-              <div>
-                <dt>Read time</dt>
-                <dd>{post.readingTime} min read</dd>
-              </div>
-              {post.draft && (
-                <div>
-                  <dt>Status</dt>
-                  <dd class="draft">Draft</dd>
-                </div>
-              )}
-            </dl>
           </div>
-        </div>
-        <TableOfContents />
-        <div class="animate content no-drop-cap" id="article-content">
-          <PortableText value={post.content} />
-        </div>
-        <div class="colophon">
-          <span>Filed {formatStamp(post.date)}</span>
-          {post.updated && <span>Revised {formatStamp(post.updated)}</span>}
-        </div>
-      </article>
-    </div>
-    <div class="back-links animate">
-      <BackToPrev />
-      <BackToTop />
-    </div>
+        ) : (
+          <hr class="rule" />
+        )
+      }
+
+      <div class="content" id="article-content">
+        <PortableText value={post.content} />
+      </div>
+
+      {(olderPost || newerPost) && (
+        <>
+          <hr class="rule rule-footer" />
+          <nav class="post-pager" aria-label="其他文章">
+            {olderPost && (
+              <a
+                class="pager-link previous"
+                href={`/blog/${olderPost.id}`}
+                aria-label={`上一篇文章：${olderPost.title}`}
+              >
+                <span class="pager-eyebrow">← 上一篇</span>
+                <span class="pager-title">{olderPost.title}</span>
+              </a>
+            )}
+            {newerPost && (
+              <a
+                class="pager-link next"
+                href={`/blog/${newerPost.id}`}
+                aria-label={`下一篇文章：${newerPost.title}`}
+              >
+                <span class="pager-eyebrow">下一篇 →</span>
+                <span class="pager-title">{newerPost.title}</span>
+              </a>
+            )}
+          </nav>
+        </>
+      )}
+    </article>
   </Container>
+
   <script>
     const progressRoot = document.querySelector<HTMLElement>("[data-article-progress]");
     if (progressRoot) {
       const progress = progressRoot.querySelector<HTMLElement>(".progress");
-
       const updateProgress = () => {
         const scrollable = document.documentElement.scrollHeight - innerHeight;
         const ratio = scrollable > 0 ? Math.min(1, scrollY / scrollable) : 0;
         if (progress) progress.style.transform = `scaleX(${ratio})`;
       };
-
       updateProgress();
       addEventListener("scroll", updateProgress, { passive: true });
+    }
+
+    for (const block of document.querySelectorAll<HTMLElement>("#article-content pre")) {
+      if (block.scrollWidth > block.clientWidth) block.tabIndex = 0;
     }
   </script>
 </Base>
 
 <style>
-  .article-layout,
-  .back-links { max-inline-size: 56rem; margin-inline: auto; }
-  article { min-width: 0; padding-top: 1rem; }
-  .article-lede {
-    display: grid;
-    gap: 2rem;
-    padding-block: 1rem 2.5rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .draft { color: var(--destructive); }
-  .title-block {
-    display: flex;
-    min-width: 0;
-    flex-direction: column;
-    justify-content: center;
-    padding-block: 1rem;
-  }
-  .title-block > * + * { margin-top: 1.5rem; }
-  .page-title {
-    color: var(--foreground);
-    font: 500 clamp(2.75rem, 4vw, 3.75rem)/1.08 var(--font-serif);
-    letter-spacing: -0.025em;
-    text-wrap: balance;
-  }
-  .introduction {
-    max-width: 30rem;
-    color: var(--muted-foreground);
-    font: 1.125rem/1.7 var(--font-serif);
-  }
-  .article-proof { min-width: 0; }
-  .article-ledger {
-    margin-top: 1rem;
-    border-top: 1px solid var(--border);
-    color: var(--foreground);
+  .post { min-width: 0; }
+  .post-header { margin-bottom: 2.25rem; }
+  .eyebrow,
+  .draft,
+  .pager-eyebrow {
     font-family: var(--font-sans);
     font-size: 0.75rem;
-    font-variant-numeric: tabular-nums;
-  }
-  .article-ledger > div {
-    display: grid;
-    grid-template-columns: minmax(6.5rem, 0.7fr) minmax(0, 1.3fr);
-    border-bottom: 1px solid var(--border);
-  }
-  .article-ledger dt,
-  .article-ledger dd { padding: 0.45rem 0.75rem; }
-  .article-ledger dt {
-    color: var(--muted-foreground);
-    border-right: 1px solid var(--border);
-    font-size: 0.625rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
+    font-weight: 500;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
-  .article-ledger dd { margin: 0; letter-spacing: 0.04em; text-transform: uppercase; }
-  .colophon {
+  .eyebrow { margin-bottom: 1.375rem; color: var(--muted-foreground); }
+  .eyebrow span { margin-inline: 0.35rem; color: var(--border); }
+  .draft {
+    width: fit-content;
+    margin-bottom: 0.75rem;
+    color: var(--destructive);
+  }
+  .post-header h1 {
+    max-width: 18ch;
+    margin-bottom: 1.125rem;
+    color: var(--foreground);
+    font: 500 clamp(1.875rem, 5.5vw, 2.875rem)/1.1 var(--font-serif);
+    letter-spacing: -0.025em;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+  .byline {
     display: flex;
     flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
+    gap: 0.25rem 0.5rem;
     color: var(--muted-foreground);
-    font-family: var(--font-mono);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
+    font-size: 1rem;
+    font-style: italic;
+    font-variant-numeric: tabular-nums;
   }
-  .content { max-inline-size: 100%; margin-top: 2.5rem; }
-  .colophon {
-    row-gap: 0.5rem;
-    margin-top: 120px;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-    font-size: 0.625rem;
+  .byline > span[aria-hidden="true"] { color: var(--border); font-style: normal; }
+  .cover { margin-bottom: 2.25rem; }
+  .rule {
+    height: 1px;
+    margin: 0 0 2.25rem;
+    border: 0;
+    background: var(--border);
   }
-  .back-links { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 3rem; }
-  @media (width >= 48rem) {
-    .introduction { font-size: 1.25rem; }
-    .article-lede {
-      grid-template-columns: minmax(18rem, 0.9fr) minmax(20rem, 1.1fr);
-      align-items: start;
-      gap: 2rem;
-    }
-    .title-block { min-height: 100%; padding-block: 2rem; }
+  .rule-footer { margin: 3.5rem 0 1.75rem; }
+  .post-pager {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem 2rem;
+    margin-bottom: 1rem;
   }
-  @media (width >= 48rem) and (width < 64rem) {
-    .page-title { font-size: clamp(2.25rem, 5vw, 2.5rem); }
+  .pager-link {
+    display: block;
+    min-width: 0;
+    color: var(--foreground);
+    text-decoration: none;
+    transition: transform 180ms ease;
   }
-  @media (width >= 64rem) {
-    .article-lede {
-      grid-template-columns: minmax(20rem, 0.9fr) minmax(26rem, 1.1fr);
-      gap: clamp(2rem, 4vw, 4rem);
-    }
+  .pager-link.next { text-align: right; }
+  .pager-link.previous:hover { transform: translateX(-0.125rem); }
+  .pager-link.next:hover { transform: translateX(0.125rem); }
+  .pager-eyebrow {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--muted-foreground);
+    font-size: 0.6875rem;
   }
-  @media (width >= 80rem) {
-    .article-layout,
-    .back-links { max-inline-size: 64rem; }
+  .pager-title {
+    display: block;
+    color: var(--foreground);
+    font: 500 1.1rem/1.35 var(--font-serif);
+    letter-spacing: -0.01em;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+    transition: color 180ms ease;
   }
-  @media (width < 48rem) {
-    .article-lede { gap: 1rem; padding-top: 0.5rem; }
-    .title-block { padding-block: 0.5rem; }
-    .page-title { font-size: clamp(2.25rem, 10.75vw, 2.75rem); }
-    .article-ledger dt,
-    .article-ledger dd { padding-inline: 0.5rem; }
+  .pager-link:hover .pager-title { color: var(--primary); }
+  .post-pager:has(.pager-link:only-child) .pager-link { grid-column: 1 / -1; }
+  @media (width < 45rem) {
+    .post-pager { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+    .pager-link.next { text-align: left; }
   }
 </style>

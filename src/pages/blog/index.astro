@@ -2,11 +2,8 @@
 import BackToTop from "@/components/BackToTop.astro";
 import Container from "@/components/Container.astro";
 import FormattedDate from "@/components/FormattedDate.astro";
-import PostCover from "@/components/PostCover.astro";
 import { getPosts } from "@/lib/posts";
 import Base from "@/layouts/Base.astro";
-import RiArrowRightUpLine from "~icons/ri/arrow-right-up-line";
-import RiSearchLine from "~icons/ri/search-line";
 
 const allPosts = await getPosts();
 const posts = allPosts.reduce<Record<string, typeof allPosts>>((groups, post) => {
@@ -22,58 +19,53 @@ const normalizeSearch = (value: string) =>
 <Base title="文章 | Vartifact" description="技術隨筆、閱讀筆記，以及其他片段。">
   <Container>
     <div class="archive">
-      <div class="animate strip">
-        <span>· Archive · Writing</span>
-        <span>{String(allPosts.length).padStart(2, "0")} {allPosts.length === 1 ? "entry" : "entries"}</span>
-      </div>
-      <div class="title-block">
-        <h1 class="animate page-title">文章<span class="accent">.</span></h1>
-        <p class="animate introduction">
-          技術隨筆、閱讀筆記，以及其他片段——<br class="desktop-break" />
-          這裡是我把想清楚的東西寫下來的地方。
-        </p>
-      </div>
+      <header class="archive-header">
+        <p class="eyebrow">Archive · {allPosts.length} {allPosts.length === 1 ? "entry" : "entries"}</p>
+        <h1>文章<span aria-hidden="true">。</span></h1>
+        <p>技術隨筆、閱讀筆記，以及其他片段。這裡是我把想清楚的東西寫下來的地方。</p>
+      </header>
 
       {
         allPosts.length > 0 ? (
           <>
-            <div class="animate search" role="search" aria-label="文章搜尋">
-              <RiSearchLine class="search-icon" aria-hidden="true" />
+            <search class="search" aria-label="文章搜尋">
               <label for="blog-search" class="visually-hidden">搜尋文章</label>
-              <input id="blog-search" type="search" placeholder="搜尋..." maxlength="100" enterkeyhint="search" aria-controls="blog-results" class="search-input" />
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="6.5"></circle>
+                <path d="m16 16 4 4"></path>
+              </svg>
+              <input
+                id="blog-search"
+                type="search"
+                placeholder="搜尋文章"
+                maxlength="100"
+                enterkeyhint="search"
+                aria-controls="blog-results"
+              />
               <span id="search-status" class="result-count" data-search-status hidden></span>
               <span class="visually-hidden" role="status" aria-atomic="true" data-search-announcement></span>
-            </div>
+            </search>
+
             <div id="blog-results">
               <div class="years">
                 {years.map((year) => (
-                  <section class="animate">
-                    <div class="year-head">
-                      <h2 class="eyebrow">· Year · {year}</h2>
-                      <span class="count">{posts[year]!.length} {posts[year]!.length === 1 ? "entry" : "entries"}</span>
-                    </div>
+                  <section>
+                    <header class="year-head">
+                      <h2>{year}</h2>
+                      <span>{posts[year]!.length} 篇</span>
+                    </header>
                     <ol class="post-list" role="list">
-                      {posts[year]!.map((post, index) => (
+                      {posts[year]!.map((post) => (
                         <li data-search-text={normalizeSearch(`${post.title} ${post.description ?? ""}`)}>
                           <a href={`/blog/${post.id}`} class="post-link">
-                            <div class="post-cover">
-                              <PostCover
-                                src={post.cover}
-                                alt={post.coverAlt}
-                                title={post.title}
-                                frame={String(index + 1).padStart(2, "0")}
-                                ratio="4 / 3"
-                                sizes="(min-width: 72rem) 21rem, (min-width: 48rem) 15rem, (min-width: 40rem) 38vw, calc(100vw - 2rem)"
-                                compact
-                              />
-                            </div>
-                            <span class="post-number">N°{String(index + 1).padStart(2, "0")}</span>
                             <div class="post-copy">
-                              <h3 class="post-title">{post.title}</h3>
-                              {post.description && <p class="post-description">{post.description}</p>}
-                              <div class="post-meta"><FormattedDate date={post.date} /></div>
+                              <h3>{post.title}</h3>
+                              {post.description && <p>{post.description}</p>}
                             </div>
-                            <RiArrowRightUpLine class="post-arrow" aria-hidden="true" />
+                            <div class="post-meta">
+                              <FormattedDate date={post.date} />
+                              <span>{post.readingTime} 分鐘</span>
+                            </div>
                           </a>
                         </li>
                       ))}
@@ -83,20 +75,20 @@ const normalizeSearch = (value: string) =>
               </div>
               <div class="empty" data-search-empty hidden>
                 <p>找不到「<bdi data-search-query></bdi>」相關文章。</p>
-                <button class="clear-search" type="button" data-search-clear>清除搜尋</button>
+                <button type="button" data-search-clear>清除搜尋</button>
               </div>
             </div>
           </>
         ) : (
           <section class="empty archive-empty" aria-labelledby="archive-empty-title">
-            <h2 id="archive-empty-title">目前沒有公開文章。</h2>
+            <h2 id="archive-empty-title">目前沒有公開文章</h2>
             <p>新的文章會出現在這裡。</p>
-            <a href="/" class="empty-link">回到首頁 →</a>
+            <a href="/">回到首頁 →</a>
           </section>
         )
       }
     </div>
-    <div class="animate back-top"><BackToTop /></div>
+    <div class="back-top"><BackToTop /></div>
   </Container>
 
   <script>
@@ -161,192 +153,140 @@ const normalizeSearch = (value: string) =>
 </Base>
 
 <style>
-  .archive {
-    padding-block: 1rem 2rem;
-  }
-  .strip,
-  .year-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-  }
-  .strip {
-    gap: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
+  .archive { padding-block-end: 1rem; }
+  .archive-header { margin-bottom: clamp(3.5rem, 9vw, 5.5rem); }
+  .eyebrow {
     color: var(--muted-foreground);
-    font: 0.6875rem var(--font-mono);
-    letter-spacing: 0.2em;
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
-  .title-block {
-    margin-block: 2rem 2.5rem;
-  }
-  .title-block > * + * {
-    margin-top: 1.5rem;
-  }
-  .page-title {
+  .archive-header h1 {
+    margin-top: 1rem;
     color: var(--foreground);
-    font-size: clamp(3rem, 10vw, 6rem);
-    font-family: var(--font-serif);
-    font-weight: 500;
-    letter-spacing: -0.035em;
-    line-height: 0.95;
+    font: 500 clamp(2.5rem, 9vw, 4.25rem)/1.05 var(--font-serif);
+    letter-spacing: -0.04em;
   }
-  .accent {
-    color: var(--primary);
-  }
-  .introduction {
-    max-width: 42rem;
+  .archive-header h1 span { color: var(--primary); }
+  .archive-header > p:last-child {
+    max-width: 36rem;
+    margin-top: 1.25rem;
     color: var(--muted-foreground);
-    font-size: 1.125rem;
-    line-height: 1.625;
-  }
-  .desktop-break {
-    display: none;
+    line-height: 1.75;
   }
   .search {
     position: relative;
-    margin-bottom: 2.5rem;
-    border-block: 1px solid var(--border);
-    transition: border-color 200ms ease-out;
+    display: block;
+    margin-bottom: 3.5rem;
+    border-block: 1px solid var(--input);
   }
-  .search:focus-within {
-    border-color: var(--primary);
-  }
-  :global(.search-icon) {
+  .search:focus-within { border-color: var(--primary); }
+  .search svg {
     position: absolute;
     top: 50%;
-    inset-inline-start: 0;
+    left: 0;
     width: 1rem;
     height: 1rem;
-    color: var(--muted-foreground);
+    fill: none;
+    stroke: var(--muted-foreground);
+    stroke-linecap: round;
+    stroke-width: 1.75;
     transform: translateY(-50%);
-    transition: color 200ms ease-out;
     pointer-events: none;
   }
-  .search:focus-within :global(.search-icon) {
-    color: var(--primary);
+  .search input {
+    width: 100%;
+    min-height: 3.5rem;
+    padding: 1rem 6rem 1rem 1.75rem;
+    border: 0;
+    background: transparent;
+    outline: none;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
   }
+  .search input::placeholder { color: var(--muted-foreground); opacity: 0.75; }
+  .result-count {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    color: var(--muted-foreground);
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    transform: translateY(-50%);
+  }
+  .result-count[hidden] { display: none; }
   .visually-hidden {
     position: absolute;
     width: 1px;
     height: 1px;
-    padding: 0;
     margin: -1px;
+    padding: 0;
     overflow: hidden;
-    clip: rect(0, 0, 0, 0);
+    border: 0;
+    clip-path: inset(50%);
     white-space: nowrap;
-    border: 0;
   }
-  .search-input {
-    width: 100%;
-    min-height: 3.5rem;
-    padding-block: 1rem;
-    padding-inline: 1.75rem 6rem;
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
-    font-size: 1rem;
-    outline: none;
+  .years { display: grid; gap: 4rem; }
+  .year-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border);
   }
-  .search-input::placeholder {
-    color: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
+  .year-head h2 {
+    font: 500 1.125rem/1.3 var(--font-serif);
+    letter-spacing: -0.015em;
   }
-  .result-count {
-    position: absolute;
-    top: 50%;
-    inset-inline-end: 0;
+  .year-head span {
     color: var(--muted-foreground);
-    font: 0.625rem var(--font-mono);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    transform: translateY(-50%);
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
   }
-  .post-list li {
-    border-top: 1px solid var(--border);
-  }
-  .post-list {
-    padding-left: 0;
-    list-style: none;
-  }
-  .post-list li:first-child {
-    border-top: 0;
-  }
+  .post-list { padding: 0; list-style: none; }
+  .post-list li + li { border-top: 1px solid var(--border); }
   .post-link {
     display: grid;
-    grid-template-areas:
-      "cover cover cover"
-      "number copy arrow";
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem 2rem;
     align-items: start;
-    gap: 1rem 0.75rem;
-    padding-block: 1.5rem 2rem;
-    color: inherit;
+    padding-block: 1.35rem;
     text-decoration: none;
   }
-  .post-cover {
-    grid-area: cover;
-    min-width: 0;
-  }
-  .post-number {
-    display: block;
-    grid-area: number;
-    padding-top: 0.25rem;
-    color: var(--muted-foreground);
-    font: 0.75rem var(--font-mono);
-    font-variant-numeric: tabular-nums;
-  }
-  .post-copy {
-    grid-area: copy;
-    min-width: 0;
-  }
-  .post-copy > * + * {
-    margin-top: 0.5rem;
-  }
-  .post-title {
+  .post-copy h3 {
     color: var(--foreground);
-    font-size: 1.25rem;
-    font-family: var(--font-serif);
-    font-weight: 500;
-    line-height: 1.375;
-    overflow-wrap: anywhere;
-    transition: color 300ms;
+    font: 500 clamp(1.15rem, 3vw, 1.4rem)/1.35 var(--font-serif);
+    letter-spacing: -0.018em;
+    text-wrap: balance;
+    transition: color 180ms ease;
   }
-  .post-link:hover .post-title {
-    color: var(--primary);
-  }
-  .post-description {
+  .post-link:hover h3 { color: var(--primary); }
+  .post-copy p {
     display: -webkit-box;
+    max-width: 35rem;
+    margin-top: 0.4rem;
     overflow: hidden;
     color: var(--muted-foreground);
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
     overflow-wrap: anywhere;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     line-clamp: 2;
   }
   .post-meta {
-    padding-top: 0.25rem;
+    display: grid;
+    gap: 0.25rem;
     color: var(--muted-foreground);
-    font: 0.625rem var(--font-mono);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-  :global(.post-arrow) {
-    grid-area: arrow;
-    align-self: center;
-    width: 1rem;
-    height: 1rem;
-    color: color-mix(in oklch, var(--muted-foreground) 60%, transparent);
-    transition:
-      transform 300ms,
-      color 300ms;
-  }
-  .post-link:hover :global(.post-arrow) {
-    color: var(--primary);
-    transform: translate(0.125rem, -0.125rem);
+    font-family: var(--font-sans);
+    font-size: 0.6875rem;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
   }
   .empty {
     display: flex;
@@ -357,139 +297,30 @@ const normalizeSearch = (value: string) =>
     color: var(--muted-foreground);
     text-align: center;
   }
-  .empty[hidden] {
-    display: none;
-  }
-  .empty bdi {
-    overflow-wrap: anywhere;
-  }
-  .clear-search,
-  .empty-link {
-    display: inline-flex;
+  .empty[hidden] { display: none; }
+  .empty button,
+  .empty a {
     min-height: 2.75rem;
-    align-items: center;
     padding-inline: 0.25rem;
-    color: var(--foreground);
+    border: 0;
     border-bottom: 1px solid var(--primary);
     background: transparent;
+    color: var(--foreground);
     font-family: var(--font-sans);
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
+    line-height: 2.75rem;
     text-decoration: none;
   }
-  .clear-search:hover,
-  .empty-link:hover {
-    color: var(--primary);
-  }
-  .archive-empty {
-    border-block: 1px solid var(--border);
-  }
-  .archive-empty h2 {
-    color: var(--foreground);
-    font-family: var(--font-serif);
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    font-weight: 500;
-  }
-  .years {
-    display: flex;
-    flex-direction: column;
-    gap: 4rem;
-  }
-  .year-head {
-    margin-bottom: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-  }
-  .eyebrow,
-  .count {
-    color: var(--muted-foreground);
-    font-family: var(--font-mono);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-  }
-  .eyebrow {
-    font-size: 0.6875rem;
-  }
-  .count {
-    font-size: 0.625rem;
-  }
-  .back-top {
-    display: flex;
-    margin-top: 3rem;
-  }
-  @media (width < 30rem) {
-    .search-input { padding-inline-end: 0.5rem; }
-    :global(.search-icon) { top: 1.75rem; }
-    .result-count {
-      position: static;
-      display: block;
-      padding-bottom: 0.75rem;
-      text-align: end;
-      transform: none;
-    }
-    .result-count[hidden] { display: none; }
-  }
-  @media (width >= 40rem) {
-    .post-link {
-      grid-template-areas: "cover number copy arrow";
-      grid-template-columns:
-        minmax(10rem, 38%)
-        2.25rem minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 1rem;
-    }
-  }
-  @media (width >= 48rem) {
-    .archive {
-      padding-top: 2rem;
-    }
-    .title-block {
-      margin-block: 3rem 3.5rem;
-    }
-    .introduction {
-      font-size: 1.25rem;
-    }
-    .desktop-break {
-      display: inline;
-    }
-    .search {
-      margin-bottom: 3.5rem;
-    }
-    .post-link {
-      grid-template-areas: "cover number copy arrow";
-      grid-template-columns:
-        minmax(11rem, 15rem)
-        2.5rem minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 2rem;
-      padding-block: 2rem;
-    }
-    .post-title {
-      font-size: 1.5rem;
-    }
-    .post-description {
-      font-size: 1rem;
-    }
-    :global(.post-arrow) {
-      width: 1.25rem;
-      height: 1.25rem;
-    }
-    .years {
-      gap: 5rem;
-    }
-  }
-  @media (width >= 72rem) {
-    .post-link {
-      grid-template-columns:
-        clamp(17rem, 24vw, 21rem)
-        3rem minmax(0, 1fr) auto;
-      gap: clamp(2rem, 4vw, 4rem);
-      padding-block: 2.5rem;
-    }
-    .post-title {
-      font-size: clamp(1.4rem, 3vw, 2rem);
-    }
-    .post-description {
-      max-width: 48rem;
-    }
+  .empty button:hover,
+  .empty a:hover { color: var(--primary); }
+  .archive-empty { border-block: 1px solid var(--border); }
+  .archive-empty h2 { font: 500 1.75rem/1.25 var(--font-serif); }
+  .empty bdi { overflow-wrap: anywhere; }
+  .back-top { display: flex; margin-top: 3rem; }
+  @media (width < 36rem) {
+    .search input { padding-right: 1rem; }
+    .result-count { position: static; display: block; padding-bottom: 0.75rem; text-align: right; transform: none; }
+    .post-link { grid-template-columns: 1fr; gap: 0.65rem; }
+    .post-meta { display: flex; gap: 0.75rem; text-align: left; }
   }
 </style>
