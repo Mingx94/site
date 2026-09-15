@@ -52,7 +52,7 @@
     padding-block: clamp(1rem, 3vw, 2rem) clamp(4rem, 10vw, 7rem);
   }
   footer {
-    padding-block: 1.5rem;
+    padding-block: 0 5rem;
   }
   input,
   textarea {

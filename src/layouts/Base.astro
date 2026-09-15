@@ -81,51 +81,48 @@ const shouldNoindex = noindex || siteUrl.hostname.endsWith(".workers.dev");
     <script>
       import { toggleTheme } from "@/lib/theme";
 
-      const themeButtons = document.querySelectorAll<HTMLButtonElement>(
-        "[data-theme-option]",
-      );
+      const themeButton = document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
       let storedTheme: string | null = null;
       try { storedTheme = localStorage.getItem("theme"); } catch {}
       let activeTheme =
         storedTheme === "light" || storedTheme === "dark" ? storedTheme : "system";
       const systemTheme = matchMedia("(prefers-color-scheme: dark)");
+      const updateThemeButton = () => {
+        if (!themeButton) return;
+        const isDark = document.documentElement.classList.contains("dark");
+        const targetTheme = isDark ? "淺色" : "深色";
+        const label = themeButton.querySelector<HTMLElement>("[data-theme-label]");
+        const status = themeButton.querySelector<HTMLElement>("[data-theme-status]");
+        if (label) label.textContent = targetTheme;
+        if (status) status.textContent = `目前使用${isDark ? "深色" : "淺色"}主題`;
+        themeButton.setAttribute("aria-label", `切換為${targetTheme}主題`);
+        themeButton.title = `切換為${targetTheme}主題`;
+      };
+      const applyTheme = () => {
+        toggleTheme(activeTheme === "dark" || (activeTheme === "system" && systemTheme.matches));
+        updateThemeButton();
+      };
       systemTheme.addEventListener("change", () => {
-        if (activeTheme === "system") toggleTheme(systemTheme.matches);
+        if (activeTheme === "system") applyTheme();
       });
-      toggleTheme(activeTheme === "dark" || (activeTheme === "system" && systemTheme.matches));
-
-      for (const button of themeButtons) {
-        const theme = button.dataset.themeOption;
-        button.setAttribute("aria-pressed", String(theme === activeTheme));
-        button.classList.toggle("active", theme === activeTheme);
-        button.addEventListener("click", () => {
-          if (theme === "system") {
-            activeTheme = theme;
-            try { localStorage.removeItem("theme"); } catch {}
-            toggleTheme(systemTheme.matches);
-          } else if (theme === "light" || theme === "dark") {
-            activeTheme = theme;
-            try { localStorage.setItem("theme", theme); } catch {}
-            toggleTheme(theme === "dark");
-          }
-          for (const option of themeButtons) {
-            const selected = option === button;
-            option.setAttribute("aria-pressed", String(selected));
-            option.classList.toggle("active", selected);
-          }
-        });
-      }
+      applyTheme();
+      themeButton?.addEventListener("click", () => {
+        activeTheme = document.documentElement.classList.contains("dark") ? "light" : "dark";
+        try { localStorage.setItem("theme", activeTheme); } catch {}
+        applyTheme();
+      });
 
       const fontButton = document.querySelector<HTMLButtonElement>("[data-font-toggle]");
       if (fontButton) {
         let font = document.documentElement.classList.contains("reading-sans") ? "sans" : "serif";
         const updateFontButton = () => {
+          const targetFont = font === "serif" ? "黑體" : "襯體";
+          const label = fontButton.querySelector<HTMLElement>("[data-font-label]");
           const status = fontButton.querySelector<HTMLElement>("[data-font-status]");
-          if (status)
-            status.textContent = `閱讀字體切換，目前是 ${font === "serif" ? "Iansui 襯體" : "Huninn 黑體"}`;
-          for (const label of fontButton.querySelectorAll<HTMLElement>("[data-font]")) {
-            label.classList.toggle("dimmed", label.dataset.font !== font);
-          }
+          if (label) label.textContent = targetFont;
+          if (status) status.textContent = `目前使用${font === "serif" ? "Iansui 襯體" : "Huninn 黑體"}`;
+          fontButton.setAttribute("aria-label", `切換為${targetFont}`);
+          fontButton.title = `切換為${targetFont}`;
         };
         updateFontButton();
         fontButton.addEventListener("click", () => {

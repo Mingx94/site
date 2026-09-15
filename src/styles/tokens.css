@@ -31,6 +31,8 @@
   --muted-foreground: #4a4239;
   --accent: #b46b43;
   --accent-foreground: #663016;
+  --accent-soft: #eadfd1;
+  --accent-soft-strong: #dfd0bd;
   --destructive: #a9362b;
   --destructive-foreground: #fff9ef;
   --border: #c8bba7;
@@ -58,6 +60,8 @@
   --muted-foreground: #c8c1ae;
   --accent: #c89761;
   --accent-foreground: #f4f0e3;
+  --accent-soft: #29231d;
+  --accent-soft-strong: #3a3128;
   --destructive: #e06f60;
   --destructive-foreground: #21120d;
   --border: #4f4a42;
