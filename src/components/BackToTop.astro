@@ -5,24 +5,3 @@
   </svg>
   <span>回到頂端</span>
 </a>
-
-<style>
-  .back-button {
-    display: inline-flex;
-    min-height: 2.5rem;
-    align-items: center;
-    gap: 0.5rem;
-    margin-left: auto;
-    padding: 0.375rem 0.75rem 0.375rem 2rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    color: var(--foreground);
-    text-decoration: none;
-  }
-  svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 2; transform: rotate(90deg); }
-  .shaft, .head { transition: transform 300ms ease-in-out; }
-  .shaft { transform: translateX(0.5rem) scaleX(0); }
-  .head { transform: translateX(0.25rem); }
-  .back-button:hover .shaft, .back-button:hover .head { transform: none; }
-  span { font-size: 0.875rem; }
-</style>
