@@ -8,7 +8,7 @@
 - EmDash CMS，D1 儲存內容，R2 儲存媒體
 - Astro components with native browser scripts
 - Native CSS
-- Cloudflare KV、Rate Limiting、Email Routing 與 Turnstile
+- Cloudflare KV 與 Rate Limiting
 
 ## 路由
 
@@ -19,7 +19,6 @@
 | `/blog/[slug]` | 文章內頁 |
 | `/blog/[slug].md` | 文章 Markdown 版本 |
 | `/about` | 關於 |
-| `/contact` | 聯絡表單 |
 | `/rss.xml`、`/sitemap.xml` | 訂閱與 SEO |
 | `/llms.txt` | LLM 可讀索引 |
 | `/_emdash/admin` | EmDash 管理介面 |
@@ -53,7 +52,7 @@ Cloudflare 資源、備份、部署與回復步驟請見 [部署指南](docs/dep
 
 文章由 EmDash 的 `posts` collection 管理。登入 `/_emdash/admin` 可編輯、預覽、排程與發布文章。公開文章保留 HTML、Markdown、RSS 與 sitemap 輸出。
 
-聯絡頁使用 EmDash Forms 的 `contact` 表單，需另外設定表單、Turnstile 與寄信通知，詳見[聯絡表單](docs/deployment.md#聯絡表單)。瀏覽次數存於 D1 的 `site_counters`；KV 提供舊計數讀取與瀏覽去重。
+瀏覽次數存於 D1 的 `site_counters`；KV 提供舊計數讀取與瀏覽去重。
 
 ## 專案結構
 

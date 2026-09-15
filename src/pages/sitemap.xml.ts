@@ -4,7 +4,7 @@ import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async () => {
   const baseUrl = "https://vartifact.cc";
-  const fixed = ["", "/blog", "/about", "/contact"];
+  const fixed = ["", "/blog", "/about"];
   const posts = await getPosts();
   const urls = [
     ...fixed.map((path) => `  <url><loc>${baseUrl}${path}/</loc></url>`),

@@ -5,6 +5,7 @@
   "ignorePatterns": [
     ".gitignore",
     "README.md",
+    ".agents/**",
     ".impeccable/**",
     ".emdash/migrations.json",
     "emdash-env.d.ts",

@@ -22,7 +22,9 @@ Preview 的 D1、R2、KV 設為 `remote: true`。從本機啟動 preview 開發�
 
 `astro.config.mjs` 依建置時的 `CLOUDFLARE_ENV` 決定網站網址：preview 使用 `https://blog-preview.vartifact.workers.dev`，其餘使用 `https://vartifact.cc`。切換環境後必須重新建置。
 
-目前 preview 區塊僅明列 D1、R2、KV。測試寄信、Turnstile 或限流前，需確認該環境的 `SEND_EMAIL`、`TURNSTILE_SITE_KEY`、`TURNSTILE_SECRET_KEY` 與 `BLOG_RATE` 設定。
+Preview 另有獨立的 `BLOG_RATE`。
+
+Production 只由 `https://vartifact.cc` 提供服務，並關閉 `workers.dev` 與版本 Preview URL。Preview 保留 `https://blog-preview.vartifact.workers.dev`，但關閉版本 Preview URL；所有 `workers.dev` 回應都會送出 `noindex`。
 
 ## Secrets
 
@@ -36,7 +38,7 @@ npx wrangler secret put EMDASH_ENCRYPTION_KEY
 npx wrangler secret put EMDASH_ENCRYPTION_KEY --env preview
 ```
 
-聯絡表單另需目標環境的 `TURNSTILE_SECRET_KEY`。本機 secret 放在未追蹤的 `.dev.vars`，不要放入正式環境的 key。搬移含加密設定的資料時，需確認原 key 的相容性，不能直接換成新 key。不要提交任何 secret。
+本機 secret 放在未追蹤的 `.dev.vars`。搬移含加密設定的資料時，需確認原 key 的相容性，不能直接換成新 key。不要提交任何 secret。
 
 ## 本機初始化
 
@@ -65,14 +67,6 @@ npx wrangler d1 execute blog-emdash --local --file migrations/0001-content-dates
 
 遠端首次遷移若需要此修正，先備份，再明確選擇對應資料庫與環境。既有文章已在 CMS 更新日期時，不要重跑。
 
-## 聯絡表單
-
-`src/pages/contact.astro` 使用 EmDash Forms 的 `<Form id="contact" />`；`.emdash/seed.json` 未包含這份表單設定。
-
-在目標環境的 EmDash Admin 建立或確認識別值為 `contact` 的表單，設定所需欄位、Turnstile 與通知收件人。寄信整合使用 `SEND_EMAIL`，寄件地址為 `michael.tsai@vartifact.cc`；確認 Cloudflare 寄信設定與允許的收件人相符。
-
-先確認 `/contact` 顯示表單，再以測試訊息確認驗證、提交紀錄與通知收信。頁面顯示正常不等於寄信成功。
-
 ## Preview 驗證
 
 以下會部署到遠端 preview。先確認該環境的 secrets 與必要 bindings 已設定。每個步驟成功後才執行下一步，失敗時停止。
@@ -82,12 +76,13 @@ $env:CLOUDFLARE_ENV = "preview"
 npm run check
 npm test
 npm run build
+npx wrangler deploy --dry-run --env preview
 npx wrangler d1 execute blog-emdash-preview --env preview --remote --file migrations/0002-blog-counters.sql
 npx wrangler deploy --env preview
 Remove-Item Env:CLOUDFLARE_ENV -ErrorAction SilentlyContinue
 ```
 
-完成後在 preview 網址執行下列 smoke test。首次使用空資料庫時，另外完成 EmDash setup 與表單初始化。
+完成後在 preview 網址執行下列 smoke test。首次使用空資料庫時，另外完成 EmDash setup。
 
 ## 日常正式部署
 
@@ -105,6 +100,7 @@ npm ci
 npm run check
 npm test
 npm run build
+npx wrangler deploy --dry-run
 # 僅在尚未建立計數表時執行
 npx wrangler d1 execute blog-emdash --remote --file migrations/0002-blog-counters.sql
 npx wrangler deploy
@@ -117,7 +113,6 @@ npx wrangler deploy
 - 公開首頁、文章列表、文章頁與不存在的路徑。
 - EmDash 登入、文章編輯與發布、媒體上傳及讀取；首次部署才測 setup。
 - 文章 views 的讀取與增加。
-- 聯絡表單提交及通知收信。
 - Markdown、RSS、sitemap、robots、llms 與 security.txt 輸出。
 
 記錄環境、Worker version 與結果。Preview 通過不等於正式環境已驗證。

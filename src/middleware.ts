@@ -61,6 +61,9 @@ export const onRequest = defineMiddleware(async ({ request, url }, next) => {
       '</sitemap.xml>; rel="sitemap", </rss.xml>; rel="alternate"; type="application/rss+xml"; title="RSS feed"',
     );
   }
+  if (url.hostname.endsWith(".workers.dev")) {
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  }
   for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
     if (!response.headers.has(name)) response.headers.set(name, value);
   }

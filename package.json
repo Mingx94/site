@@ -16,13 +16,13 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "cf-typegen": "wrangler types ./src/worker-configuration.d.ts",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy:dry-run": "npm run build && wrangler deploy --dry-run",
+    "deploy": "npm run check && npm test && npm run deploy:dry-run && wrangler deploy"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.2.5",
     "@astrojs/react": "^6.0.4",
     "@emdash-cms/cloudflare": "^0.35.0",
-    "@emdash-cms/plugin-forms": "^0.2.5",
     "astro": "^7.2.7",
     "emdash": "^0.35.0",
     "react-dom": "^19.2.8"

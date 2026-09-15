@@ -6,8 +6,19 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "blog",
   "main": "./src/worker.ts",
-  "compatibility_date": "2026-04-07",
+  "compatibility_date": "2026-09-15",
   "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    {
+      "pattern": "vartifact.cc",
+      "custom_domain": true,
+    },
+  ],
+  "cache": {
+    "enabled": true,
+  },
   "d1_databases": [
     {
       "binding": "DB",
@@ -26,17 +37,16 @@
   },
   "observability": {
     "enabled": true,
-    "head_sampling_rate": 1,
     "logs": {
       "enabled": true,
-      "head_sampling_rate": 1,
+      "head_sampling_rate": 0.1,
       "persist": true,
       "invocation_logs": true,
     },
     "traces": {
       "enabled": true,
       "persist": true,
-      "head_sampling_rate": 1,
+      "head_sampling_rate": 0.01,
     },
   },
   /**
@@ -67,22 +77,25 @@
       "simple": { "limit": 30, "period": 60 },
     },
   ],
-  "send_email": [
-    {
-      "name": "SEND_EMAIL",
-      "destination_address": "mingxcv@gmail.com",
-    },
-  ],
-  /**
-   * Environment Variables
-   * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
-   * Note: Use secrets to store sensitive data via `wrangler secret put`.
-   */
-  "vars": {
-    "TURNSTILE_SITE_KEY": "0x4AAAAAAC9uFe71dDNfqvcZ",
-  },
   "env": {
     "preview": {
+      "workers_dev": true,
+      "preview_urls": false,
+      "routes": [],
+      "observability": {
+        "enabled": true,
+        "logs": {
+          "enabled": true,
+          "head_sampling_rate": 1,
+          "persist": true,
+          "invocation_logs": true,
+        },
+        "traces": {
+          "enabled": true,
+          "persist": true,
+          "head_sampling_rate": 1,
+        },
+      },
       "d1_databases": [
         {
           "binding": "DB",
@@ -105,11 +118,18 @@
           "remote": true,
         },
       ],
+      "ratelimits": [
+        {
+          "name": "BLOG_RATE",
+          // Stable namespace derived from "vartifact-blog-preview".
+          "namespace_id": "319239317",
+          "simple": { "limit": 30, "period": 60 },
+        },
+      ],
     },
   },
   /**
    * Secrets (set via `wrangler secret put`):
-   * - TURNSTILE_SECRET_KEY
    * - EMDASH_ENCRYPTION_KEY
    */
 }

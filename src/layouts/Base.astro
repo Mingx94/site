@@ -21,8 +21,10 @@ const {
   type = "website",
   markdown,
 } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.url.origin).href;
-const imageUrl = new URL(image, Astro.url.origin).href;
+const siteUrl = Astro.site ?? Astro.url;
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const imageUrl = new URL(image, siteUrl).href;
+const shouldNoindex = noindex || siteUrl.hostname.endsWith(".workers.dev");
 ---
 
 <!doctype html>
@@ -35,7 +37,7 @@ const imageUrl = new URL(image, Astro.url.origin).href;
     <meta name="description" content={description} />
     <meta name="author" content={config.metadata.meta_author} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    {shouldNoindex && <meta name="robots" content="noindex,nofollow" />}
     <link rel="icon" type="image/svg+xml" href={config.site.favicon} />
     <link rel="icon" type="image/svg+xml" href={config.site.favicon_dark} media="(prefers-color-scheme: dark)" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

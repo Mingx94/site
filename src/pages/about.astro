@@ -64,12 +64,6 @@ const facts = [
           </section>
         )
       }
-      <section class="animate">
-        <div class="contact-row">
-          <span class="eyebrow"> · Say Hi </span>
-          <Link href="/contact" underline={false} class="contact-link">寄封信給我 <RiArrowRightUpLine class="arrow" aria-hidden="true" /></Link>
-        </div>
-      </section>
     </div>
     <div class="animate back-links"><BackToPrev /><BackToTop /></div>
   </Container>
@@ -83,8 +77,7 @@ const facts = [
     padding-block: 1rem 2rem;
   }
   .strip,
-  .section-head,
-  .contact-row {
+  .section-head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -154,8 +147,7 @@ const facts = [
     flex-direction: column;
     gap: 2.5rem;
   }
-  .section-head,
-  .contact-row {
+  .section-head {
     padding-top: 1rem;
     border-top: 1px solid var(--border);
   }
@@ -212,25 +204,9 @@ const facts = [
   :global(.elsewhere-link .arrow) {
     color: var(--muted-foreground);
   }
-  :global(.elsewhere-link:hover .arrow),
-  :global(.contact-link:hover .arrow) {
+  :global(.elsewhere-link:hover .arrow) {
     color: var(--primary);
     transform: translate(0.125rem, -0.125rem);
-  }
-  .contact-row {
-    flex-wrap: wrap;
-    row-gap: 0.75rem;
-  }
-  :global(.contact-link) {
-    display: inline-flex !important;
-    align-items: baseline;
-    gap: 0.5rem;
-    color: var(--foreground) !important;
-    font-size: 1.125rem;
-    font-weight: 500;
-  }
-  :global(.contact-link:hover) {
-    color: var(--primary) !important;
   }
   .back-links {
     display: flex;
