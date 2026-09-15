@@ -30,7 +30,6 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
   <ArticleClient slug={slug} readingTime={post.readingTime} draft={post.draft} />
   <Container>
     <div class="article-layout">
-      <TableOfContents />
       <article>
         <div class="article-lede">
           <div class="title-block">
@@ -73,6 +72,7 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
             </dl>
           </div>
         </div>
+        <TableOfContents />
         <div class="animate content no-drop-cap" id="article-content">
           <PortableText value={post.content} />
         </div>
@@ -135,6 +135,8 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
 </Base>
 
 <style>
+  .article-layout,
+  .back-links { max-inline-size: 56rem; margin-inline: auto; }
   article { min-width: 0; padding-top: 1rem; }
   .article-lede {
     display: grid;
@@ -197,7 +199,7 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
     letter-spacing: 0.2em;
     text-transform: uppercase;
   }
-  .content { margin-top: 2.5rem; }
+  .content { max-inline-size: 100%; margin-top: 2.5rem; }
   .colophon {
     row-gap: 0.5rem;
     margin-top: 120px;
@@ -224,14 +226,9 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
       gap: clamp(2rem, 4vw, 4rem);
     }
   }
-  @media (width >= 72rem) {
-    .article-layout {
-      display: grid;
-      grid-template-columns: minmax(8rem, 10rem) minmax(0, 1fr);
-      gap: clamp(2rem, 3vw, 3rem);
-      align-items: start;
-    }
-    .article-layout > article { grid-column: 2; }
+  @media (width >= 80rem) {
+    .article-layout,
+    .back-links { max-inline-size: 64rem; }
   }
   @media (width < 48rem) {
     .article-lede { gap: 1rem; padding-top: 0.5rem; }
