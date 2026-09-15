@@ -8,7 +8,6 @@
 - EmDash CMS，D1 儲存內容，R2 儲存媒體
 - Astro components with native browser scripts
 - Native CSS
-- Cloudflare KV 與 Rate Limiting
 
 ## 路由
 
@@ -33,7 +32,7 @@ npm ci
 npm run dev
 ```
 
-開發伺服器預設使用 `http://localhost:4321`。首次使用請先完成[本機初始化](docs/deployment.md#本機初始化)，包含 EmDash setup 與 `site_counters` 資料表，才能正常開啟文章頁。預設使用本機資料；選用 preview 環境會連到遠端 preview 資源。
+開發伺服器預設使用 `http://localhost:4321`。首次使用請先完成[本機初始化](docs/deployment.md#本機初始化)的 EmDash setup，才能正常開啟文章頁。預設使用本機資料；選用 preview 環境會連到遠端 preview 資源。
 
 | 指令 | 用途 |
 | --- | --- |
@@ -51,8 +50,6 @@ Cloudflare 資源、備份、部署與回復步驟請見 [部署指南](docs/dep
 ## 內容管理
 
 文章由 EmDash 的 `posts` collection 管理。登入 `/_emdash/admin` 可編輯、預覽、排程與發布文章。公開文章保留 HTML、Markdown、RSS 與 sitemap 輸出。
-
-瀏覽次數存於 D1 的 `site_counters`；KV 提供舊計數讀取與瀏覽去重。
 
 ## 專案結構
 

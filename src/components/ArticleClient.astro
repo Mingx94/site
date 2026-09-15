@@ -1,20 +1,7 @@
----
-interface Props {
-  slug: string;
-  readingTime: number;
-  draft?: boolean;
-}
-
-const { slug, readingTime, draft = false } = Astro.props;
----
-
 <div
   class="progress-track"
   aria-hidden="true"
   data-article-progress
-  data-slug={slug}
-  data-min-seconds={Math.max(10, readingTime * 60 * 0.3)}
-  data-draft={draft}
 >
   <div class="progress"></div>
 </div>

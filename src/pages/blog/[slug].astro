@@ -8,15 +8,12 @@ import PostCover from "@/components/PostCover.astro";
 import TableOfContents from "@/components/TableOfContents.astro";
 import Base from "@/layouts/Base.astro";
 import { getPost } from "@/lib/posts";
-import { getViews } from "@/lib/server/blog";
-import { env } from "cloudflare:workers";
 import { PortableText } from "emdash/ui";
 
 const slug = Astro.params.slug;
 if (!slug) return Astro.redirect("/404");
 const post = await getPost(slug);
 if (!post) return Astro.redirect("/404");
-const views = await getViews(env, slug);
 const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".") ?? "";
 ---
 
@@ -27,7 +24,7 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
   type="article"
   markdown={`/blog/${slug}.md`}
 >
-  <ArticleClient slug={slug} readingTime={post.readingTime} draft={post.draft} />
+  <ArticleClient />
   <Container>
     <div class="article-layout">
       <article>
@@ -59,10 +56,6 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
                 <dt>Read time</dt>
                 <dd>{post.readingTime} min read</dd>
               </div>
-              <div>
-                <dt>Views</dt>
-                <dd>{views} views</dd>
-              </div>
               {post.draft && (
                 <div>
                   <dt>Status</dt>
@@ -91,46 +84,16 @@ const formatStamp = (value?: string) => value?.slice(0, 10).replaceAll("-", ".")
     const progressRoot = document.querySelector<HTMLElement>("[data-article-progress]");
     if (progressRoot) {
       const progress = progressRoot.querySelector<HTMLElement>(".progress");
-      const slug = progressRoot.dataset.slug ?? "";
-      const minSeconds = Number(progressRoot.dataset.minSeconds ?? 10);
-      const draft = progressRoot.dataset.draft === "true";
-      let counted = false;
-      let visibleSeconds = 0;
-      let maxScroll = 0;
-
-      const countView = async () => {
-        if (draft || counted || visibleSeconds < minSeconds || maxScroll < 0.6) return;
-        counted = true;
-        try {
-          const response = await fetch(`/api/blog/${encodeURIComponent(slug)}/views`, {
-            method: "POST",
-          });
-          if (!response.ok) counted = false;
-        } catch {
-          counted = false;
-        }
-      };
 
       const updateProgress = () => {
         const scrollable = document.documentElement.scrollHeight - innerHeight;
         const ratio = scrollable > 0 ? Math.min(1, scrollY / scrollable) : 0;
         if (progress) progress.style.transform = `scaleX(${ratio})`;
-        maxScroll = Math.max(maxScroll, ratio);
-        void countView();
       };
 
       updateProgress();
       addEventListener("scroll", updateProgress, { passive: true });
-      if (!draft) {
-        setInterval(() => {
-          if (!document.hidden) {
-            visibleSeconds += 1;
-            void countView();
-          }
-        }, 1000);
-      }
     }
-
   </script>
 </Base>
 

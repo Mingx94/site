@@ -54,29 +54,6 @@
    * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
    */
   // "placement": {  "mode": "smart" }
-  /**
-   * Bindings
-   * https://developers.cloudflare.com/workers/runtime-apis/bindings/
-   */
-  "kv_namespaces": [
-    {
-      "binding": "BLOG_KV",
-      "id": "8f933e166b8044e9af33e4ed03f1de39",
-    },
-  ],
-  /**
-   * Rate limit binding used by Astro API routes to cap per-IP abuse on
-   * trackView / addReaction / removeReaction.
-   * limit=30/period=60s chosen conservatively — a real reader won't
-   * hit 30 counter-writes in a minute; a script will.
-   */
-  "ratelimits": [
-    {
-      "name": "BLOG_RATE",
-      "namespace_id": "1001",
-      "simple": { "limit": 30, "period": 60 },
-    },
-  ],
   "env": {
     "preview": {
       "workers_dev": true,
@@ -109,21 +86,6 @@
           "binding": "MEDIA",
           "bucket_name": "blog-emdash-media-preview",
           "remote": true,
-        },
-      ],
-      "kv_namespaces": [
-        {
-          "binding": "BLOG_KV",
-          "id": "3da827c525f747e4b283a48247569624",
-          "remote": true,
-        },
-      ],
-      "ratelimits": [
-        {
-          "name": "BLOG_RATE",
-          // Stable namespace derived from "vartifact-blog-preview".
-          "namespace_id": "319239317",
-          "simple": { "limit": 30, "period": 60 },
         },
       ],
     },
