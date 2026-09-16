@@ -32,7 +32,6 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
                   <path d={item.icon}></path>
                 </svg>
                 <span>{item.label}</span>
-                {isActive(item.href) && <span class="active-line" aria-hidden="true"></span>}
               </Link>
             ))
           }
@@ -65,31 +64,36 @@ const isActive = (href: string) => pathname === href || pathname.startsWith(`${h
   :global(.home-link:hover) { color: var(--primary) !important; }
   :global(.nav-link) {
     position: relative;
-    display: inline-flex !important;
-    flex-wrap: nowrap;
-    align-items: center;
-    gap: 0.375rem;
+    display: inline-block !important;
     padding-bottom: 0.1875rem;
     color: var(--muted-foreground) !important;
     font-family: var(--font-sans);
     font-size: 0.84375rem;
-    font-weight: 500;
+    font-weight: 400;
     white-space: nowrap;
     transition: color 180ms ease;
   }
-  :global(.nav-link:hover),
-  :global(.nav-link.active) { color: var(--foreground) !important; }
-  .active-line {
+  :global(.nav-link::after) {
     position: absolute;
     right: -0.1875rem;
     bottom: 0;
     left: -0.1875rem;
     height: 1px;
-    background: var(--primary);
+    background: transparent;
+    content: "";
   }
-  .nav-icon { width: 0.875rem; height: 0.875rem; flex: none; }
+  :global(.nav-link:hover) { color: var(--primary) !important; }
+  :global(.nav-link.active) { color: var(--foreground) !important; }
+  :global(.nav-link.active::after) { background: var(--primary); }
+  .nav-icon {
+    display: inline-block;
+    width: 0.875rem;
+    height: 0.875rem;
+    margin-right: 0.375rem;
+    vertical-align: -0.125rem;
+  }
   @media (width < 48rem), (pointer: coarse) {
-    :global(.home-link), :global(.nav-link) { display: inline-flex !important; min-width: 2.75rem; min-height: 2.75rem; align-items: center; justify-content: center; }
+    :global(.home-link), :global(.nav-link) { min-width: 2.75rem; min-height: 2.75rem; }
   }
   @media (width <= 45rem) {
     .bar {

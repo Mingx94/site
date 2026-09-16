@@ -37,6 +37,9 @@ const {
     text-decoration-line: underline;
     text-underline-offset: 0.22em;
   }
+  .link[data-underline="false"] {
+    text-decoration: none;
+  }
   .link:hover {
     color: var(--primary);
     text-decoration-color: color-mix(in oklch, var(--primary) 60%, transparent);

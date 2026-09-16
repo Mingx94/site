@@ -1,5 +1,4 @@
 ---
-import BackToTop from "@/components/BackToTop.astro";
 import Container from "@/components/Container.astro";
 import Link from "@/components/Link.astro";
 import config from "@/config";
@@ -15,14 +14,15 @@ const elsewhere = [
 ].filter((item) => item.href);
 const formatRailDate = (value: string) =>
   new Intl.DateTimeFormat("zh-TW", { month: "numeric", day: "numeric" }).format(new Date(value));
+const formatStampDate = (value: string) =>
+  new Intl.DateTimeFormat("zh-TW", { year: "numeric", month: "long" }).format(new Date(value));
 ---
 
 <Base>
   <Container>
     <div class="home">
       <section class="hero" aria-labelledby="home-title">
-        <p class="eyebrow">Michael Tsai · Taiwan</p>
-        <h1 id="home-title">分享技術及生活<span aria-hidden="true">。</span></h1>
+        <h1 class="visually-hidden" id="home-title">分享技術及生活</h1>
         <p class="introduction">
           前端工程師的個人書寫空間。記錄程式、設計、閱讀，以及日常裡值得留下的片段。
         </p>
@@ -30,9 +30,12 @@ const formatRailDate = (value: string) =>
           elsewhere.length > 0 && (
             <ul class="socials" role="list" aria-label="其他平台">
               {elsewhere.map((item) => (
-                <li><Link href={item.href} external>{item.label}</Link></li>
+                <li>
+                  <Link href={item.href} external>{item.label}</Link>
+                  <span class="sep" aria-hidden="true">·</span>
+                </li>
               ))}
-              <li><Link href="/rss.xml" external aria-label="RSS 訂閱">RSS</Link></li>
+              <li><Link href="/rss.xml" aria-label="RSS 訂閱">RSS</Link></li>
             </ul>
           )
         }
@@ -44,14 +47,14 @@ const formatRailDate = (value: string) =>
             <h2 class="section-label" id="writing-title">Writing</h2>
             <ol class="timeline" role="list">
               {recentBlogs.map((post, index) => (
-                <li class:list={["post", { featured: index === 0 }]}>
+                <li class:list={["post", { featured: index === 0 }]} style={`--i: ${index}`}>
                   <div class="post-rail">
-                    <time datetime={new Date(post.date).toISOString()}>{formatRailDate(post.date)}</time>
+                    <time class="post-date" datetime={new Date(post.date).toISOString()}>{formatRailDate(post.date)}</time>
                     <span class="post-dot" aria-hidden="true"></span>
                   </div>
                   <div class="post-body">
-                    {index === 0 && <p class="post-stamp">Latest</p>}
-                    <h3><a href={`/blog/${post.id}`}>{post.title}</a></h3>
+                    {index === 0 && <p class="post-stamp">Latest · {formatStampDate(post.date)}</p>}
+                    <h3><a class="post-link" href={`/blog/${post.id}`}>{post.title}</a></h3>
                     {post.description && <p class="post-description">{post.description}</p>}
                     <p class="post-meta">{post.readingTime} 分鐘閱讀</p>
                   </div>
@@ -66,7 +69,7 @@ const formatRailDate = (value: string) =>
           </section>
         ) : (
           <section class="empty-writing" aria-labelledby="empty-title">
-            <p class="eyebrow">Writing</p>
+            <p class="section-label">Writing</p>
             <h2 id="empty-title">目前沒有公開文章</h2>
             <p>新的文章會出現在這裡。你也可以先認識作者。</p>
             <Link href="/about">關於 Michael →</Link>
@@ -74,130 +77,201 @@ const formatRailDate = (value: string) =>
         )
       }
     </div>
-    <div class="back-top"><BackToTop /></div>
   </Container>
 </Base>
 
 <style>
-  .home { padding-block: 0 1rem; }
-  .hero { margin-bottom: clamp(4.5rem, 10vw, 7rem); }
-  .eyebrow,
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .hero { margin-bottom: 4.75rem; }
+  .introduction {
+    max-width: 60ch;
+    margin: 0 0 1.375rem;
+    color: var(--foreground);
+    font-size: 1.21875rem;
+    line-height: 1.65;
+    text-wrap: pretty;
+    white-space: pre-line;
+  }
+  .socials {
+    margin-top: 1.125rem;
+    padding: 0;
+    color: color-mix(in oklab, var(--foreground) 72%, transparent);
+    font-family: var(--font-sans);
+    font-size: 0.84375rem;
+    list-style: none;
+  }
+  .socials li { display: inline; }
+  .socials :global(a) {
+    color: var(--muted-foreground);
+    text-decoration-color: color-mix(in oklab, var(--foreground) 35%, transparent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    transition: color 180ms ease, text-decoration-color 180ms ease;
+  }
+  .socials :global(a:hover) {
+    color: var(--primary);
+    text-decoration-color: var(--primary);
+  }
+  .socials .sep {
+    margin-inline: 0.5625rem;
+    color: var(--input);
+  }
+  .writing { margin-bottom: 5.25rem; }
   .section-label,
   .post-stamp,
   .post-meta {
-    color: var(--muted-foreground);
     font-family: var(--font-sans);
-    font-size: 0.75rem;
     font-weight: 500;
-    letter-spacing: 0.12em;
+  }
+  .section-label {
+    margin-bottom: 2.25rem;
+    color: color-mix(in oklab, var(--foreground) 72%, transparent);
+    font-size: 0.71875rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
   }
-  .hero h1 {
-    max-width: 14ch;
-    margin-top: 1rem;
-    color: var(--foreground);
-    font: 500 clamp(2.25rem, 8vw, 3.75rem)/1.1 var(--font-serif);
-    letter-spacing: -0.035em;
-    text-wrap: balance;
-  }
-  .hero h1 span { color: var(--primary); }
-  .introduction {
-    max-width: 35rem;
-    margin-top: 1.25rem;
-    color: var(--muted-foreground);
-    font-size: clamp(1.0625rem, 2.5vw, 1.1875rem);
-    line-height: 1.75;
-  }
-  .socials {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem 1.1rem;
-    margin-top: 1.25rem;
-    padding: 0;
-    list-style: none;
-    font-family: var(--font-sans);
-    font-size: 0.8125rem;
-  }
-  .socials :global(a) {
-    color: var(--muted-foreground);
-    text-decoration-color: color-mix(in srgb, var(--muted-foreground) 45%, transparent);
-  }
-  .socials :global(a:hover) { color: var(--primary); }
-  .section-label { margin-bottom: 2rem; }
   .timeline {
-    --rail-width: 6.5rem;
-    --rail-gap: 2rem;
+    --rail-width: 6.875rem;
+    --rail-gap: 2.25rem;
+
     position: relative;
     display: grid;
-    gap: 0;
+    grid-template-columns: var(--rail-width) 1fr;
+    column-gap: var(--rail-gap);
     padding: 0;
     list-style: none;
   }
   .timeline::before {
     position: absolute;
-    top: 0.45rem;
-    bottom: 0.45rem;
-    left: calc(var(--rail-width) - 1px);
+    top: 0.375rem;
+    bottom: 0.375rem;
+    left: calc(var(--rail-width) - 0.5px);
     width: 1px;
     background: var(--border);
     content: "";
+    transition: background-color 350ms ease;
   }
-  .post {
-    display: grid;
-    grid-template-columns: var(--rail-width) minmax(0, 1fr);
-    column-gap: var(--rail-gap);
-  }
+  .post { display: contents; }
   .post-rail {
+    --rail-date-size: 0.71875rem;
+
     position: relative;
-    padding-top: 0.2rem;
-    padding-right: 1.25rem;
-    color: var(--muted-foreground);
-    font-family: var(--font-sans);
-    font-size: 0.75rem;
+    padding-top: 0.25rem;
+    padding-right: 1.125rem;
+    color: color-mix(in oklab, var(--foreground) 72%, transparent);
+    font-size: var(--rail-date-size);
     font-variant-numeric: tabular-nums;
+    line-height: 1.4;
     text-align: right;
   }
   .post-dot {
+    --rail-dot-size: 0.5625rem;
+
     position: absolute;
     z-index: 1;
-    top: 0.6rem;
-    right: -0.3rem;
-    width: 0.625rem;
-    height: 0.625rem;
-    border: 1.5px solid var(--border);
+    top: calc(0.25rem + 0.5lh);
+    right: calc(-0.5 * var(--rail-dot-size));
+    width: var(--rail-dot-size);
+    height: var(--rail-dot-size);
+    border: 1.5px solid var(--input);
     border-radius: 50%;
     background: var(--background);
-    transition: border-color 180ms ease, background-color 180ms ease;
+    transform: translateY(-50%);
+    transition: background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
   }
-  .post-body { padding-bottom: 2.5rem; }
-  .post-stamp { margin-bottom: 0.5rem; color: var(--primary); font-size: 0.6875rem; }
+  .post-body { padding-bottom: 2.375rem; }
+  .post.featured .post-body {
+    position: relative;
+    padding-bottom: 3.5rem;
+  }
+  .post.featured .post-dot {
+    --rail-dot-size: 0.6875rem;
+    border-color: var(--muted-foreground);
+  }
+  .post-stamp {
+    margin-bottom: 0.75rem;
+    color: var(--primary);
+    font-size: 0.6875rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
   .post h3 {
+    margin: 0 0 0.375rem;
     color: var(--foreground);
-    font: 500 1.25rem/1.35 var(--font-serif);
-    letter-spacing: -0.018em;
+    font: 500 1.15625rem/1.3 var(--font-serif);
+    letter-spacing: -0.012em;
     text-wrap: balance;
+    overflow-wrap: anywhere;
+    transition: color 180ms ease;
   }
-  .post.featured h3 { font-size: clamp(1.6rem, 4vw, 2rem); }
+  .post.featured h3 {
+    margin-bottom: 0.875rem;
+    font-size: 1.875rem;
+    line-height: 1.14;
+    letter-spacing: -0.02em;
+  }
   .post h3 a { text-decoration: none; }
-  .post h3 a:hover { color: var(--primary); }
+  .post.featured .post-link::after {
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    content: "";
+  }
+  .post h3 a:hover,
+  .post:has(h3 a:hover) h3 { color: var(--primary); }
   .post:has(h3 a:hover) .post-dot {
     border-color: var(--primary);
     background: var(--primary);
+    box-shadow: 0 0 0 3px var(--background);
   }
   .post-description {
-    max-width: 36rem;
-    margin-top: 0.5rem;
-    color: var(--muted-foreground);
-    font-size: 0.975rem;
-    line-height: 1.65;
+    display: -webkit-box;
+    max-width: 58ch;
+    margin: 0;
+    overflow: clip;
+    color: color-mix(in oklab, var(--foreground) 72%, transparent);
+    font-size: 1rem;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
   }
-  .post.featured .post-description { font-size: 1.0625rem; }
-  .post-meta { margin-top: 0.65rem; font-size: 0.6875rem; letter-spacing: 0.06em; text-transform: none; }
+  .post.featured .post-description {
+    display: block;
+    max-width: 58ch;
+    margin-bottom: 0.875rem;
+    overflow: visible;
+    color: var(--muted-foreground);
+    font-size: 1.125rem;
+    line-height: 1.62;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+  }
+  .post-meta {
+    position: relative;
+    z-index: 2;
+    margin-top: 0.625rem;
+    color: color-mix(in oklab, var(--foreground) 55%, transparent);
+    font-size: 0.71875rem;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0;
+  }
   .archive-link {
-    margin-top: 0.25rem;
+    margin-top: 0.5rem;
     margin-left: calc(var(--rail-width) + var(--rail-gap));
     font-family: var(--font-sans);
-    font-size: 0.8125rem;
+    font-size: 0.84375rem;
   }
   .archive-link :global(a) { color: var(--muted-foreground); }
   .archive-link :global(a:hover) { color: var(--primary); }
@@ -209,14 +283,72 @@ const formatRailDate = (value: string) =>
     margin-block: 0.75rem;
     font: 500 clamp(1.75rem, 5vw, 2.5rem)/1.2 var(--font-serif);
   }
-  .empty-writing p:not(.eyebrow) { margin-bottom: 1rem; color: var(--muted-foreground); }
-  .back-top { display: flex; margin-top: 3rem; }
-  @media (width < 34rem) {
-    .timeline { --rail-width: 4.75rem; --rail-gap: 1.15rem; }
-    .post-rail { padding-right: 0.8rem; font-size: 0.6875rem; }
-    .post-body { padding-bottom: 2rem; }
-    .post h3 { font-size: 1.125rem; }
-    .post.featured h3 { font-size: 1.45rem; }
-    .post-description { font-size: 0.9375rem; }
+  .empty-writing p { margin-bottom: 1rem; color: var(--muted-foreground); }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes intro-fade-up {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: none; }
+    }
+    .hero > *,
+    .section-label,
+    .post .post-rail,
+    .post .post-body,
+    .archive-link {
+      animation: intro-fade-up 380ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
+      animation-delay: calc(var(--i, 0) * 55ms);
+    }
+    .hero > :nth-child(1) { --i: 0; }
+    .hero > :nth-child(2) { --i: 1; }
+    .hero > :nth-child(3) { --i: 2; }
+    .post:active { opacity: 0.85; transform: scale(0.992); }
+  }
+
+  @media (width <= 45rem) {
+    .hero { margin-bottom: 3.5rem; }
+    .introduction { font-size: 1.125rem; }
+    .timeline { display: block; }
+    .timeline::before { display: none; }
+    .post {
+      display: block;
+      padding-bottom: 2rem;
+    }
+    .post-rail {
+      padding: 0 0 0.375rem;
+      text-align: left;
+    }
+    .post-dot { display: none; }
+    .post-body { padding-bottom: 0; }
+    .post.featured .post-rail { display: none; }
+    .post.featured .post-body {
+      margin-bottom: 0.25rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .post.featured h3 {
+      margin-bottom: 0.625rem;
+      font-size: 1.375rem;
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+    }
+    .post.featured .post-description {
+      margin-bottom: 0.625rem;
+      font-size: 0.96875rem;
+      line-height: 1.55;
+    }
+    .archive-link { margin-top: 0; margin-left: 0; }
+  }
+
+  @media (width <= 26.25rem) {
+    .hero { margin-bottom: 3rem; }
+    .introduction { font-size: 1.0625rem; }
+    .socials { font-size: 0.78125rem; }
+    .socials .sep { margin-inline: 0.375rem; }
+    .section-label { margin-bottom: 1.625rem; }
+    .writing { margin-bottom: 4rem; }
+    .post h3 { font-size: 1.0625rem; }
+    .post.featured h3 { font-size: 1.0625rem; }
+    .post-description,
+    .post.featured .post-description { font-size: 0.9375rem; }
   }
 </style>
