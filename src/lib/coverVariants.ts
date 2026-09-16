@@ -204,7 +204,18 @@ export function createCloudflareCoverDependencies(
       const result = await env.IMAGES.input(new Blob([source]).stream())
         .transform({ width, fit: "scale-down" })
         .output({ format: "image/webp", quality: 82 });
-      return { body: result.image(), contentType: result.contentType() };
+      const response = result.response();
+      if (!response.body) {
+        throw new CoverVariantError(
+          "Transformed cover has no response body",
+          true,
+        );
+      }
+      return {
+        body: response.body,
+        contentType:
+          response.headers.get("Content-Type") ?? result.contentType(),
+      };
     },
     async writeVariant(key, output, metadata) {
       const result = await env.MEDIA.put(key, output.body, {

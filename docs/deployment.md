@@ -12,10 +12,11 @@
 
 資源名稱與 IDs 以 `wrangler.jsonc` 為準，不要重複建立。
 
-| 環境       | 選擇方式                   | 資料目的地                         |
-| ---------- | -------------------------- | ---------------------------------- |
-| 本機       | 執行 `npm run dev`         | 本機模擬的 D1、R2                  |
-| Production | 使用預設 Wrangler 設定部署 | `blog-emdash`、`blog-emdash-media` |
+| 環境        | 選擇方式                   | 資料目的地                         |
+| ----------- | -------------------------- | ---------------------------------- |
+| 本機        | 執行 `npm run dev`         | 本機模擬的 D1、R2                  |
+| Remote data | 執行 `npm run dev:remote`  | `blog-emdash`、`blog-emdash-media` |
+| Production  | 使用預設 Wrangler 設定部署 | `blog-emdash`、`blog-emdash-media` |
 
 網站只由 `https://vartifact.cc` 提供服務。`workers.dev` 與版本預覽網址皆已關閉。
 
@@ -38,6 +39,18 @@ npm run dev
 ```
 
 開啟 `http://localhost:4321/_emdash/admin`，完成 EmDash setup，確認 schema 與 `.emdash/seed.json` 的文章已載入。
+
+## 使用正式資料開發介面
+
+```powershell
+npm run dev:remote
+```
+
+此模式仍在本機執行 Astro，但 D1、R2 與 Images binding 會連到 Cloudflare。Queue 留在本機，不會把訊息送進正式 Queue。既有 `npm run dev` 維持純本機模式。
+
+Remote binding 不是唯讀。查詢會讀取正式資料；更新文章、上傳媒體、產生缺少的封面尺寸或其他寫入，也會直接修改正式 D1 或 R2。只開發顯示介面時，不要進行 CMS 寫入、schema 初始化或 migration。
+
+若需要登入正式 EmDash Admin，將既有正式 `EMDASH_ENCRYPTION_KEY` 放進未追蹤的 `.dev.vars.remote-data`。不要產生新 key，也不要提交該檔案。
 
 ### 一次性歷史日期修正
 

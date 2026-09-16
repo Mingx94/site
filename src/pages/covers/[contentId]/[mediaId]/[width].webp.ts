@@ -91,8 +91,18 @@ export const GET: APIRoute = async ({ params, request }) => {
     const transformed = await env.IMAGES.input(source.body)
       .transform({ width, fit: "scale-down" })
       .output({ format: "image/webp", quality: 82 });
-    const contentType = transformed.contentType();
-    const [responseBody, storageBody] = transformed.image().tee();
+    const storageResponse = transformed.response({
+      headers: {
+        "Cache-Control": IMMUTABLE_CACHE,
+        "Content-Disposition": "inline",
+        "X-Content-Type-Options": "nosniff",
+      },
+    });
+    const clientResponse = storageResponse.clone();
+    const storageBody = storageResponse.body;
+    if (!storageBody) throw new Error("Transformed cover has no response body");
+    const contentType =
+      storageResponse.headers.get("Content-Type") ?? transformed.contentType();
     const storage = env.MEDIA.put(variantKey, storageBody, {
       httpMetadata: {
         contentType,
@@ -119,7 +129,7 @@ export const GET: APIRoute = async ({ params, request }) => {
       });
 
     waitUntil(storage);
-    return imageResponse(responseBody, contentType);
+    return clientResponse;
   } catch (error) {
     console.error(
       JSON.stringify({
