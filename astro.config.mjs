@@ -2,6 +2,7 @@ import cloudflare from "@astrojs/cloudflare";
 import { cacheCloudflare } from "@astrojs/cloudflare/cache";
 import react from "@astrojs/react";
 import { d1, r2 } from "@emdash-cms/cloudflare";
+import { coverVariants } from "./src/plugins/cover-variants.config.ts";
 import { defineConfig } from "astro/config";
 import emdash from "emdash/astro";
 import Icons from "unplugin-icons/vite";
@@ -35,6 +36,7 @@ export default defineConfig({
       database: d1({ binding: "DB", session: "auto" }),
       storage: r2({ binding: "MEDIA" }),
       siteUrl,
+      plugins: [coverVariants()],
     }),
   ],
   vite: {

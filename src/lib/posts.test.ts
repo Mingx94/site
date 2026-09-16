@@ -32,6 +32,8 @@ describe("getPost", () => {
     await expect(getPost("article")).resolves.toMatchObject({
       cover: "/_emdash/api/media/file/cover.jpg",
       coverAlt: "A riverside park under a blue sky",
+      coverMediaId: "media-id",
+      coverStorageKey: "cover.jpg",
     });
   });
 });

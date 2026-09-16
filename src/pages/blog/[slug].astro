@@ -53,8 +53,11 @@ const olderPost =
           <div class="cover">
             <PostCover
               title={post.title}
+              contentId={post.id}
               src={post.cover}
               alt={post.coverAlt}
+              mediaId={post.coverMediaId}
+              storageKey={post.coverStorageKey}
               ratio="16 / 9"
               sizes="(max-width: 26.25rem) calc(100vw - 2rem), (max-width: 45rem) calc(100vw - 2.75rem), 43.5rem"
               priority

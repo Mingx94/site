@@ -1,5 +1,6 @@
 import { getEmDashCollection, getEmDashEntry } from "emdash";
 import type { PortableTextBlock } from "emdash/client";
+import { getLocalCoverSource } from "./coverVariants";
 import { getReadingTime } from "./readingTime";
 
 export interface Post {
@@ -11,6 +12,8 @@ export interface Post {
   readingTime: number;
   cover?: string;
   coverAlt?: string;
+  coverMediaId?: string;
+  coverStorageKey?: string;
   content: PortableTextBlock[];
   draft?: boolean;
 }
@@ -25,15 +28,21 @@ type EntryData = {
   status?: string;
 };
 
-function media(value: unknown): Pick<Post, "cover" | "coverAlt"> {
+function media(
+  value: unknown,
+): Pick<Post, "cover" | "coverAlt" | "coverMediaId" | "coverStorageKey"> {
   if (!value || typeof value !== "object") return {};
   const image = value as Record<string, unknown>;
   const coverAlt = typeof image.alt === "string" ? image.alt : undefined;
   if (typeof image.src === "string") return { cover: image.src, coverAlt };
-  const meta = image.meta as Record<string, unknown> | undefined;
-  const key = meta?.storageKey ?? image.id;
-  return typeof key === "string"
-    ? { cover: `/_emdash/api/media/file/${key}`, coverAlt }
+  const source = getLocalCoverSource(image);
+  return source
+    ? {
+        cover: `/_emdash/api/media/file/${source.storageKey}`,
+        coverAlt,
+        coverMediaId: source.mediaId,
+        coverStorageKey: source.storageKey,
+      }
     : {};
 }
 

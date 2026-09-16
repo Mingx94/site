@@ -1,10 +1,14 @@
 ---
 import { imageConfig } from "astro:assets";
+import { COVER_WIDTHS, coverDeliveryUrl } from "@/lib/coverVariants";
 
 interface Props {
   title: string;
+  contentId?: string;
   src?: string;
   alt?: string;
+  mediaId?: string;
+  storageKey?: string;
   ratio?: string;
   sizes?: string;
   priority?: boolean;
@@ -12,20 +16,26 @@ interface Props {
 
 const {
   title,
+  contentId,
   src,
   alt,
+  mediaId,
+  storageKey,
   ratio = "16 / 9",
   sizes = "100vw",
   priority = false,
 } = Astro.props;
 
-const responsiveWidths = [320, 480, 640, 750, 960, 1280, 1600];
 const imageSrc = src ? new URL(src, Astro.site ?? Astro.url).href : undefined;
 const imageAlt = alt ?? (title.trim() || "文章封面");
-const responsiveSrc = (width: number) => {
+const fallbackSrc = (width: number) => {
   const params = new URLSearchParams({ href: imageSrc!, w: String(width), f: "webp" });
   return `${imageConfig.endpoint.route}?${params}`;
 };
+const responsiveSrc = (width: number) =>
+  contentId && mediaId && storageKey
+    ? coverDeliveryUrl(contentId, mediaId, width)
+    : fallbackSrc(width);
 ---
 
 <figure class="post-cover" style={`--cover-ratio:${ratio}`}>
@@ -33,12 +43,12 @@ const responsiveSrc = (width: number) => {
     imageSrc ? (
       <img
         src={responsiveSrc(1280)}
-        srcset={responsiveWidths.map((width) => `${responsiveSrc(width)} ${width}w`).join(", ")}
+        srcset={COVER_WIDTHS.map((width) => `${responsiveSrc(width)} ${width}w`).join(", ")}
         sizes={sizes}
         alt={imageAlt}
         width="1280"
         height="720"
-        fetchpriority={priority ? "high" : "auto"}
+        fetchpriority={priority ? "high" : undefined}
         loading={priority ? "eager" : "lazy"}
         decoding="async"
       />
