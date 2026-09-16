@@ -2,7 +2,10 @@
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import config from "@/config";
+import "@/styles/tokens.css";
+import "@/styles/reset.css";
 import "@/styles/global.css";
+import iansuiPackage from "@fontsource/iansui/package.json";
 
 interface Props {
   title?: string;
@@ -25,10 +28,11 @@ const siteUrl = Astro.site ?? Astro.url;
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
 const imageUrl = new URL(image, siteUrl).href;
 const shouldNoindex = noindex || siteUrl.hostname.endsWith(".workers.dev");
+const fontAssetsBase = `/fonts/${iansuiPackage.version}`;
 ---
 
 <!doctype html>
-<html lang="zh-Hant" id="top">
+<html lang="zh-Hant" id="top" data-font-assets={fontAssetsBase}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -40,9 +44,6 @@ const shouldNoindex = noindex || siteUrl.hostname.endsWith(".workers.dev");
     {shouldNoindex && <meta name="robots" content="noindex,nofollow" />}
     <link rel="icon" type="image/svg+xml" href={config.site.favicon} />
     <link rel="icon" type="image/svg+xml" href={config.site.favicon_dark} media="(prefers-color-scheme: dark)" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Huninn&family=Iansui&display=swap" rel="stylesheet" />
     <link rel="alternate" type="application/rss+xml" title="Vartifact RSS" href="/rss.xml" />
     <link rel="sitemap" href="/sitemap.xml" />
     {markdown && <link rel="alternate" type="text/markdown" href={markdown} />}
@@ -66,12 +67,32 @@ const shouldNoindex = noindex || siteUrl.hostname.endsWith(".workers.dev");
           theme === "dark" ||
             (theme !== "light" && matchMedia("(prefers-color-scheme: dark)").matches),
         );
-        document.documentElement.classList.toggle(
-          "reading-sans",
-          localStorage.getItem("font") === "sans",
-        );
+        const font = localStorage.getItem("font") === "sans" ? "sans" : "serif";
+        document.documentElement.classList.toggle("reading-sans", font === "sans");
+
+        const fontName = font === "sans" ? "huninn" : "iansui";
+        const fontPreload = document.createElement("link");
+        fontPreload.rel = "preload";
+        fontPreload.as = "font";
+        fontPreload.type = "font/woff2";
+        fontPreload.crossOrigin = "anonymous";
+        fontPreload.href = `${document.documentElement.dataset.fontAssets}/${fontName}.woff2`;
+        fontPreload.dataset.readingFontPreload = font;
+        document.head.append(fontPreload);
+
+        const fontStylesheet = document.createElement("link");
+        fontStylesheet.rel = "preload";
+        fontStylesheet.as = "style";
+        fontStylesheet.href = `${document.documentElement.dataset.fontAssets}/${fontName}.css`;
+        fontStylesheet.dataset.readingFont = font;
+        fontStylesheet.addEventListener("load", () => {
+          fontStylesheet.rel = "stylesheet";
+          fontStylesheet.dataset.loaded = "true";
+        }, { once: true });
+        document.head.append(fontStylesheet);
       } catch {}
     </script>
+    <noscript><link rel="stylesheet" href={`${fontAssetsBase}/iansui.css`} /></noscript>
   </head>
   <body>
     <a href="#main" class="skip-link">跳到主要內容</a>
@@ -115,20 +136,55 @@ const shouldNoindex = noindex || siteUrl.hostname.endsWith(".workers.dev");
       const fontButton = document.querySelector<HTMLButtonElement>("[data-font-toggle]");
       if (fontButton) {
         let font = document.documentElement.classList.contains("reading-sans") ? "sans" : "serif";
+        const loadFont = (nextFont: "serif" | "sans") =>
+          new Promise<void>((resolve) => {
+            const selector = `link[data-reading-font="${nextFont}"]`;
+            const existing = document.querySelector<HTMLLinkElement>(selector);
+            if (existing?.dataset.loaded === "true" || existing?.sheet) {
+              resolve();
+              return;
+            }
+
+            const link = existing ?? document.createElement("link");
+            const finish = () => {
+              link.dataset.loaded = "true";
+              resolve();
+            };
+            link.addEventListener("load", finish, { once: true });
+            link.addEventListener("error", finish, { once: true });
+            if (!existing) {
+              const fontName = nextFont === "sans" ? "huninn" : "iansui";
+              link.rel = "stylesheet";
+              link.href = `${document.documentElement.dataset.fontAssets}/${fontName}.css`;
+              link.dataset.readingFont = nextFont;
+              document.head.appendChild(link);
+            }
+          });
         const updateFontButton = () => {
           const targetFont = font === "serif" ? "黑體" : "襯體";
           const label = fontButton.querySelector<HTMLElement>("[data-font-label]");
-          const status = fontButton.querySelector<HTMLElement>("[data-font-status]");
+          const status = document.querySelector<HTMLElement>("[data-font-status]");
           if (label) label.textContent = targetFont;
           if (status) status.textContent = `目前使用${font === "serif" ? "Iansui 襯體" : "Huninn 黑體"}`;
-          fontButton.setAttribute("aria-label", `切換為${targetFont}`);
           fontButton.title = `切換為${targetFont}`;
         };
         updateFontButton();
-        fontButton.addEventListener("click", () => {
-          font = font === "serif" ? "sans" : "serif";
+        fontButton.addEventListener("click", async () => {
+          const nextFont = font === "serif" ? "sans" : "serif";
+          const status = document.querySelector<HTMLElement>("[data-font-status]");
+          fontButton.disabled = true;
+          fontButton.setAttribute("aria-busy", "true");
+          if (status) status.textContent = `正在載入${nextFont === "serif" ? "Iansui 襯體" : "Huninn 黑體"}`;
+          await loadFont(nextFont);
+          const fontFamily = nextFont === "serif" ? "Iansui" : "Huninn";
+          try {
+            await document.fonts.load(`1em "${fontFamily}"`, document.body.textContent ?? "");
+          } catch {}
+          font = nextFont;
           try { localStorage.setItem("font", font); } catch {}
           document.documentElement.classList.toggle("reading-sans", font === "sans");
+          fontButton.disabled = false;
+          fontButton.removeAttribute("aria-busy");
           updateFontButton();
         });
       }

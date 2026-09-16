@@ -14,6 +14,9 @@ const siteUrl = isPreview
 export default defineConfig({
   site: siteUrl,
   output: "server",
+  build: {
+    inlineStylesheets: "always",
+  },
   adapter: cloudflare(),
   cache: {
     provider: cacheCloudflare(),

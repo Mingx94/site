@@ -39,3 +39,6 @@ dogfood-output/
 
 # Old build-time OG output. Article pages now use the EmDash featured image.
 public/og/*.png
+
+# Generated from the pinned Fontsource packages before dev/build.
+public/fonts/

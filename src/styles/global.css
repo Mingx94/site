@@ -1,8 +1,3 @@
-@import "./tokens.css";
-@import "./reset.css";
-@import "../content/styles/article.css";
-@import "./back-button.css";
-
 @layer base {
   html {
     color-scheme: light;
@@ -26,6 +21,7 @@
     color: var(--foreground);
     font-family: var(--font-serif);
     font-size: 1.0625rem;
+    font-size-adjust: from-font;
     line-height: 1.65;
     font-kerning: normal;
     letter-spacing: var(--tracking-normal);
@@ -75,12 +71,6 @@
   .animate {
     opacity: 1;
     transform: none;
-  }
-  .reading-sans .content,
-  .reading-sans .content :where(p, li, blockquote),
-  .reading-sans .prose,
-  .reading-sans .introduction {
-    font-family: var(--font-sans);
   }
 }
 
