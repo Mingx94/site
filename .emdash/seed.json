@@ -19,14 +19,7 @@
       "labelSingular": "文章",
       "description": "Vartifact 公開文章",
       "icon": "file-text",
-      "supports": [
-        "drafts",
-        "revisions",
-        "preview",
-        "scheduling",
-        "search",
-        "seo"
-      ],
+      "supports": ["drafts", "revisions", "scheduling", "search", "seo"],
       "fields": [
         {
           "slug": "title",
