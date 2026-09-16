@@ -27,12 +27,11 @@
 需要 Node.js 22.19 或更新版本。以下指令使用 PowerShell。
 
 ```powershell
-Remove-Item Env:CLOUDFLARE_ENV -ErrorAction SilentlyContinue
 npm ci
 npm run dev
 ```
 
-開發伺服器預設使用 `http://localhost:4321`。首次使用請先完成[本機初始化](docs/deployment.md#本機初始化)的 EmDash setup，才能正常開啟文章頁。預設使用本機資料；選用 preview 環境會連到遠端 preview 資源。
+開發伺服器預設使用 `http://localhost:4321`。首次使用請先完成[本機初始化](docs/deployment.md#本機初始化)的 EmDash setup，才能正常開啟文章頁。本機開發使用本機 D1 與 R2 資料。
 
 | 指令 | 用途 |
 | --- | --- |

@@ -27,7 +27,6 @@ const {
 const siteUrl = Astro.site ?? Astro.url;
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
 const imageUrl = new URL(image, siteUrl).href;
-const shouldNoindex = noindex || siteUrl.hostname.endsWith(".workers.dev");
 const fontAssetsBase = `/fonts/${iansuiPackage.version}`;
 ---
 
@@ -41,7 +40,7 @@ const fontAssetsBase = `/fonts/${iansuiPackage.version}`;
     <meta name="description" content={description} />
     <meta name="author" content={config.metadata.meta_author} />
     <link rel="canonical" href={canonical} />
-    {shouldNoindex && <meta name="robots" content="noindex,nofollow" />}
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
     <link rel="icon" type="image/svg+xml" href={config.site.favicon} />
     <link rel="icon" type="image/svg+xml" href={config.site.favicon_dark} media="(prefers-color-scheme: dark)" />
     <link rel="alternate" type="application/rss+xml" title="Vartifact RSS" href="/rss.xml" />

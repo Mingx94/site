@@ -12,28 +12,20 @@
 
 資源名稱與 IDs 以 `wrangler.jsonc` 為準，不要重複建立。
 
-| 環境       | 選擇方式                                                       | 資料目的地                                         |
-| ---------- | -------------------------------------------------------------- | -------------------------------------------------- |
-| 本機       | 清除 `CLOUDFLARE_ENV` 後執行 `npm run dev`                     | 本機模擬的 D1、R2                                  |
-| Preview    | 設定 `CLOUDFLARE_ENV=preview`；Wrangler 指令加 `--env preview` | `blog-emdash-preview`、`blog-emdash-media-preview` |
-| Production | 清除 `CLOUDFLARE_ENV`，使用預設部署設定                        | `blog-emdash`、`blog-emdash-media`                 |
+| 環境       | 選擇方式                   | 資料目的地                         |
+| ---------- | -------------------------- | ---------------------------------- |
+| 本機       | 執行 `npm run dev`         | 本機模擬的 D1、R2                  |
+| Production | 使用預設 Wrangler 設定部署 | `blog-emdash`、`blog-emdash-media` |
 
-Preview 的 D1、R2 設為 `remote: true`。從本機啟動 preview 開發伺服器，也可能修改遠端 preview 資料。`npm run preview` 是 Astro 建置預覽指令，不代表選用 Cloudflare preview 環境。
-
-`astro.config.mjs` 依建置時的 `CLOUDFLARE_ENV` 決定網站網址：preview 使用 `https://blog-preview.vartifact.workers.dev`，其餘使用 `https://vartifact.cc`。切換環境後必須重新建置。
-
-Production 只由 `https://vartifact.cc` 提供服務，並關閉 `workers.dev` 與版本 Preview URL。Preview 保留 `https://blog-preview.vartifact.workers.dev`，但關閉版本 Preview URL；所有 `workers.dev` 回應都會送出 `noindex`。
+網站只由 `https://vartifact.cc` 提供服務。`workers.dev` 與版本預覽網址皆已關閉。
 
 ## Secrets
 
-新環境首次設定時，產生該環境專用的 `EMDASH_ENCRYPTION_KEY`，存入密碼管理器，再寫入對應 Worker。既有環境沿用原 key，不要在日常部署時重新產生或覆寫。以下依目標環境擇一設定：
+首次設定時，產生 `EMDASH_ENCRYPTION_KEY`，存入密碼管理器，再寫入 Worker。既有環境沿用原 key，不要在日常部署時重新產生或覆寫：
 
 ```powershell
 npx emdash secrets generate
-# Production
 npx wrangler secret put EMDASH_ENCRYPTION_KEY
-# Preview：使用 preview 自己的 key
-npx wrangler secret put EMDASH_ENCRYPTION_KEY --env preview
 ```
 
 本機 secret 放在未追蹤的 `.dev.vars`。搬移含加密設定的資料時，需確認原 key 的相容性，不能直接換成新 key。不要提交任何 secret。
@@ -41,7 +33,6 @@ npx wrangler secret put EMDASH_ENCRYPTION_KEY --env preview
 ## 本機初始化
 
 ```powershell
-Remove-Item Env:CLOUDFLARE_ENV -ErrorAction SilentlyContinue
 npm ci
 npm run dev
 ```
@@ -58,32 +49,14 @@ npx wrangler d1 execute blog-emdash --local --file migrations/0001-content-dates
 
 遠端首次遷移若需要此修正，先備份，再明確選擇對應資料庫與環境。既有文章已在 CMS 更新日期時，不要重跑。
 
-## Preview 驗證
-
-以下會部署到遠端 preview。先確認該環境的 secrets 與必要 bindings 已設定。每個步驟成功後才執行下一步，失敗時停止。
-
-```powershell
-$env:CLOUDFLARE_ENV = "preview"
-npm run check
-npm test
-npm run build
-npx wrangler deploy --dry-run --env preview
-npx wrangler deploy --env preview
-Remove-Item Env:CLOUDFLARE_ENV -ErrorAction SilentlyContinue
-```
-
-完成後在 preview 網址執行下列 smoke test。首次使用空資料庫時，另外完成 EmDash setup。
-
 ## 日常正式部署
 
-1. 完成 preview 驗證。
-2. 記錄正式 D1 Time Travel bookmark、從 EmDash Admin 下載內容備份，並另外備份 R2 objects。EmDash 使用 FTS5 virtual tables，不要把未驗證可用的完整 D1 SQL 匯出當成唯一備份。
-3. 記錄目前 active deployment 與可回復的 Worker version ID，確認舊版本能使用部署後的資料結構。
-4. 清除 preview 環境，重新檢查與建置。
-5. 部署後立即執行 smoke test。此流程直接更新正式 Worker，不包含另一個「驗證後才切換網域」步驟。
+1. 記錄正式 D1 Time Travel bookmark、從 EmDash Admin 下載內容備份，並另外備份 R2 objects。EmDash 使用 FTS5 virtual tables，不要把未驗證可用的完整 D1 SQL 匯出當成唯一備份。
+2. 記錄目前 active deployment 與可回復的 Worker version ID，確認舊版本能使用部署後的資料結構。
+3. 重新檢查並建置。
+4. 部署後立即執行 smoke test。此流程會直接更新正式 Worker。
 
 ```powershell
-Remove-Item Env:CLOUDFLARE_ENV -ErrorAction SilentlyContinue
 npx wrangler deployments list
 npx wrangler d1 time-travel info blog-emdash --json
 npm ci
@@ -102,14 +75,13 @@ npx wrangler deploy
 - EmDash 登入、文章編輯與發布、媒體上傳及讀取；首次部署才測 setup。
 - Markdown、RSS、sitemap、robots、llms 與 security.txt 輸出。
 
-記錄環境、Worker version 與結果。Preview 通過不等於正式環境已驗證。
+記錄 Worker version 與驗證結果。
 
 ## 回復
 
 先確認問題是否只在程式碼，以及舊 Worker 是否相容目前資料結構。將佔位值換成部署前記錄的 version ID：
 
 ```powershell
-Remove-Item Env:CLOUDFLARE_ENV -ErrorAction SilentlyContinue
 npx wrangler rollback <WORKER_VERSION_ID>
 ```
 

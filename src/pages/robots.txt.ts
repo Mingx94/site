@@ -1,11 +1,7 @@
 import type { APIRoute } from "astro";
 
-export const GET: APIRoute = ({ url }) => {
-  const isPreview = url.hostname.endsWith(".workers.dev");
-  const body = isPreview
-    ? `User-agent: *
-Disallow: /`
-    : `User-agent: *
+export const GET: APIRoute = () => {
+  const body = `User-agent: *
 Allow: /
 Content-Signal: search=yes, ai-input=no, ai-train=no
 
