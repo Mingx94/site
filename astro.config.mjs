@@ -5,7 +5,7 @@ import { d1, r2 } from "@emdash-cms/cloudflare";
 import { coverVariants } from "./src/plugins/cover-variants.config.ts";
 import { defineConfig } from "astro/config";
 import emdash from "emdash/astro";
-import Icons from "unplugin-icons/vite";
+import expressiveCode from "astro-expressive-code";
 
 const siteUrl = "https://vartifact.cc";
 
@@ -36,6 +36,7 @@ export default defineConfig({
     },
   },
   integrations: [
+    expressiveCode(),
     react(),
     emdash({
       database: d1({ binding: "DB", session: "auto" }),
@@ -45,7 +46,21 @@ export default defineConfig({
     }),
   ],
   vite: {
-    plugins: [Icons({ compiler: "astro" })],
+    plugins: [
+      {
+        name: "sienna-worker-dependencies",
+        configEnvironment(environment) {
+          // Bundle the renderer's CommonJS dependencies before loading it in workerd.
+          if (environment !== "client") {
+            return {
+              optimizeDeps: {
+                include: ["postcss", "rehype-expressive-code/hast"],
+              },
+            };
+          }
+        },
+      },
+    ],
     optimizeDeps: {
       include: ["astro/app/manifest", "astro/logger/console"],
     },

@@ -18,6 +18,8 @@
 | `/blog/[slug]` | 文章內頁 |
 | `/blog/[slug].md` | 文章 Markdown 版本 |
 | `/about` | 關於 |
+| `/tags`、`/tags/[tag]` | 標籤索引與文章分類 |
+| `/showcase` | 作品展示；沒有作品時隱藏導覽與首頁區塊 |
 | `/rss.xml`、`/sitemap.xml` | 訂閱與 SEO |
 | `/llms.txt` | LLM 可讀索引 |
 | `/_emdash/admin` | EmDash 管理介面 |
@@ -68,7 +70,13 @@ Oxfmt 目前不支援 `.astro` 檔案，因此格式化指令會跳過這些檔�
 
 ## 設計來源
 
-網站的窄版編輯排版、文章時間軸與部分視覺語彙改編自 [Astro Sienna](https://github.com/anjay-goel/astro-sienna)，參考版本為 `c5ea7eed5b1bab37ac1b730da32387355fdefdf2`。本專案保留原有的 Astro Server、Cloudflare Workers、EmDash、路由與內容模型。第三方授權聲明見 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+前台移植自 [Astro Sienna](https://github.com/anjay-goel/astro-sienna)，參考版本為 `c5ea7eed5b1bab37ac1b730da32387355fdefdf2`。首頁、文章時間軸、文章內頁、關於、標籤、作品與 404 頁沿用原版的結構、配色、間距、動畫與響應式規則。
+
+依專案需求，字體全部改用作業系統內建字體，不下載 Google Fonts 或其他網頁字體，也不提供字體切換。文字、文章網址、作者資訊與內容保留 Vartifact 的設定；文章由 EmDash 管理，部署沿用 Cloudflare Workers。第三方授權聲明見 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
+標籤讀取 EmDash 的 `terms.tag`。作品資料放在 `src/data/showcase.ts`，空陣列會隱藏首頁作品區與導覽。程式碼區塊使用原版的 Expressive Code 主題，提供語法上色、檔名與複製按鈕；`mermaid` 語言的程式碼區塊會延遲載入圖表。文章提供分享、段落連結、閱讀進度與回到頁首。
+
+本專案保留 EmDash 的 Portable Text 內容模型，不改成原版的 MDX 編輯流程。原版的 KaTeX Markdown 語法、建置時產生的 OG 圖片，以及需另設帳號的 Giscus、Webmentions、GA4、GoatCounter 未啟用；社群預覽沿用 EmDash SEO 與封面，流量分析沿用 Cloudflare Web Analytics。
 
 ## License
 

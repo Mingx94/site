@@ -1,0 +1,69 @@
+---
+import { getPosts, getTags } from "@/lib/posts";
+import Base from "@/layouts/Base.astro";
+const tags = getTags(await getPosts());
+---
+<Base title="標籤 | Vartifact" description="依照標籤瀏覽 Vartifact 的文章。">
+  <section class="tags-index" aria-labelledby="tags-label">
+    <h1 class="section-label" id="tags-label">標籤 · {tags.length}</h1>
+    <ul class="tag-run">{tags.map(tag => <li><a href={`/tags/${encodeURIComponent(tag.slug)}`}><span class="name">{tag.name}</span><span class="count">{tag.count}</span></a></li>)}</ul>
+    {!tags.length && <p class="empty-state">目前沒有標籤。<a href="/blog">瀏覽所有文章 →</a></p>}
+  </section>
+</Base>
+<style>
+	.tags-index {
+		margin-bottom: 96px;
+	}
+
+	.tag-run {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px 24px;
+		font-family: var(--font-mono);
+		max-width: 60ch;
+	}
+	.tag-run a {
+		display: inline-flex;
+		align-items: baseline;
+		gap: 5px;
+		text-decoration: none;
+		color: hsl(var(--theme-text) / 0.78);
+		font-size: 14.5px;
+		letter-spacing: 0.01em;
+		transition: color 0.2s ease;
+	}
+	.tag-run .name::before {
+		content: "#";
+		color: var(--faint);
+		transition: color 0.2s ease;
+	}
+	.tag-run a:hover {
+		color: hsl(var(--theme-accent));
+	}
+	.tag-run a:hover .name::before {
+		color: hsl(var(--theme-accent));
+	}
+	.tag-run a:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 3px;
+		border-radius: 3px;
+	}
+	.tag-run .count {
+		font-size: 11px;
+		color: hsl(var(--theme-text) / 0.4);
+		font-variant-numeric: tabular-nums;
+		font-feature-settings: "tnum";
+	}
+	.tag-run a:hover .count {
+		color: hsl(var(--theme-accent) / 0.7);
+	}
+
+	@media (max-width: 420px) {
+		.tags-index {
+			margin-bottom: 64px;
+		}
+	}
+</style>

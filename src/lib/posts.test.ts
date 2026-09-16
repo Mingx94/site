@@ -10,9 +10,42 @@ vi.mock("emdash", () => ({
   getEmDashEntry: mocks.getEmDashEntry,
 }));
 
-import { getPost } from "./posts";
+import { getPost, getTags } from "./posts";
 
 describe("getPost", () => {
+  it("maps EmDash tag labels and slugs without treating categories as tags", async () => {
+    mocks.getEmDashEntry.mockResolvedValue({
+      entry: {
+        id: "tagged",
+        data: {
+          terms: {
+            tag: [{ slug: "astro", label: "Astro", name: "tag" }],
+            category: [{ slug: "notes", label: "筆記", name: "category" }],
+          },
+        },
+      },
+      error: null,
+    });
+    const post = await getPost("tagged");
+    expect(post?.tags).toEqual([{ slug: "astro", name: "Astro" }]);
+    expect(
+      getTags([
+        post!,
+        { ...post!, id: "another", tags: [...post!.tags, ...post!.tags] },
+      ]),
+    ).toEqual([{ slug: "astro", name: "Astro", count: 2 }]);
+  });
+
+  it("supports existing articles without tags", async () => {
+    mocks.getEmDashEntry.mockResolvedValue({
+      entry: { id: "untagged", data: {} },
+      error: null,
+    });
+    const post = await getPost("untagged");
+    expect(post?.tags).toEqual([]);
+    expect(getTags([post!])).toEqual([]);
+  });
+
   it("preserves the featured image alt text", async () => {
     mocks.getEmDashEntry.mockResolvedValue({
       entry: {

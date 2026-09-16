@@ -1,0 +1,40 @@
+---
+import { showcase } from "@/data/showcase";
+import Base from "@/layouts/Base.astro";
+---
+<Base title="作品 | Vartifact" description="Michael Tsai 的作品與專案。">
+  <section class="work" aria-labelledby="work-label">
+    <h1 class="section-label" id="work-label">作品</h1>
+    <p class="intro">{showcase.length ? "一些我做過的專案。" : "作品整理中。"}</p>
+    <ul class="work-list">{showcase.map(item => <li><a href={item.href} rel="noreferrer" target="_blank"><div class="head"><span class="name">{item.name}</span><span class="stack">{item.stack}</span>{item.badge && <span class="badge">{item.badge}</span>}</div><p>{item.desc}</p></a></li>)}</ul>
+  </section>
+</Base>
+<style>
+	.work {
+		margin-bottom: 88px;
+	}
+	.intro {
+		font-family: var(--font-serif);
+		font-size: 17.5px;
+		line-height: 1.7;
+		color: hsl(var(--theme-text));
+		margin: 0 0 36px;
+		max-width: 60ch;
+		text-wrap: pretty;
+	}
+
+	@media (max-width: 720px) {
+		.intro {
+			font-size: 17px;
+			margin-bottom: 28px;
+		}
+	}
+	@media (max-width: 420px) {
+		.work {
+			margin-bottom: 56px;
+		}
+		.intro {
+			font-size: 16.5px;
+		}
+	}
+</style>

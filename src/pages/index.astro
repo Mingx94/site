@@ -1,354 +1,262 @@
 ---
-import Container from "@/components/Container.astro";
-import Link from "@/components/Link.astro";
-import config from "@/config";
+import PostList from "@/components/blog/PostList.astro";
 import { getPosts } from "@/lib/posts";
+import { showcase } from "@/data/showcase";
 import Base from "@/layouts/Base.astro";
-
-const posts = await getPosts();
-const recentBlogs = posts.slice(0, config.settings.num_posts_on_homepage);
-const elsewhere = [
-  { label: "GitHub", href: config.social.github },
-  { label: "LinkedIn", href: config.social.linkedin },
-  { label: "X", href: config.social.twitter },
-].filter((item) => item.href);
-const formatRailDate = (value: string) =>
-  new Intl.DateTimeFormat("zh-TW", { month: "numeric", day: "numeric" }).format(new Date(value));
-const formatStampDate = (value: string) =>
-  new Intl.DateTimeFormat("zh-TW", { year: "numeric", month: "long" }).format(new Date(value));
+import config from "@/config";
+import { formatRailDate, formatStampDate } from "@/lib/date";
+const allPosts = await getPosts();
+const [featured, ...rest] = allPosts.slice(0, config.settings.num_posts_on_homepage);
+const socials = [{ name: "GitHub", href: config.social.github }, { name: "LinkedIn", href: config.social.linkedin }, { name: "X", href: config.social.twitter }, { name: "Bluesky", href: config.social.bluesky }].filter(item => item.href);
 ---
-
 <Base>
-  <Container>
-    <div class="home">
-      <section class="hero" aria-labelledby="home-title">
-        <h1 class="visually-hidden" id="home-title">分享技術及生活</h1>
-        <p class="introduction">
-          前端工程師的個人書寫空間。記錄程式、設計、閱讀，以及日常裡值得留下的片段。
-        </p>
-        {
-          elsewhere.length > 0 && (
-            <ul class="socials" role="list" aria-label="其他平台">
-              {elsewhere.map((item) => (
-                <li>
-                  <Link href={item.href} external>{item.label}</Link>
-                  <span class="sep" aria-hidden="true">·</span>
-                </li>
-              ))}
-              <li><Link href="/rss.xml" aria-label="RSS 訂閱">RSS</Link></li>
-            </ul>
-          )
-        }
-      </section>
-
-      {
-        recentBlogs.length > 0 ? (
-          <section class="writing" aria-labelledby="writing-title">
-            <h2 class="section-label" id="writing-title">Writing</h2>
-            <ol class="timeline" role="list">
-              {recentBlogs.map((post, index) => (
-                <li class:list={["post", { featured: index === 0 }]} style={`--i: ${index}`}>
-                  <div class="post-rail">
-                    <time class="post-date" datetime={new Date(post.date).toISOString()}>{formatRailDate(post.date)}</time>
-                    <span class="post-dot" aria-hidden="true"></span>
-                  </div>
-                  <div class="post-body">
-                    {index === 0 && <p class="post-stamp">Latest · {formatStampDate(post.date)}</p>}
-                    <h3><a class="post-link" href={`/blog/${post.id}`}>{post.title}</a></h3>
-                    {post.description && <p class="post-description">{post.description}</p>}
-                    <p class="post-meta">{post.readingTime} 分鐘閱讀</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-            {posts.length > recentBlogs.length && (
-              <p class="archive-link">
-                <Link href="/blog">查看全部 {posts.length} 篇文章 →</Link>
-              </p>
-            )}
-          </section>
-        ) : (
-          <section class="empty-writing" aria-labelledby="empty-title">
-            <p class="section-label">Writing</p>
-            <h2 id="empty-title">目前沒有公開文章</h2>
-            <p>新的文章會出現在這裡。你也可以先認識作者。</p>
-            <Link href="/about">關於 Michael →</Link>
-          </section>
-        )
-      }
+  <h1 class="visually-hidden">{config.site.name} — {config.metadata.meta_description}</h1>
+  <section class="hero">
+    <p>前端工程師的個人書寫空間。記錄程式、設計、閱讀，以及日常裡值得留下的片段。</p>
+    <div class="socials">
+      {socials.map(item => <><a href={item.href} rel="noreferrer" target="_blank">{item.name}</a><span class="sep" aria-hidden="true">·</span></>)}
+      <a href="/rss.xml">RSS</a>
     </div>
-  </Container>
+  </section>
+  <section class="writing" aria-labelledby="writing-label">
+    <h2 class="section-label" id="writing-label">文章</h2>
+    {featured ? <div class="timeline">
+      <div class="post featured" style="--i: 0">
+        <div class="post-rail"><time class="post-date" datetime={featured.date}>{formatRailDate(featured.date)}</time><span class="post-dot" aria-hidden="true" /></div>
+        <div class="post-body">
+          <div class="post-stamp">最新文章 · {formatStampDate(featured.date)}</div>
+          <h3 class="post-title"><a class="post-cardlink" href={`/blog/${encodeURIComponent(featured.id)}`}>{featured.title}</a></h3>
+          {featured.description && <p class="post-excerpt">{featured.description}</p>}
+          {!!featured.tags.length && <div class="post-meta">{featured.tags.map((tag, i) => <>{i > 0 && <span class="dot">·</span>}<a class="tag" href={`/tags/${encodeURIComponent(tag.slug)}`}>{tag.name}</a></>)}</div>}
+        </div>
+      </div>
+      <PostList posts={rest} startIndex={1} headingLevel="h3" />
+      <div class="archive-link" style={`--i: ${rest.length + 1}`}><a href="/blog">查看全部 {allPosts.length} 篇文章 →</a></div>
+    </div> : <div class="empty-state"><p>目前沒有公開文章。</p><a href="/about">關於 Michael →</a></div>}
+  </section>
+  {showcase.length > 0 && <section class="work" aria-labelledby="work-label">
+    <h2 class="section-label" id="work-label">作品</h2>
+    <ul class="work-list">{showcase.map((item, idx) => <li style={`--i: ${idx + 1}`}><a href={item.href} rel="noreferrer" target="_blank"><div class="head"><span class="name">{item.name}</span><span class="stack">{item.stack}</span>{item.badge && <span class="badge">{item.badge}</span>}</div><p>{item.desc}</p></a></li>)}</ul>
+  </section>}
 </Base>
-
 <style>
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    border: 0;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-  .hero { margin-bottom: 4.75rem; }
-  .introduction {
-    max-width: 60ch;
-    margin: 0 0 1.375rem;
-    color: var(--foreground);
-    font-size: 1.21875rem;
-    line-height: 1.65;
-    text-wrap: pretty;
-    white-space: pre-line;
-  }
-  .socials {
-    margin-top: 1.125rem;
-    padding: 0;
-    color: color-mix(in oklab, var(--foreground) 72%, transparent);
-    font-family: var(--font-sans);
-    font-size: 0.84375rem;
-    list-style: none;
-  }
-  .socials li { display: inline; }
-  .socials :global(a) {
-    color: var(--muted-foreground);
-    text-decoration-color: color-mix(in oklab, var(--foreground) 35%, transparent);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 3px;
-    transition: color 180ms ease, text-decoration-color 180ms ease;
-  }
-  .socials :global(a:hover) {
-    color: var(--primary);
-    text-decoration-color: var(--primary);
-  }
-  .socials .sep {
-    margin-inline: 0.5625rem;
-    color: var(--input);
-  }
-  .writing { margin-bottom: 5.25rem; }
-  .section-label,
-  .post-stamp,
-  .post-meta {
-    font-family: var(--font-sans);
-    font-weight: 500;
-  }
-  .section-label {
-    margin-bottom: 2.25rem;
-    color: color-mix(in oklab, var(--foreground) 72%, transparent);
-    font-size: 0.71875rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
-  .timeline {
-    --rail-width: 6.875rem;
-    --rail-gap: 2.25rem;
+	/* ---------- Hero ---------- */
+	.hero {
+		margin-bottom: 76px;
+	}
+	.hero p {
+		font-size: 19.5px;
+		line-height: 1.65;
+		color: hsl(var(--theme-text));
+		margin: 0 0 22px;
+		max-width: 60ch;
+		text-wrap: pretty;
+		white-space: pre-line;
+	}
+	.socials {
+		font-family: var(--font-sans);
+		font-size: 13.5px;
+		color: hsl(var(--theme-text) / 0.72);
+		margin-top: 18px;
+	}
+	.socials a {
+		color: hsl(var(--theme-text-muted));
+		text-decoration: underline;
+		text-decoration-color: hsl(var(--theme-text) / 0.35);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+		transition: color 0.2s ease, text-decoration-color 0.2s ease;
+	}
+	.socials a:hover {
+		color: hsl(var(--theme-accent));
+		text-decoration-color: hsl(var(--theme-accent));
+	}
+	.socials .sep {
+		color: var(--faint);
+		margin: 0 9px;
+	}
 
-    position: relative;
-    display: grid;
-    grid-template-columns: var(--rail-width) 1fr;
-    column-gap: var(--rail-gap);
-    padding: 0;
-    list-style: none;
-  }
-  .timeline::before {
-    position: absolute;
-    top: 0.375rem;
-    bottom: 0.375rem;
-    left: calc(var(--rail-width) - 0.5px);
-    width: 1px;
-    background: var(--border);
-    content: "";
-    transition: background-color 350ms ease;
-  }
-  .post { display: contents; }
-  .post-rail {
-    --rail-date-size: 0.71875rem;
+	/* ---------- Writing timeline ---------- */
+	.writing {
+		margin-bottom: 84px;
+	}
+	/* ---------- Featured post ---------- */
+	.post.featured .post-body {
+		position: relative;
+		padding-bottom: 56px;
+	}
+	/* Title is the post link; its ::after stretches over the whole card body so
+	   clicking anywhere opens the post, while the tag links sit above it. */
+	.post.featured .post-cardlink {
+		color: inherit;
+		text-decoration: none;
+	}
+	.post.featured .post-cardlink::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+	}
+	.post.featured .post-cardlink:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 3px;
+		border-radius: 3px;
+	}
+	.post.featured .post-stamp {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: hsl(var(--theme-accent));
+		margin-bottom: 12px;
+	}
+	.post.featured .post-title {
+		font-size: 30px;
+		line-height: 1.14;
+		margin-bottom: 14px;
+		letter-spacing: -0.02em;
+	}
+	.post.featured .post-excerpt {
+		font-size: 18px;
+		line-height: 1.62;
+		color: hsl(var(--theme-text-muted));
+		margin: 0 0 14px;
+		max-width: 58ch;
+		word-wrap: break-word;
+		overflow-wrap: anywhere;
+	}
+	.post.featured .post-meta {
+		position: relative;
+		z-index: 2;
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		color: hsl(var(--theme-text) / 0.55);
+		font-variant-numeric: tabular-nums;
+		font-feature-settings: "tnum";
+	}
+	.post.featured .post-meta .tag {
+		color: inherit;
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+	.post.featured .post-meta .tag::before {
+		content: "#";
+		color: var(--faint);
+		transition: color 0.2s ease;
+	}
+	.post.featured .post-meta .tag:hover,
+	.post.featured .post-meta .tag:hover::before {
+		color: hsl(var(--theme-accent));
+	}
+	.post.featured .post-meta .tag:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 2px;
+		border-radius: 3px;
+	}
+	.post.featured .post-meta .dot {
+		color: var(--faint);
+		margin: 0 8px;
+	}
+	.post.featured .post-dot {
+		--rail-dot-size: 11px;
+		border-color: hsl(var(--theme-text-muted));
+	}
+	.post.featured:hover .post-dot {
+		background: hsl(var(--theme-accent));
+		border-color: hsl(var(--theme-accent));
+	}
 
-    position: relative;
-    padding-top: 0.25rem;
-    padding-right: 1.125rem;
-    color: color-mix(in oklab, var(--foreground) 72%, transparent);
-    font-size: var(--rail-date-size);
-    font-variant-numeric: tabular-nums;
-    line-height: 1.4;
-    text-align: right;
-  }
-  .post-dot {
-    --rail-dot-size: 0.5625rem;
+	.archive-link {
+		grid-column: 2;
+		margin-top: 8px;
+		font-family: var(--font-sans);
+		font-size: 13.5px;
+		color: hsl(var(--theme-text) / 0.72);
+	}
+	.archive-link a {
+		display: inline-block;
+		padding: 6px 0;
+		color: hsl(var(--theme-text-muted));
+		text-decoration: underline;
+		text-decoration-color: hsl(var(--theme-text) / 0.35);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+		transition: color 0.2s ease, text-decoration-color 0.2s ease;
+	}
+	.archive-link a:hover {
+		color: hsl(var(--theme-accent));
+		text-decoration-color: hsl(var(--theme-accent));
+	}
 
-    position: absolute;
-    z-index: 1;
-    top: calc(0.25rem + 0.5lh);
-    right: calc(-0.5 * var(--rail-dot-size));
-    width: var(--rail-dot-size);
-    height: var(--rail-dot-size);
-    border: 1.5px solid var(--input);
-    border-radius: 50%;
-    background: var(--background);
-    transform: translateY(-50%);
-    transition: background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
-  }
-  .post-body { padding-bottom: 2.375rem; }
-  .post.featured .post-body {
-    position: relative;
-    padding-bottom: 3.5rem;
-  }
-  .post.featured .post-dot {
-    --rail-dot-size: 0.6875rem;
-    border-color: var(--muted-foreground);
-  }
-  .post-stamp {
-    margin-bottom: 0.75rem;
-    color: var(--primary);
-    font-size: 0.6875rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .post h3 {
-    margin: 0 0 0.375rem;
-    color: var(--foreground);
-    font: 500 1.15625rem/1.3 var(--font-serif);
-    letter-spacing: -0.012em;
-    text-wrap: balance;
-    overflow-wrap: anywhere;
-    transition: color 180ms ease;
-  }
-  .post.featured h3 {
-    margin-bottom: 0.875rem;
-    font-size: 1.875rem;
-    line-height: 1.14;
-    letter-spacing: -0.02em;
-  }
-  .post h3 a { text-decoration: none; }
-  .post.featured .post-link::after {
-    position: absolute;
-    z-index: 1;
-    inset: 0;
-    content: "";
-  }
-  .post h3 a:hover,
-  .post:has(h3 a:hover) h3 { color: var(--primary); }
-  .post:has(h3 a:hover) .post-dot {
-    border-color: var(--primary);
-    background: var(--primary);
-    box-shadow: 0 0 0 3px var(--background);
-  }
-  .post-description {
-    display: -webkit-box;
-    max-width: 58ch;
-    margin: 0;
-    overflow: clip;
-    color: color-mix(in oklab, var(--foreground) 72%, transparent);
-    font-size: 1rem;
-    line-height: 1.55;
-    overflow-wrap: anywhere;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1;
-    line-clamp: 1;
-  }
-  .post.featured .post-description {
-    display: block;
-    max-width: 58ch;
-    margin-bottom: 0.875rem;
-    overflow: visible;
-    color: var(--muted-foreground);
-    font-size: 1.125rem;
-    line-height: 1.62;
-    -webkit-line-clamp: unset;
-    line-clamp: unset;
-  }
-  .post-meta {
-    position: relative;
-    z-index: 2;
-    margin-top: 0.625rem;
-    color: color-mix(in oklab, var(--foreground) 55%, transparent);
-    font-size: 0.71875rem;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 0;
-  }
-  .archive-link {
-    margin-top: 0.5rem;
-    margin-left: calc(var(--rail-width) + var(--rail-gap));
-    font-family: var(--font-sans);
-    font-size: 0.84375rem;
-  }
-  .archive-link :global(a) { color: var(--muted-foreground); }
-  .archive-link :global(a:hover) { color: var(--primary); }
-  .empty-writing {
-    padding-block: 2rem;
-    border-block: 1px solid var(--border);
-  }
-  .empty-writing h2 {
-    margin-block: 0.75rem;
-    font: 500 clamp(1.75rem, 5vw, 2.5rem)/1.2 var(--font-serif);
-  }
-  .empty-writing p { margin-bottom: 1rem; color: var(--muted-foreground); }
+	.work {
+		margin-bottom: 88px;
+	}
 
-  @media (prefers-reduced-motion: no-preference) {
-    @keyframes intro-fade-up {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: none; }
-    }
-    .hero > *,
-    .section-label,
-    .post .post-rail,
-    .post .post-body,
-    .archive-link {
-      animation: intro-fade-up 380ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
-      animation-delay: calc(var(--i, 0) * 55ms);
-    }
-    .hero > :nth-child(1) { --i: 0; }
-    .hero > :nth-child(2) { --i: 1; }
-    .hero > :nth-child(3) { --i: 2; }
-    .post:active { opacity: 0.85; transform: scale(0.992); }
-  }
+	.socials a:focus-visible,
+	.archive-link a:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 3px;
+		border-radius: 3px;
+	}
 
-  @media (width <= 45rem) {
-    .hero { margin-bottom: 3.5rem; }
-    .introduction { font-size: 1.125rem; }
-    .timeline { display: block; }
-    .timeline::before { display: none; }
-    .post {
-      display: block;
-      padding-bottom: 2rem;
-    }
-    .post-rail {
-      padding: 0 0 0.375rem;
-      text-align: left;
-    }
-    .post-dot { display: none; }
-    .post-body { padding-bottom: 0; }
-    .post.featured .post-rail { display: none; }
-    .post.featured .post-body {
-      margin-bottom: 0.25rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .post.featured h3 {
-      margin-bottom: 0.625rem;
-      font-size: 1.375rem;
-      line-height: 1.2;
-      letter-spacing: -0.015em;
-    }
-    .post.featured .post-description {
-      margin-bottom: 0.625rem;
-      font-size: 0.96875rem;
-      line-height: 1.55;
-    }
-    .archive-link { margin-top: 0; margin-left: 0; }
-  }
+	@media (max-width: 720px) {
+		.hero {
+			margin-bottom: 56px;
+		}
+		.hero p {
+			font-size: 18px;
+		}
+		.post.featured .post-rail {
+			display: none;
+		}
+		.post.featured .post-body {
+			padding-bottom: 24px;
+			border-bottom: 1px solid var(--hairline);
+			margin-bottom: 4px;
+		}
+		.post.featured .post-title {
+			font-size: 22px;
+			line-height: 1.2;
+			letter-spacing: -0.015em;
+			margin-bottom: 10px;
+		}
+		.post.featured .post-excerpt {
+			font-size: 15.5px;
+			line-height: 1.55;
+			margin: 0 0 10px;
+		}
+		.post.featured .post-meta {
+			font-size: 11px;
+		}
+		.archive-link {
+			margin-top: 0;
+		}
+	}
 
-  @media (width <= 26.25rem) {
-    .hero { margin-bottom: 3rem; }
-    .introduction { font-size: 1.0625rem; }
-    .socials { font-size: 0.78125rem; }
-    .socials .sep { margin-inline: 0.375rem; }
-    .section-label { margin-bottom: 1.625rem; }
-    .writing { margin-bottom: 4rem; }
-    .post h3 { font-size: 1.0625rem; }
-    .post.featured h3 { font-size: 1.0625rem; }
-    .post-description,
-    .post.featured .post-description { font-size: 0.9375rem; }
-  }
+	@media (max-width: 420px) {
+		.hero {
+			margin-bottom: 48px;
+		}
+		.hero p {
+			font-size: 17px;
+		}
+		.socials {
+			font-size: 12.5px;
+		}
+		.socials .sep {
+			margin: 0 6px;
+		}
+		.writing {
+			margin-bottom: 64px;
+		}
+		.post.featured .post-title {
+			font-size: 17px;
+		}
+		.post.featured .post-excerpt {
+			font-size: 15px;
+		}
+		.work {
+			margin-bottom: 56px;
+		}
+	}
 </style>

@@ -1,7 +1,11 @@
 ---
 import ArticleClient from "@/components/ArticleClient.astro";
-import Container from "@/components/Container.astro";
-import FormattedDate from "@/components/FormattedDate.astro";
+import CodeBlock from "@/components/blog/CodeBlock.astro";
+import Mermaid from "@/components/blog/Mermaid.astro";
+
+import { formatBylineDate, formatStampDate } from "@/lib/date";
+import ShareButtons from "@/components/blog/ShareButtons.astro";
+import config from "@/config";
 import PostCover from "@/components/PostCover.astro";
 import { resolvePostSeo } from "@/lib/postSeo";
 import { getPost, getPosts } from "@/lib/posts";
@@ -10,9 +14,9 @@ import "@/content/styles/article.css";
 import { PortableText } from "emdash/ui";
 
 const slug = Astro.params.slug;
-if (!slug) return Astro.redirect("/404");
+if (!slug) return Astro.rewrite("/404");
 const [post, sortedPosts] = await Promise.all([getPost(slug), getPosts()]);
-if (!post) return Astro.redirect("/404");
+if (!post) return Astro.rewrite("/404");
 
 const seo = resolvePostSeo(post, {
   path: Astro.url.pathname,
@@ -25,206 +29,305 @@ const olderPost =
   currentIndex >= 0 && currentIndex < sortedPosts.length - 1
     ? sortedPosts[currentIndex + 1]
     : undefined;
+
+const postUrl = new URL(`/blog/${encodeURIComponent(post.id)}`, Astro.site ?? Astro.url).href;
 ---
-
-<Base
-  title={seo.title}
-  description={seo.description ?? undefined}
-  image={seo.ogImage ?? undefined}
-  canonical={seo.canonical ?? undefined}
-  noindex={seo.robots !== null}
-  ogTitle={seo.ogTitle}
-  ogDescription={seo.ogDescription ?? undefined}
-  type="article"
-  markdown={`/blog/${slug}.md`}
->
+<Base title={seo.title} description={seo.description ?? undefined} image={seo.ogImage ?? undefined} canonical={seo.canonical ?? undefined} noindex={seo.robots !== null} ogTitle={seo.ogTitle} ogDescription={seo.ogDescription ?? undefined} type="article" markdown={`/blog/${encodeURIComponent(post.id)}.md`}>
+  <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify({ "@context": "https://schema.org", "@type": "BlogPosting", headline: post.title, description: post.description, datePublished: post.date, dateModified: post.updated ?? post.date, url: postUrl, image: seo.ogImage ?? new URL("/og.jpg", Astro.site ?? Astro.url).href, author: { "@type": "Person", name: config.metadata.meta_author, url: new URL("/about", Astro.site ?? Astro.url).href } }).replace(/</g, "\\u003c")} />
+  <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
+  <div class="post-shell"><div class="post-main">
+    <header id="blog-hero" class="post-header">
+      <div class="post-eyebrow">文章 <span class="sep">·</span> {formatStampDate(post.date)}</div>
+      {post.draft && <span class="draft-flag">草稿</span>}
+      <h1 class="post-title">{post.title}</h1>
+      <p class="byline">{config.metadata.meta_author}<span class="sep">·</span><time datetime={post.date}>{formatBylineDate(post.date)}</time><span class="sep">·</span>{post.readingTime} 分鐘閱讀</p>
+      {!!post.tags.length && <div class="post-tags">{post.tags.map((tag, i) => <><a class="tag-link" href={`/tags/${encodeURIComponent(tag.slug)}`}>{tag.name}</a>{i < post.tags.length - 1 && <span class="sep">·</span>}</>)}</div>}
+      {post.updated && <div class="post-updated">更新於 <time datetime={post.updated}>{formatBylineDate(post.updated)}</time></div>}
+    </header>
+    {post.cover ? <div class="post-cover"><PostCover title={post.title} contentId={post.id} src={post.cover} alt={post.coverAlt} mediaId={post.coverMediaId} storageKey={post.coverStorageKey} sizes="(max-width: 420px) calc(100vw - 32px), (max-width: 720px) calc(100vw - 44px), (max-width: 1024px) calc(100vw - 64px), 960px" priority /></div> : <hr class="rule" />}
+    <article class="post-article" id="article-content"><PortableText value={post.content} components={{ type: { code: CodeBlock } }} /></article>
+    <Mermaid />
+    <ShareButtons title={post.title} url={postUrl} description={post.description} />
+    <hr class="rule rule--footer" />
+    {(olderPost || newerPost) && <nav class="post-pager" aria-label="其他文章">
+      {olderPost && <a class="pager-link prev" href={`/blog/${encodeURIComponent(olderPost.id)}`}><span class="pager-eyebrow">上一篇</span><span class="pager-title">{olderPost.title}</span></a>}
+      {newerPost && <a class="pager-link next" href={`/blog/${encodeURIComponent(newerPost.id)}`}><span class="pager-eyebrow">下一篇</span><span class="pager-title">{newerPost.title}</span></a>}
+    </nav>}
+  </div></div>
+  <button type="button" aria-label="回到頁首" class="to-top-btn" data-show="false" id="to-top-btn" hidden><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4.5 15.75l7.5-7.5 7.5 7.5" stroke-linecap="round" stroke-linejoin="round" /></svg></button>
   <ArticleClient />
-  <Container>
-    <article class="post">
-      <header class="post-header">
-        <p class="eyebrow">Writing <span aria-hidden="true">·</span> <FormattedDate date={post.date} /></p>
-        {post.draft && <p class="draft">草稿</p>}
-        <h1>{post.title}</h1>
-        <p class="byline">
-          <span>Michael Tsai</span>
-          <span aria-hidden="true">·</span>
-          <span>{post.readingTime} 分鐘閱讀</span>
-          {post.updated && (
-            <>
-              <span aria-hidden="true">·</span>
-              <span>更新於 <FormattedDate date={post.updated} /></span>
-            </>
-          )}
-        </p>
-      </header>
-
-      {
-        post.cover ? (
-          <div class="cover">
-            <PostCover
-              title={post.title}
-              contentId={post.id}
-              src={post.cover}
-              alt={post.coverAlt}
-              mediaId={post.coverMediaId}
-              storageKey={post.coverStorageKey}
-              ratio="16 / 9"
-              sizes="(max-width: 26.25rem) calc(100vw - 2rem), (max-width: 45rem) calc(100vw - 2.75rem), 43.5rem"
-              priority
-            />
-          </div>
-        ) : (
-          <hr class="rule" />
-        )
-      }
-
-      <div class="content" id="article-content">
-        <PortableText value={post.content} />
-      </div>
-
-      {(olderPost || newerPost) && (
-        <>
-          <hr class="rule rule-footer" />
-          <nav class="post-pager" aria-label="其他文章">
-            {olderPost && (
-              <a
-                class="pager-link previous"
-                href={`/blog/${olderPost.id}`}
-                aria-label={`上一篇文章：${olderPost.title}`}
-              >
-                <span class="pager-eyebrow">← 上一篇</span>
-                <span class="pager-title">{olderPost.title}</span>
-              </a>
-            )}
-            {newerPost && (
-              <a
-                class="pager-link next"
-                href={`/blog/${newerPost.id}`}
-                aria-label={`下一篇文章：${newerPost.title}`}
-              >
-                <span class="pager-eyebrow">下一篇 →</span>
-                <span class="pager-title">{newerPost.title}</span>
-              </a>
-            )}
-          </nav>
-        </>
-      )}
-    </article>
-  </Container>
-
-  <script>
-    const progressRoot = document.querySelector<HTMLElement>("[data-article-progress]");
-    if (progressRoot) {
-      const progress = progressRoot.querySelector<HTMLElement>(".progress");
-      const updateProgress = () => {
-        const scrollable = document.documentElement.scrollHeight - innerHeight;
-        const ratio = scrollable > 0 ? Math.min(1, scrollY / scrollable) : 0;
-        if (progress) progress.style.transform = `scaleX(${ratio})`;
-      };
-      updateProgress();
-      addEventListener("scroll", updateProgress, { passive: true });
-    }
-
-    for (const block of document.querySelectorAll<HTMLElement>("#article-content pre")) {
-      if (block.scrollWidth > block.clientWidth) block.tabIndex = 0;
-    }
-  </script>
 </Base>
-
 <style>
-  .post { min-width: 0; }
-  .post-header { margin-bottom: 0; }
-  .eyebrow,
-  .draft,
-  .pager-eyebrow {
-    font-family: var(--font-sans);
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-  .eyebrow { margin-bottom: 1.375rem; color: var(--muted-foreground); }
-  .eyebrow span { margin-inline: 0.35rem; color: var(--border); }
-  .draft {
-    width: fit-content;
-    margin-bottom: 0.75rem;
-    color: var(--destructive);
-  }
-  .post-header h1 {
-    margin-bottom: 1.125rem;
-    color: var(--foreground);
-    font: 500 clamp(1.75rem, 5.5vw, 2.875rem)/1.1 var(--font-serif);
-    letter-spacing: -0.022em;
-    overflow-wrap: break-word;
-    text-wrap: balance;
-  }
-  .byline {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0;
-    margin-bottom: 0.875rem;
-    color: var(--muted-foreground);
-    font-size: 1.03125rem;
-    font-style: italic;
-    font-variant-numeric: tabular-nums;
-    line-height: 1.5;
-  }
-  .byline > span[aria-hidden="true"] {
-    margin-inline: 0.375rem;
-    color: var(--input);
-    font-style: normal;
-  }
-  .cover { margin-bottom: 2.25rem; }
-  .rule {
-    height: 1px;
-    margin: 0 0 2.25rem;
-    border: 0;
-    background: var(--border);
-  }
-  .rule-footer { margin: 3.5rem 0 1.75rem; }
-  .post-pager {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.75rem 2rem;
-    margin-bottom: 1rem;
-  }
-  .pager-link {
-    display: block;
-    min-width: 0;
-    color: var(--foreground);
-    text-decoration: none;
-    transition: transform 180ms ease;
-  }
-  .pager-link.next { text-align: right; }
-  .pager-link.previous:hover { transform: translateX(-0.125rem); }
-  .pager-link.next:hover { transform: translateX(0.125rem); }
-  .pager-eyebrow {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: var(--muted-foreground);
-    font-size: 0.6875rem;
-  }
-  .pager-title {
-    display: block;
-    color: var(--foreground);
-    font: 500 1.1rem/1.35 var(--font-serif);
-    letter-spacing: -0.01em;
-    overflow-wrap: anywhere;
-    text-wrap: balance;
-    transition: color 180ms ease;
-  }
-  .pager-link:hover .pager-title { color: var(--primary); }
-  .post-pager:has(.pager-link:only-child) .pager-link { grid-column: 1 / -1; }
-  @media (width < 45rem) {
-    .post-header h1 { font-size: 1.875rem; line-height: 1.15; }
-    .byline { font-size: 0.96875rem; }
-    .post-pager { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
-    .pager-link.next { text-align: left; }
-  }
-  @media (width <= 26.25rem) {
-    .eyebrow { margin-bottom: 1.125rem; font-size: 0.6875rem; }
-    .eyebrow span { margin-inline: 0.375rem; }
-    .post-header h1 { font-size: 1.625rem; }
-    .byline { margin-bottom: 1.5rem; font-size: 0.90625rem; }
-  }
+	.post-shell { display: block; position: relative; }
+
+	.reading-progress {
+		position: fixed;
+		top: 0;
+		left: 0;
+		height: 2px;
+		width: 0;
+		background: hsl(var(--theme-accent));
+		z-index: 100;
+		pointer-events: none;
+		transition: width 0.05s linear;
+	}
+
+	.post-cover {
+		margin: 0 0 36px;
+		padding: 0;
+	}
+	.post-cover :global(img) {
+		display: block;
+		width: 100%;
+		height: auto;
+		max-height: 524px;
+		object-fit: cover;
+		border: 1px solid var(--hairline);
+		border-radius: 4px;
+		background: var(--paper);
+	}
+
+	.post-eyebrow {
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		font-weight: 500;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: hsl(var(--theme-text) / 0.55);
+		margin-bottom: 22px;
+		font-variant-numeric: tabular-nums;
+		font-feature-settings: "tnum";
+	}
+	.post-eyebrow .sep {
+		color: var(--faint);
+		margin: 0 8px;
+	}
+
+	.draft-flag {
+		display: inline-block;
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		color: #c14a2b;
+		margin-bottom: 12px;
+		letter-spacing: 0.08em;
+	}
+
+	.post-title {
+		font-family: var(--font-serif);
+		font-weight: 500;
+		font-size: clamp(28px, 5.5vw, 46px);
+		letter-spacing: -0.022em;
+		line-height: 1.1;
+		color: hsl(var(--theme-text));
+		margin: 0 0 18px;
+		word-wrap: break-word;
+		overflow-wrap: break-word;
+	}
+	.post-title :global(em) {
+		font-style: italic;
+		color: hsl(var(--theme-accent));
+		font-weight: 400;
+	}
+
+	.byline {
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-size: 16.5px;
+		color: hsl(var(--theme-text-muted));
+		margin: 0 0 14px;
+		line-height: 1.5;
+		font-variant-numeric: tabular-nums;
+		font-feature-settings: "tnum";
+	}
+	.byline .sep {
+		color: var(--faint);
+		margin: 0 6px;
+		font-style: normal;
+	}
+
+	.post-tags {
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		color: hsl(var(--theme-text) / 0.55);
+		letter-spacing: 0.02em;
+		margin-bottom: 32px;
+		word-break: break-word;
+	}
+	.post-tags .tag-link {
+		color: inherit;
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+	.post-tags .tag-link::before {
+		content: "#";
+		color: var(--faint);
+		transition: color 0.2s ease;
+	}
+	.post-tags .tag-link:hover,
+	.post-tags .tag-link:hover::before {
+		color: hsl(var(--theme-accent));
+	}
+	.post-tags .tag-link:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 2px;
+		border-radius: 3px;
+	}
+	.post-tags .sep {
+		color: var(--faint);
+		margin: 0 6px;
+	}
+
+	.post-updated {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: hsl(var(--theme-text) / 0.5);
+		margin: 0 0 32px;
+	}
+
+	.rule {
+		height: 1px;
+		background: var(--hairline);
+		border: 0;
+		margin: 0 0 44px;
+		transition: background-color 0.35s ease;
+	}
+	/* Extra spacing so stacked footer blocks (post-end link, comments) read as intentional. */
+	.rule--footer {
+		margin: 56px 0 28px;
+	}
+
+	/* Match article body width */
+	.comments { max-width: var(--reading-width); margin: 56px 0 32px; }
+	.comments .giscus { max-width: 100%; }
+
+	/* Prev/Next post navigation */
+	.post-pager {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		column-gap: 32px;
+		row-gap: 28px;
+		margin: 0 0 56px;
+		padding: 0 0 0 0;
+	}
+	.pager-link {
+		display: block;
+		text-decoration: none;
+		min-width: 0;
+		transition: transform 0.25s ease;
+	}
+	.pager-link.next {
+		text-align: right;
+	}
+	.pager-link.prev:hover { transform: translateX(-2px); }
+	.pager-link.next:hover { transform: translateX(2px); }
+	.pager-eyebrow {
+		display: block;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		font-weight: 500;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: hsl(var(--theme-text) / 0.72);
+		margin-bottom: 8px;
+	}
+	.pager-link.prev .pager-eyebrow::before { content: "← "; }
+	.pager-link.next .pager-eyebrow::after { content: " →"; }
+	.pager-title {
+		display: block;
+		font-family: var(--font-serif);
+		font-size: 17.5px;
+		line-height: 1.3;
+		font-weight: 500;
+		letter-spacing: -0.01em;
+		color: hsl(var(--theme-text));
+		text-wrap: balance;
+		word-wrap: break-word;
+		overflow-wrap: anywhere;
+		transition: color 0.2s ease;
+	}
+	.pager-link:hover .pager-title {
+		color: hsl(var(--theme-accent));
+	}
+	/* Lone prev/next spans full width, text on its natural side. */
+	.post-pager:has(.pager-link.prev:only-child) .pager-link.prev,
+	.post-pager:has(.pager-link.next:only-child) .pager-link.next {
+		grid-column: 1 / -1;
+	}
+	@media (max-width: 720px) {
+		.post-pager {
+			grid-template-columns: 1fr;
+			row-gap: 22px;
+			margin-bottom: 40px;
+		}
+		.pager-link.next {
+			order: 0;
+			text-align: left;
+		}
+		.pager-link.prev {
+			order: 1;
+		}
+	}
+
+	.to-top-btn {
+		position: fixed;
+		bottom: 32px;
+		right: 16px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		border-radius: 999px;
+		border: 1px solid transparent;
+		background: var(--accent-soft);
+		color: hsl(var(--theme-text-muted));
+		cursor: pointer;
+		opacity: 0;
+		transform: translateY(28px);
+		transition: opacity 0.3s ease, transform 0.3s ease, color 0.2s ease, border-color 0.2s ease;
+		z-index: 90;
+	}
+	.to-top-btn[data-show="true"] {
+		opacity: 1;
+		transform: translateY(0);
+	}
+	.to-top-btn:hover {
+		color: hsl(var(--theme-accent));
+		border-color: var(--hairline);
+	}
+	.to-top-btn svg {
+		width: 20px;
+		height: 20px;
+	}
+	@media (min-width: 720px) {
+		.to-top-btn {
+			right: 32px;
+			bottom: 32px;
+			width: 44px;
+			height: 44px;
+		}
+	}
+
+	@media (max-width: 720px) {
+		.post-title { font-size: 30px; line-height: 1.15; }
+		.byline { font-size: 15.5px; }
+		.rule { margin-bottom: 32px; }
+	}
+	@media (max-width: 420px) {
+		.post-eyebrow { font-size: 11px; margin-bottom: 18px; }
+		.post-eyebrow .sep { margin: 0 6px; }
+		.post-title { font-size: 26px; }
+		.byline { font-size: 14.5px; margin-bottom: 24px; }
+		.rule { margin-bottom: 26px; }
+		.post-end { font-size: 14px; }
+	}
+
+	.post-end a:focus-visible,
+	.to-top-btn:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 3px;
+		border-radius: 3px;
+	}
 </style>

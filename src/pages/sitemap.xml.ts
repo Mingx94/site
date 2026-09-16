@@ -1,13 +1,19 @@
-import { getPosts } from "@/lib/posts";
+import { getPosts, getTags } from "@/lib/posts";
+import { showcase } from "@/data/showcase";
 import { escapeXml } from "@/lib/utils";
 import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async () => {
   const baseUrl = "https://vartifact.cc";
-  const fixed = ["", "/blog", "/about"];
+  const fixed = ["", "/blog", "/about", "/tags"];
+  if (showcase.length) fixed.push("/showcase");
   const posts = await getPosts();
   const urls = [
     ...fixed.map((path) => `  <url><loc>${baseUrl}${path}/</loc></url>`),
+    ...getTags(posts).map(
+      (tag) =>
+        `  <url><loc>${baseUrl}/tags/${escapeXml(encodeURIComponent(tag.slug))}/</loc></url>`,
+    ),
     ...posts.map(
       (post) =>
         `  <url><loc>${baseUrl}/blog/${escapeXml(post.id)}/</loc><lastmod>${(post.updated ?? post.date).slice(0, 10)}</lastmod></url>`,

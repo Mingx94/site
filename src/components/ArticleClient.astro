@@ -1,18 +1,54 @@
-<div
-  class="progress-track"
-  aria-hidden="true"
-  data-article-progress
->
-  <div class="progress"></div>
-</div>
-
-<style>
-  .progress-track {
-    position: fixed;
-    z-index: 51;
-    inset: 0 0 auto;
-    height: 0.125rem;
-    background: color-mix(in oklch, var(--border) 50%, transparent);
+<script>
+  import { copyText } from "@/lib/clipboard";
+  import { headingId } from "@/lib/headings";
+  const root = document.documentElement;
+  const scrollButton = document.querySelector<HTMLButtonElement>("#to-top-btn");
+  const hero = document.querySelector<HTMLElement>("#blog-hero");
+  if (scrollButton && hero) {
+    scrollButton.hidden = false;
+    new IntersectionObserver(entries => {
+      scrollButton.dataset.show = String(!entries[0].isIntersecting && scrollY > 0);
+    }).observe(hero);
+    scrollButton.addEventListener("click", () => window.scrollTo({ top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" }));
   }
-  .progress { height: 100%; background: var(--primary); transform-origin: left; transition: transform 75ms linear; }
-</style>
+  const progress = document.querySelector<HTMLElement>("#reading-progress");
+  if (progress) {
+    let queued = false;
+    const update = () => {
+      const max = root.scrollHeight - root.clientHeight;
+      progress.style.width = (max > 0 ? Math.max(0, Math.min(100, root.scrollTop / max * 100)) : 0) + "%";
+      queued = false;
+    };
+    const schedule = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+    update();
+    addEventListener("scroll", schedule, { passive: true });
+    addEventListener("resize", schedule, { passive: true });
+    new ResizeObserver(schedule).observe(document.body);
+  }
+  const headings = document.querySelectorAll<HTMLHeadingElement>("#article-content :is(h1,h2,h3,h4,h5,h6)");
+  const reserved = new Set(Array.from(document.querySelectorAll<HTMLElement>("[id]")).map(el => el.id));
+  for (const heading of headings) {
+    const title = heading.textContent ?? "段落";
+    if (!heading.id) heading.id = headingId(title, reserved);
+    const link = document.createElement("a");
+    link.className = "heading-anchor";
+    link.href = "#" + encodeURIComponent(heading.id);
+    link.setAttribute("aria-label", "複製段落連結：" + title);
+    link.textContent = "#";
+    link.addEventListener("click", async () => {
+      const url = new URL(location.href);
+      url.hash = heading.id;
+      if (await copyText(url.href)) {
+        link.textContent = "✓";
+        setTimeout(() => { link.textContent = "#"; }, 1500);
+      }
+    });
+    heading.insertBefore(link, heading.firstChild);
+  }
+  if (location.hash) {
+    try { document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView(); } catch {}
+  }
+  for (const block of document.querySelectorAll<HTMLElement>("#article-content pre, #article-content .emdash-table-wrapper")) {
+    if (block.scrollWidth > block.clientWidth) block.tabIndex = 0;
+  }
+</script>

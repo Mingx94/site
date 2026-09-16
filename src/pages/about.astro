@@ -1,147 +1,79 @@
 ---
-import BackToPrev from "@/components/BackToPrev.astro";
-import BackToTop from "@/components/BackToTop.astro";
-import Container from "@/components/Container.astro";
-import Link from "@/components/Link.astro";
-import config from "@/config";
 import Base from "@/layouts/Base.astro";
-
-const elsewhere = [
-  { label: "GitHub", href: config.social.github, handle: "Mingx94" },
-  { label: "LinkedIn", href: config.social.linkedin, handle: "ming-hsuan-tsai94" },
-  { label: "Bluesky", href: config.social.bluesky, handle: "vartifact.cc" },
-  { label: "X", href: config.social.twitter, handle: "mingx94" },
-].filter((item) => item.href);
-const facts = [
-  { label: "Role", value: "前端工程師" },
-  { label: "Location", value: "Taiwan" },
-  { label: "Stack", value: "React · Next.js · Astro" },
-  { label: "Also", value: "攝影、閱讀" },
-];
+import config from "@/config";
+const socials = [{ name: "GitHub", href: config.social.github }, { name: "LinkedIn", href: config.social.linkedin }, { name: "X", href: config.social.twitter }, { name: "Bluesky", href: config.social.bluesky }].filter(item => item.href);
 ---
-
 <Base title="關於 | Vartifact" description="關於 Michael Tsai — 前端工程師，Vartifact 部落格的作者。">
-  <Container>
-    <div class="about">
-      <header class="about-header">
-        <p class="eyebrow">About</p>
-        <h1>關於<span aria-hidden="true">。</span></h1>
-        <p class="introduction">
-          我是 Michael Tsai。<span>前端工程師，在台灣工作。關注效能、無障礙設計與產品細節，也用攝影和閱讀觀察世界。</span>
-        </p>
-      </header>
-
-      <section aria-labelledby="profile-title">
-        <h2 class="section-label" id="profile-title">Profile</h2>
-        <dl class="facts">
-          {facts.map(({ label, value }) => (
-            <div>
-              <dt>{label}</dt>
-              <dd>{value}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
-
-      <section class="narrative" aria-labelledby="notes-title">
-        <h2 class="section-label" id="notes-title">Notes</h2>
-        <div class="prose">
-          <p>工作上主要使用 React 與 Next.js 開發 Web 應用。這個部落格則用 Astro 與 EmDash 打造，邊探索邊實作，把新框架當作思考與整理的素材。</p>
-          <p>出門時常帶著相機。部落格裡的圖片大多是自己拍的。拍攝和寫程式有點像，都在尋找更精簡、更有力量的表達。</p>
-        </div>
-      </section>
-
-      {
-        elsewhere.length > 0 && (
-          <section aria-labelledby="elsewhere-title">
-            <h2 class="section-label" id="elsewhere-title">Elsewhere</h2>
-            <ul class="elsewhere-list" role="list">
-              {elsewhere.map((item) => (
-                <li>
-                  <Link href={item.href} external underline={false} class="elsewhere-link">
-                    <span>{item.label}</span>
-                    <small>{item.handle} ↗</small>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )
-      }
+  <section class="about" aria-labelledby="about-label">
+    <h1 class="section-label" id="about-label">關於</h1>
+    <div class="bio">
+      <p>我是 Michael Tsai。前端工程師，在台灣工作。關注效能、無障礙設計與產品細節，也用攝影和閱讀觀察世界。</p>
+      <p>工作上主要使用 React 與 Next.js 開發 Web 應用。這個部落格則用 Astro 與 EmDash 打造，邊探索邊實作，把新框架當作思考與整理的素材。</p>
+      <p>出門時常帶著相機。部落格裡的圖片大多是自己拍的。拍攝和寫程式有點像，都在尋找更精簡、更有力量的表達。</p>
+      <p>你也可以在{socials.map((item, i) => <>{i > 0 && "、"}<a href={item.href} rel="noreferrer" target="_blank">{item.name}</a></>)}找到我。</p>
     </div>
-    <div class="back-links"><BackToPrev /><BackToTop /></div>
-  </Container>
+  </section>
 </Base>
-
 <style>
-  .about { display: grid; gap: clamp(4rem, 10vw, 6rem); }
-  .eyebrow,
-  .section-label,
-  dt,
-  small {
-    color: var(--muted-foreground);
-    font-family: var(--font-sans);
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-  }
-  .eyebrow,
-  .section-label,
-  dt { text-transform: uppercase; }
-  .about-header h1 {
-    margin-top: 1rem;
-    color: var(--foreground);
-    font: 500 clamp(2.5rem, 9vw, 4.25rem)/1.05 var(--font-serif);
-    letter-spacing: -0.04em;
-  }
-  .about-header h1 span { color: var(--primary); }
-  .introduction {
-    max-width: 39rem;
-    margin-top: 1.25rem;
-    color: var(--foreground);
-    font-size: clamp(1.15rem, 3vw, 1.4rem);
-    line-height: 1.7;
-  }
-  .introduction span { color: var(--muted-foreground); }
-  .section-label { margin-bottom: 1.5rem; }
-  .facts { border-block: 1px solid var(--border); }
-  .facts div {
-    display: grid;
-    grid-template-columns: minmax(6rem, 8rem) minmax(0, 1fr);
-    align-items: baseline;
-    gap: 1.5rem;
-    padding-block: 0.9rem;
-  }
-  .facts div + div { border-top: 1px solid var(--border); }
-  dd { color: var(--foreground); overflow-wrap: anywhere; }
-  .prose {
-    max-width: 40rem;
-    color: var(--foreground);
-    font-size: 1.0625rem;
-    line-height: 1.85;
-  }
-  .prose p + p { margin-top: 1.5rem; }
-  .elsewhere-list { padding: 0; border-block: 1px solid var(--border); list-style: none; }
-  .elsewhere-list li + li { border-top: 1px solid var(--border); }
-  :global(.elsewhere-link) {
-    display: flex !important;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    padding-block: 0.9rem;
-    color: var(--foreground) !important;
-    font-size: 1.0625rem;
-  }
-  :global(.elsewhere-link:hover) { color: var(--primary) !important; }
-  small {
-    min-width: 0;
-    overflow-wrap: anywhere;
-    letter-spacing: 0;
-    text-align: right;
-  }
-  .back-links { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 3rem; }
-  @media (width < 32rem) {
-    .facts div { grid-template-columns: 5.5rem minmax(0, 1fr); gap: 1rem; }
-    small { max-width: 55%; }
-  }
+	.about {
+		margin-bottom: 64px;
+	}
+	.bio {
+		font-family: var(--font-serif);
+		font-size: 17.5px;
+		line-height: 1.75;
+		color: hsl(var(--theme-text));
+		max-width: var(--reading-width);
+	}
+	.bio :global(ul) {
+		list-style: disc;
+		list-style-position: inside;
+		margin: 0 0 28px;
+		padding: 0;
+	}
+	.bio :global(ul li) {
+		margin-bottom: 6px;
+		text-wrap: pretty;
+		word-wrap: break-word;
+		overflow-wrap: anywhere;
+	}
+	.bio :global(ul li:last-child) {
+		margin-bottom: 0;
+	}
+	.bio :global(p) {
+		margin: 0 0 22px;
+		text-wrap: pretty;
+	}
+	.bio :global(p:last-child) {
+		margin-bottom: 0;
+	}
+	.bio :global(a) {
+		color: hsl(var(--theme-text));
+		text-decoration: underline;
+		text-decoration-color: hsl(var(--theme-text) / 0.35);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+		transition: color 0.2s ease, text-decoration-color 0.2s ease;
+	}
+	.bio :global(a:hover) {
+		color: hsl(var(--theme-accent));
+		text-decoration-color: hsl(var(--theme-accent));
+	}
+	.bio :global(a:focus-visible) {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 3px;
+		border-radius: 3px;
+	}
+
+	@media (max-width: 720px) {
+		.bio {
+			font-size: 17px;
+			line-height: 1.7;
+		}
+	}
+	@media (max-width: 420px) {
+		.bio {
+			font-size: 16.5px;
+		}
+	}
 </style>

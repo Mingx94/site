@@ -1,328 +1,67 @@
 ---
-import BackToTop from "@/components/BackToTop.astro";
-import Container from "@/components/Container.astro";
-import FormattedDate from "@/components/FormattedDate.astro";
+import PostList from "@/components/blog/PostList.astro";
 import { getPosts } from "@/lib/posts";
 import Base from "@/layouts/Base.astro";
-
-const allPosts = await getPosts();
-const posts = allPosts.reduce<Record<string, typeof allPosts>>((groups, post) => {
-  const year = String(new Date(post.date).getFullYear());
-  (groups[year] ??= []).push(post);
-  return groups;
-}, {});
-const years = Object.keys(posts).toSorted((a, b) => Number(b) - Number(a));
-const normalizeSearch = (value: string) =>
-  value.trim().normalize("NFKC").toLocaleLowerCase("zh-TW");
+const posts = await getPosts();
 ---
-
-<Base title="文章 | Vartifact" description="技術隨筆、閱讀筆記，以及其他片段。">
-  <Container>
-    <div class="archive">
-      <header class="archive-header">
-        <p class="eyebrow">Archive · {allPosts.length} {allPosts.length === 1 ? "entry" : "entries"}</p>
-        <h1>文章<span aria-hidden="true">。</span></h1>
-        <p>技術隨筆、閱讀筆記，以及其他片段。這裡是我把想清楚的東西寫下來的地方。</p>
-      </header>
-
-      {
-        allPosts.length > 0 ? (
-          <>
-            <search class="search" aria-label="文章搜尋">
-              <label for="blog-search" class="visually-hidden">搜尋文章</label>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="11" cy="11" r="6.5"></circle>
-                <path d="m16 16 4 4"></path>
-              </svg>
-              <input
-                id="blog-search"
-                type="search"
-                placeholder="搜尋文章"
-                maxlength="100"
-                enterkeyhint="search"
-                aria-controls="blog-results"
-              />
-              <span id="search-status" class="result-count" data-search-status hidden></span>
-              <span class="visually-hidden" role="status" aria-atomic="true" data-search-announcement></span>
-            </search>
-
-            <div id="blog-results">
-              <div class="years">
-                {years.map((year) => (
-                  <section>
-                    <header class="year-head">
-                      <h2>{year}</h2>
-                      <span>{posts[year]!.length} 篇</span>
-                    </header>
-                    <ol class="post-list" role="list">
-                      {posts[year]!.map((post) => (
-                        <li data-search-text={normalizeSearch(`${post.title} ${post.description ?? ""}`)}>
-                          <a href={`/blog/${post.id}`} class="post-link">
-                            <div class="post-copy">
-                              <h3>{post.title}</h3>
-                              {post.description && <p>{post.description}</p>}
-                            </div>
-                            <div class="post-meta">
-                              <FormattedDate date={post.date} />
-                              <span>{post.readingTime} 分鐘</span>
-                            </div>
-                          </a>
-                        </li>
-                      ))}
-                    </ol>
-                  </section>
-                ))}
-              </div>
-              <div class="empty" data-search-empty hidden>
-                <p>找不到「<bdi data-search-query></bdi>」相關文章。</p>
-                <button type="button" data-search-clear>清除搜尋</button>
-              </div>
-            </div>
-          </>
-        ) : (
-          <section class="empty archive-empty" aria-labelledby="archive-empty-title">
-            <h2 id="archive-empty-title">目前沒有公開文章</h2>
-            <p>新的文章會出現在這裡。</p>
-            <a href="/">回到首頁 →</a>
-          </section>
-        )
-      }
-    </div>
-    <div class="back-top"><BackToTop /></div>
-  </Container>
-
-  <script>
-    const input = document.querySelector<HTMLInputElement>("#blog-search");
-    const results = document.querySelector<HTMLElement>("#blog-results");
-    const status = document.querySelector<HTMLElement>("[data-search-status]");
-    const announcement = document.querySelector<HTMLElement>("[data-search-announcement]");
-    const empty = document.querySelector<HTMLElement>("[data-search-empty]");
-    const displayQuery = document.querySelector<HTMLElement>("[data-search-query]");
-    const clearButton = document.querySelector<HTMLButtonElement>("[data-search-clear]");
-
-    if (input && results && status && empty) {
-      let composing = false;
-      let announcementTimer: ReturnType<typeof setTimeout> | undefined;
-      const sections = Array.from(results.querySelectorAll<HTMLElement>(".years > section"));
-      const normalize = (value: string) => value.trim().normalize("NFKC").toLocaleLowerCase("zh-TW");
-      const filterPosts = () => {
-        const query = normalize(input.value);
-        let matches = 0;
-        for (const section of sections) {
-          let sectionMatches = 0;
-          for (const item of section.querySelectorAll<HTMLElement>(".post-list > li")) {
-            const match = query === "" || (item.dataset.searchText ?? "").includes(query);
-            item.hidden = !match;
-            if (match) sectionMatches += 1;
-          }
-          section.hidden = query !== "" && sectionMatches === 0;
-          matches += sectionMatches;
-        }
-        const searching = query !== "";
-        status.hidden = !searching;
-        status.textContent = `找到 ${matches} 篇文章`;
-        if (searching) input.setAttribute("aria-describedby", "search-status");
-        else input.removeAttribute("aria-describedby");
-        empty.hidden = !searching || matches > 0;
-        if (displayQuery) displayQuery.textContent = input.value.trim();
-        clearTimeout(announcementTimer);
-        announcementTimer = setTimeout(() => {
-          if (announcement) announcement.textContent = searching
-            ? `搜尋「${input.value.trim()}」，找到 ${matches} 篇文章`
-            : `顯示全部 ${matches} 篇文章`;
-        }, 300);
-      };
-      input.addEventListener("compositionstart", () => {
-        composing = true;
-        clearTimeout(announcementTimer);
-      });
-      input.addEventListener("compositionend", () => {
-        composing = false;
-        filterPosts();
-      });
-      input.addEventListener("input", (event) => {
-        if (!composing && !event.isComposing) filterPosts();
-      });
-      clearButton?.addEventListener("click", () => {
-        input.value = "";
-        filterPosts();
-        input.focus();
-      });
-    }
-  </script>
+<Base title="文章 | Vartifact" description="閱讀 Vartifact 的文章，記錄程式、設計與生活。">
+  <section class="writing" aria-labelledby="writing-label">
+    <h1 class="section-label" id="writing-label">文章 · {posts.length} 篇</h1>
+    {posts.length ? <div class="timeline"><PostList posts={posts} /></div> : <p class="empty-state">目前沒有公開文章。</p>}
+  </section>
 </Base>
-
 <style>
-  .archive { padding-block-end: 1rem; }
-  .archive-header { margin-bottom: clamp(3.5rem, 9vw, 5.5rem); }
-  .eyebrow {
-    color: var(--muted-foreground);
-    font-family: var(--font-sans);
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-  .archive-header h1 {
-    margin-top: 1rem;
-    color: var(--foreground);
-    font: 500 clamp(2.5rem, 9vw, 4.25rem)/1.05 var(--font-serif);
-    letter-spacing: -0.04em;
-  }
-  .archive-header h1 span { color: var(--primary); }
-  .archive-header > p:last-child {
-    max-width: 36rem;
-    margin-top: 1.25rem;
-    color: var(--muted-foreground);
-    line-height: 1.75;
-  }
-  .search {
-    position: relative;
-    display: block;
-    margin-bottom: 3.5rem;
-    border-block: 1px solid var(--input);
-  }
-  .search:focus-within { border-color: var(--primary); }
-  .search svg {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 1rem;
-    height: 1rem;
-    fill: none;
-    stroke: var(--muted-foreground);
-    stroke-linecap: round;
-    stroke-width: 1.75;
-    transform: translateY(-50%);
-    pointer-events: none;
-  }
-  .search input {
-    width: 100%;
-    min-height: 3.5rem;
-    padding: 1rem 6rem 1rem 1.75rem;
-    border: 0;
-    background: transparent;
-    outline: none;
-    font-family: var(--font-sans);
-    font-size: 0.9375rem;
-  }
-  .search input::placeholder { color: var(--muted-foreground); opacity: 0.75; }
-  .result-count {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    color: var(--muted-foreground);
-    font-family: var(--font-sans);
-    font-size: 0.6875rem;
-    transform: translateY(-50%);
-  }
-  .result-count[hidden] { display: none; }
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    border: 0;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-  .years { display: grid; gap: 4rem; }
-  .year-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .year-head h2 {
-    font: 500 1.125rem/1.3 var(--font-serif);
-    letter-spacing: -0.015em;
-  }
-  .year-head span {
-    color: var(--muted-foreground);
-    font-family: var(--font-sans);
-    font-size: 0.6875rem;
-  }
-  .post-list { padding: 0; list-style: none; }
-  .post-list li + li { border-top: 1px solid var(--border); }
-  .post-link {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 1rem 2rem;
-    align-items: start;
-    padding-block: 1.35rem;
-    text-decoration: none;
-  }
-  .post-copy h3 {
-    color: var(--foreground);
-    font: 500 clamp(1.15rem, 3vw, 1.4rem)/1.35 var(--font-serif);
-    letter-spacing: -0.018em;
-    text-wrap: balance;
-    transition: color 180ms ease;
-  }
-  .post-link:hover h3 { color: var(--primary); }
-  .post-copy p {
-    display: -webkit-box;
-    max-width: 35rem;
-    margin-top: 0.4rem;
-    overflow: hidden;
-    color: var(--muted-foreground);
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    overflow-wrap: anywhere;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-  }
-  .post-meta {
-    display: grid;
-    gap: 0.25rem;
-    color: var(--muted-foreground);
-    font-family: var(--font-sans);
-    font-size: 0.6875rem;
-    font-variant-numeric: tabular-nums;
-    text-align: right;
-    white-space: nowrap;
-  }
-  .empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    padding-block: 4rem;
-    color: var(--muted-foreground);
-    text-align: center;
-  }
-  .empty[hidden] { display: none; }
-  .empty button,
-  .empty a {
-    min-height: 2.75rem;
-    padding-inline: 0.25rem;
-    border: 0;
-    border-bottom: 1px solid var(--primary);
-    background: transparent;
-    color: var(--foreground);
-    font-family: var(--font-sans);
-    font-size: 0.8125rem;
-    line-height: 2.75rem;
-    text-decoration: none;
-  }
-  .empty button:hover,
-  .empty a:hover { color: var(--primary); }
-  .archive-empty { border-block: 1px solid var(--border); }
-  .archive-empty h2 {
-    font: 500 1.75rem/1.25 var(--font-serif);
-  }
-  .empty bdi { overflow-wrap: anywhere; }
-  .back-top { display: flex; margin-top: 3rem; }
-  @media (width < 36rem) {
-    .search input { padding-right: 1rem; }
-    .result-count { position: static; display: block; padding-bottom: 0.75rem; text-align: right; transform: none; }
-    .post-link { grid-template-columns: 1fr; gap: 0.65rem; }
-    .post-meta { display: flex; gap: 0.75rem; text-align: left; }
-  }
+	.writing {
+		margin-bottom: 96px;
+	}
+
+	.pagination {
+		grid-column: 2;
+		margin-top: 8px;
+		display: flex;
+		gap: 24px;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.pag-link {
+		display: inline-block;
+		padding: 8px 4px;
+		font-family: var(--font-mono);
+		font-size: 11.5px;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: hsl(var(--theme-text-muted));
+		text-decoration: underline;
+		text-decoration-color: hsl(var(--theme-text) / 0.35);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 3px;
+		transition: color 0.2s ease, text-decoration-color 0.2s ease;
+	}
+	.pag-link.prev {
+		margin-right: auto;
+	}
+	.pag-link.next {
+		margin-left: auto;
+	}
+	.pag-link:hover {
+		color: hsl(var(--theme-accent));
+		text-decoration-color: hsl(var(--theme-accent));
+	}
+	.pag-link:focus-visible {
+		outline: 2px solid hsl(var(--theme-accent));
+		outline-offset: 3px;
+		border-radius: 3px;
+	}
+
+	@media (max-width: 720px) {
+		.pagination {
+			margin-top: 16px;
+		}
+	}
+
+	@media (max-width: 420px) {
+		.writing {
+			margin-bottom: 64px;
+		}
+	}
 </style>

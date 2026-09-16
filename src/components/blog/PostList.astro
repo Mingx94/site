@@ -1,0 +1,39 @@
+---
+import type { Post } from "@/lib/posts";
+
+import { formatRailDate } from "@/lib/date";
+
+
+interface Props {
+	posts: Post[];
+	/** Seeds the `--i` stagger-animation index (e.g. when rows follow a featured post). */
+	startIndex?: number;
+	/** Heading tag for each post title. */
+	headingLevel?: "h2" | "h3";
+}
+
+const { posts, startIndex = 0, headingLevel = "h2" } = Astro.props;
+const Heading = headingLevel;
+---
+
+{
+	posts.map((p, idx) => (
+		<a
+			class="post"
+			data-astro-prefetch
+			href={`/blog/${encodeURIComponent(p.id)}`}
+			style={`--i: ${startIndex + idx}`}
+		>
+			<div class="post-rail">
+				<time class="post-date" datetime={p.date}>
+					{formatRailDate(p.date)}
+				</time>
+				<span class="post-dot" aria-hidden="true" />
+			</div>
+			<div class="post-body">
+				<Heading class="post-title">{p.title}</Heading>
+				<p class="post-preview">{p.description}</p>
+			</div>
+		</a>
+	))
+}

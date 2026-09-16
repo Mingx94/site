@@ -1,0 +1,19 @@
+---
+import { Code } from "astro-expressive-code/components";
+
+interface Props {
+  node: {
+    code: string;
+    language?: string;
+    filename?: string;
+  };
+}
+
+const { node } = Astro.props;
+const diagram = node.language?.trim().toLowerCase() === "mermaid";
+---
+
+{node.code?.trim() && (diagram
+  ? <pre class="mermaid">{node.code}</pre>
+  : <Code code={node.code} lang={node.language || "text"} title={node.filename} locale="zh-TW" />
+)}

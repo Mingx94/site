@@ -1,5 +1,5 @@
 import { getEmDashCollection, getEmDashEntry } from "emdash";
-import type { ContentSeo } from "emdash";
+import type { ContentSeo, TaxonomyTerm } from "emdash";
 import type { PortableTextBlock } from "emdash/client";
 import { getLocalCoverSource } from "./coverVariants";
 import { getReadingTime } from "./readingTime";
@@ -18,6 +18,12 @@ export interface Post {
   seo?: ContentSeo;
   content: PortableTextBlock[];
   draft?: boolean;
+  tags: PostTag[];
+}
+
+export interface PostTag {
+  slug: string;
+  name: string;
 }
 
 type EntryData = {
@@ -29,6 +35,7 @@ type EntryData = {
   publishedAt?: Date | string | null;
   updatedAt?: Date | string | null;
   status?: string;
+  terms?: Record<string, TaxonomyTerm[]>;
 };
 
 function media(
@@ -67,7 +74,28 @@ function toPost(entry: { id: string; data: unknown }): Post {
     seo: data.seo,
     content,
     draft: data.status === "draft",
+    tags: (data.terms?.tag ?? []).map((term) => ({
+      slug: term.slug,
+      name: term.label,
+    })),
   };
+}
+
+export function getTags(posts: Post[]): (PostTag & { count: number })[] {
+  const tags = new Map<string, PostTag & { count: number }>();
+  for (const post of posts) {
+    const seen = new Set<string>();
+    for (const tag of post.tags) {
+      if (seen.has(tag.slug)) continue;
+      seen.add(tag.slug);
+      const existing = tags.get(tag.slug);
+      if (existing) existing.count += 1;
+      else tags.set(tag.slug, { ...tag, count: 1 });
+    }
+  }
+  return [...tags.values()].sort((a, b) =>
+    a.name.localeCompare(b.name, "zh-TW"),
+  );
 }
 
 export async function getPosts(): Promise<Post[]> {

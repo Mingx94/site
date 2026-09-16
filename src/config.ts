@@ -7,7 +7,7 @@ export default {
   },
 
   settings: {
-    num_posts_on_homepage: 3,
+    num_posts_on_homepage: 5,
   },
 
   metadata: {
