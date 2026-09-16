@@ -5,7 +5,6 @@ import config from "@/config";
 import "@/styles/tokens.css";
 import "@/styles/reset.css";
 import "@/styles/global.css";
-import iansuiPackage from "@fontsource/iansui/package.json";
 
 interface Props {
   title?: string;
@@ -27,11 +26,10 @@ const {
 const siteUrl = Astro.site ?? Astro.url;
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
 const imageUrl = new URL(image, siteUrl).href;
-const fontAssetsBase = `/fonts/${iansuiPackage.version}`;
 ---
 
 <!doctype html>
-<html lang="zh-Hant" id="top" data-font-assets={fontAssetsBase}>
+<html lang="zh-Hant" id="top">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -58,6 +56,8 @@ const fontAssetsBase = `/fonts/${iansuiPackage.version}`;
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={imageUrl} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <script is:inline>
       try {
         const theme = localStorage.getItem("theme");
@@ -69,20 +69,12 @@ const fontAssetsBase = `/fonts/${iansuiPackage.version}`;
         const font = localStorage.getItem("font") === "sans" ? "sans" : "serif";
         document.documentElement.classList.toggle("reading-sans", font === "sans");
 
-        const fontName = font === "sans" ? "huninn" : "iansui";
-        const fontPreload = document.createElement("link");
-        fontPreload.rel = "preload";
-        fontPreload.as = "font";
-        fontPreload.type = "font/woff2";
-        fontPreload.crossOrigin = "anonymous";
-        fontPreload.href = `${document.documentElement.dataset.fontAssets}/${fontName}.woff2`;
-        fontPreload.dataset.readingFontPreload = font;
-        document.head.append(fontPreload);
-
+        const fontFamily = font === "sans" ? "Huninn" : "Iansui";
         const fontStylesheet = document.createElement("link");
         fontStylesheet.rel = "preload";
         fontStylesheet.as = "style";
-        fontStylesheet.href = `${document.documentElement.dataset.fontAssets}/${fontName}.css`;
+        fontStylesheet.fetchPriority = "low";
+        fontStylesheet.href = `https://fonts.googleapis.com/css2?family=${fontFamily}&display=swap`;
         fontStylesheet.dataset.readingFont = font;
         fontStylesheet.addEventListener("load", () => {
           fontStylesheet.rel = "stylesheet";
@@ -91,13 +83,14 @@ const fontAssetsBase = `/fonts/${iansuiPackage.version}`;
         document.head.append(fontStylesheet);
       } catch {}
     </script>
-    <noscript><link rel="stylesheet" href={`${fontAssetsBase}/iansui.css`} /></noscript>
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Iansui&display=swap" /></noscript>
   </head>
   <body>
     <a href="#main" class="skip-link">跳到主要內容</a>
     <Header pathname={Astro.url.pathname} />
     <main id="main" tabindex="-1"><slot /></main>
     <Footer />
+    <a href="/_emdash/admin" class="admin-shortcut" aria-label="開啟管理後台"></a>
     <script>
       import { toggleTheme } from "@/lib/theme";
 
@@ -152,9 +145,9 @@ const fontAssetsBase = `/fonts/${iansuiPackage.version}`;
             link.addEventListener("load", finish, { once: true });
             link.addEventListener("error", finish, { once: true });
             if (!existing) {
-              const fontName = nextFont === "sans" ? "huninn" : "iansui";
+              const fontFamily = nextFont === "sans" ? "Huninn" : "Iansui";
               link.rel = "stylesheet";
-              link.href = `${document.documentElement.dataset.fontAssets}/${fontName}.css`;
+              link.href = `https://fonts.googleapis.com/css2?family=${fontFamily}&display=swap`;
               link.dataset.readingFont = nextFont;
               document.head.appendChild(link);
             }
@@ -234,4 +227,14 @@ const fontAssetsBase = `/fonts/${iansuiPackage.version}`;
     transform: translateY(-150%);
   }
   .skip-link:focus { transform: none; }
+  .admin-shortcut {
+    position: fixed;
+    z-index: 100;
+    bottom: 0;
+    left: 0;
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: transparent;
+  }
 </style>
