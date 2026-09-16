@@ -1,5 +1,6 @@
 export default {
   site: {
+    name: "Vartifact",
     title: "Vartifact | 部落格",
     favicon: "/favicon.svg",
     favicon_dark: "/favicon-dark.svg",

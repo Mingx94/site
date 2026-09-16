@@ -1,4 +1,5 @@
 import { getEmDashCollection, getEmDashEntry } from "emdash";
+import type { ContentSeo } from "emdash";
 import type { PortableTextBlock } from "emdash/client";
 import { getLocalCoverSource } from "./coverVariants";
 import { getReadingTime } from "./readingTime";
@@ -14,6 +15,7 @@ export interface Post {
   coverAlt?: string;
   coverMediaId?: string;
   coverStorageKey?: string;
+  seo?: ContentSeo;
   content: PortableTextBlock[];
   draft?: boolean;
 }
@@ -22,6 +24,7 @@ type EntryData = {
   title?: string;
   excerpt?: string;
   featured_image?: unknown;
+  seo?: ContentSeo;
   content?: PortableTextBlock[];
   publishedAt?: Date | string | null;
   updatedAt?: Date | string | null;
@@ -61,6 +64,7 @@ function toPost(entry: { id: string; data: unknown }): Post {
     updated: data.updatedAt ? iso(data.updatedAt) : undefined,
     readingTime: getReadingTime(content),
     ...media(data.featured_image),
+    seo: data.seo,
     content,
     draft: data.status === "draft",
   };

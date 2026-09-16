@@ -10,7 +10,10 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  canonical?: string;
   noindex?: boolean;
+  ogTitle?: string;
+  ogDescription?: string;
   type?: "website" | "article";
   markdown?: string;
 }
@@ -19,12 +22,15 @@ const {
   title = config.site.title,
   description = config.metadata.meta_description,
   image = "/og.jpg",
+  canonical: canonicalOverride,
   noindex = false,
+  ogTitle = title,
+  ogDescription = description,
   type = "website",
   markdown,
 } = Astro.props;
 const siteUrl = Astro.site ?? Astro.url;
-const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const canonical = new URL(canonicalOverride ?? Astro.url.pathname, siteUrl).href;
 const imageUrl = new URL(image, siteUrl).href;
 ---
 
@@ -45,16 +51,16 @@ const imageUrl = new URL(image, siteUrl).href;
     <link rel="sitemap" href="/sitemap.xml" />
     {markdown && <link rel="alternate" type="text/markdown" href={markdown} />}
     <meta property="og:type" content={type} />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={ogTitle} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={imageUrl} />
-    <meta property="og:description" content={description} />
-    <meta property="og:site_name" content={config.site.title} />
+    <meta property="og:description" content={ogDescription} />
+    <meta property="og:site_name" content={config.site.name} />
     <meta property="article:author" content={config.metadata.meta_author} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:creator" content={config.metadata.meta_author} />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={ogTitle} />
+    <meta name="twitter:description" content={ogDescription} />
     <meta name="twitter:image" content={imageUrl} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

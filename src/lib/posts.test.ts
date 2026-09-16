@@ -36,4 +36,26 @@ describe("getPost", () => {
       coverStorageKey: "cover.jpg",
     });
   });
+
+  it("preserves EmDash SEO settings", async () => {
+    const seo = {
+      title: "SEO title",
+      description: "SEO description",
+      image: "seo-image-id",
+      canonical: "https://example.com/canonical",
+      noIndex: true,
+    };
+    mocks.getEmDashEntry.mockResolvedValue({
+      entry: {
+        id: "article",
+        data: {
+          title: "Article title",
+          seo,
+        },
+      },
+      error: null,
+    });
+
+    await expect(getPost("article")).resolves.toMatchObject({ seo });
+  });
 });

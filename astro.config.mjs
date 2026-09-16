@@ -12,6 +12,11 @@ const siteUrl = "https://vartifact.cc";
 export default defineConfig({
   site: siteUrl,
   output: "server",
+  i18n: {
+    defaultLocale: "zh-TW",
+    locales: ["zh-TW"],
+    routing: "manual",
+  },
   build: {
     inlineStylesheets: "always",
   },
