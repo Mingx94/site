@@ -10,10 +10,9 @@ import { PortableText } from "emdash/ui";
 
 const slug = Astro.params.slug;
 if (!slug) return Astro.redirect("/404");
-const post = await getPost(slug);
+const [post, sortedPosts] = await Promise.all([getPost(slug), getPosts()]);
 if (!post) return Astro.redirect("/404");
 
-const sortedPosts = await getPosts();
 const currentIndex = sortedPosts.findIndex((item) => item.id === post.id);
 const newerPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : undefined;
 const olderPost =

@@ -21,6 +21,13 @@ export default defineConfig({
   routeRules: {
     "/": { maxAge: 300, swr: 60, tags: ["posts"] },
     "/blog": { maxAge: 300, swr: 60, tags: ["posts"] },
+    "/blog/[slug]": { maxAge: 300, swr: 3600, tags: ["posts"] },
+    "/blog/[slug].md": { maxAge: 300, swr: 3600, tags: ["posts"] },
+    "/_image": {
+      maxAge: 31536000,
+      swr: 86400,
+      tags: ["images"],
+    },
   },
   integrations: [
     react(),
