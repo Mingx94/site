@@ -21,7 +21,6 @@
     color: var(--foreground);
     font-family: var(--font-serif);
     font-size: 1.0625rem;
-    font-size-adjust: from-font;
     line-height: 1.65;
     font-kerning: normal;
     letter-spacing: var(--tracking-normal);
