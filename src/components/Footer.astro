@@ -9,11 +9,7 @@ import Link from "./Link.astro";
     <div class="footer-inner">
       <span class="copyright">{config.params.copyright}</span>
       <nav class="links" aria-label="頁尾導覽">
-        <Link href="/blog" underline={false} class="footer-link">Writing</Link>
-        <span class="separator" aria-hidden="true">·</span>
         <Link href="/rss.xml" external underline={false} class="footer-link" aria-label="RSS 訂閱">RSS</Link>
-        <span class="separator" aria-hidden="true">·</span>
-        <Link href="/about" underline={false} class="footer-link">About</Link>
       </nav>
     </div>
   </Container>
@@ -35,7 +31,6 @@ import Link from "./Link.astro";
   :global(.footer-link) { color: var(--muted-foreground) !important; }
   :global(.footer-link:hover) { color: var(--primary) !important; }
   .copyright { color: var(--muted-foreground); font: 400 0.78125rem var(--font-sans); }
-  .separator { color: var(--border); }
   @media (width < 48rem), (pointer: coarse) {
     :global(.footer-link) { display: inline-flex !important; min-width: 2.75rem; min-height: 2.75rem; align-items: center; justify-content: center; }
   }
