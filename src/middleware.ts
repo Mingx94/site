@@ -2,6 +2,7 @@ import { postToMarkdown } from "@/lib/markdown";
 import { getPost } from "@/lib/posts";
 import { defineMiddleware } from "astro:middleware";
 import { prefersMarkdown } from "./lib/accept";
+import { invalidateTaxonomyPages } from "./lib/pageCache";
 
 const CSP = [
   "default-src 'self'",
@@ -51,6 +52,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
   } else {
     response = await next();
   }
+
+  await invalidateTaxonomyPages(request, response, cache);
 
   if (response.status >= 400) {
     cache.set(false);

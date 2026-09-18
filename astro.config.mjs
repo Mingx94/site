@@ -49,7 +49,8 @@ export default defineConfig({
     expressiveCode(),
     react(),
     emdash({
-      database: d1({ binding: "DB", session: "auto" }),
+      // EmDash's experimental batching reduces D1 round trips within each request.
+      database: d1({ binding: "DB", session: "auto", coalesce: true }),
       storage: r2({ binding: "MEDIA" }),
       siteUrl,
       plugins: [coverVariants()],
