@@ -411,7 +411,7 @@ ul.work-list a:focus-visible {
   }
 }
 
-/* Stagger entry: items set --i inline; nth-child rules cover the rest. */
+/* Keep entry motion brief, including long lists and article content. */
 @media (prefers-reduced-motion: no-preference) {
   @keyframes intro-fade-up {
     from {
@@ -439,8 +439,8 @@ ul.work-list a:focus-visible {
   .post-main > .share,
   .post-main > .post-pager,
   .post-main > .comments {
-    animation: intro-fade-up 380ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
-    animation-delay: calc(var(--i, 0) * 55ms);
+    animation: intro-fade-up 180ms cubic-bezier(0.2, 0.6, 0.2, 1) both;
+    animation-delay: min(calc(var(--i, 0) * 20ms), 60ms);
   }
   .hero > *:nth-child(1) {
     --i: 0;

@@ -9,7 +9,7 @@ const posts = allPosts.filter(post => post.tags.some(item => item.slug === tag.s
 ---
 <Base title={`#${tag.name} | Vartifact`} description={`標籤「${tag.name}」的所有文章。`}>
   <section class="tag-archive" aria-labelledby="tag-label">
-    <nav class="crumbs" aria-label="導覽路徑"><a href="/tags">標籤</a><span class="sep" aria-hidden="true">/</span><span class="current" aria-current="page">#{tag.name}</span></nav>
+    <nav class="crumbs" aria-label="導覽路徑"><a data-astro-prefetch href="/tags">標籤</a><span class="sep" aria-hidden="true">/</span><span class="current" aria-current="page">#{tag.name}</span></nav>
     <h1 class="section-label" id="tag-label">#{tag.name} · {posts.length} 篇文章</h1>
     <div class="timeline"><PostList posts={posts} /></div>
   </section>

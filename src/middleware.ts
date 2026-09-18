@@ -28,7 +28,8 @@ const SECURITY_HEADERS: Record<string, string> = {
 
 const BLOG_POST_PATH = /^\/blog\/([^/]+?)\/?$/;
 
-export const onRequest = defineMiddleware(async ({ request, url }, next) => {
+export const onRequest = defineMiddleware(async (context, next) => {
+  const { request, url, cache } = context;
   const matchedSlug = BLOG_POST_PATH.exec(url.pathname)?.[1];
   const slug = matchedSlug?.endsWith(".md") ? undefined : matchedSlug;
   let response: Response;
@@ -43,9 +44,17 @@ export const onRequest = defineMiddleware(async ({ request, url }, next) => {
             Vary: "Accept",
           },
         })
-      : new Response("Not found", { status: 404, headers: { Vary: "Accept" } });
+      : new Response("Not found", {
+          status: 404,
+          headers: { Vary: "Accept" },
+        });
   } else {
     response = await next();
+  }
+
+  if (response.status >= 400) {
+    cache.set(false);
+    response.headers.set("Cache-Control", "no-store");
   }
 
   if (slug && response.headers.get("Content-Type")?.startsWith("text/html")) {

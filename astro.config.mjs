@@ -18,7 +18,12 @@ export default defineConfig({
     routing: "manual",
   },
   build: {
+    format: "file",
     inlineStylesheets: "always",
+  },
+  prefetch: {
+    prefetchAll: false,
+    defaultStrategy: "hover",
   },
   adapter: cloudflare(),
   cache: {
@@ -29,6 +34,11 @@ export default defineConfig({
     "/blog": { maxAge: 300, swr: 60, tags: ["posts"] },
     "/blog/[slug]": { maxAge: 300, swr: 3600, tags: ["posts"] },
     "/blog/[slug].md": { maxAge: 300, swr: 3600, tags: ["posts"] },
+    "/tags": { maxAge: 300, swr: 60, tags: ["posts"] },
+    "/tags/[tag]": { maxAge: 300, swr: 60, tags: ["posts"] },
+    "/rss.xml": { maxAge: 300, swr: 60, tags: ["posts"] },
+    "/sitemap.xml": { maxAge: 300, swr: 60, tags: ["posts"] },
+    "/llms.txt": { maxAge: 300, swr: 60, tags: ["posts"] },
     "/_image": {
       maxAge: 31536000,
       swr: 86400,

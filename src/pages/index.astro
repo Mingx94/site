@@ -25,14 +25,14 @@ const socials = [{ name: "GitHub", href: config.social.github }, { name: "Linked
         <div class="post-rail"><time class="post-date" datetime={featured.date}>{formatRailDate(featured.date)}</time><span class="post-dot" aria-hidden="true" /></div>
         <div class="post-body">
           <div class="post-stamp">最新文章 · {formatStampDate(featured.date)}</div>
-          <h3 class="post-title"><a class="post-cardlink" href={`/blog/${encodeURIComponent(featured.id)}`}>{featured.title}</a></h3>
+          <h3 class="post-title"><a class="post-cardlink" data-astro-prefetch href={`/blog/${encodeURIComponent(featured.id)}`}>{featured.title}</a></h3>
           {featured.description && <p class="post-excerpt">{featured.description}</p>}
-          {!!featured.tags.length && <div class="post-meta">{featured.tags.map((tag, i) => <>{i > 0 && <span class="dot">·</span>}<a class="tag" href={`/tags/${encodeURIComponent(tag.slug)}`}>{tag.name}</a></>)}</div>}
+          {!!featured.tags.length && <div class="post-meta">{featured.tags.map((tag, i) => <>{i > 0 && <span class="dot">·</span>}<a class="tag" data-astro-prefetch href={`/tags/${encodeURIComponent(tag.slug)}`}>{tag.name}</a></>)}</div>}
         </div>
       </div>
       <PostList posts={rest} startIndex={1} headingLevel="h3" />
-      <div class="archive-link" style={`--i: ${rest.length + 1}`}><a href="/blog">查看全部 {allPosts.length} 篇文章 →</a></div>
-    </div> : <div class="empty-state"><p>目前沒有公開文章。</p><a href="/about">關於 Michael →</a></div>}
+      <div class="archive-link" style={`--i: ${rest.length + 1}`}><a data-astro-prefetch href="/blog">查看全部 {allPosts.length} 篇文章 →</a></div>
+    </div> : <div class="empty-state"><p>目前沒有公開文章。</p><a data-astro-prefetch href="/about">關於 Michael →</a></div>}
   </section>
   {showcase.length > 0 && <section class="work" aria-labelledby="work-label">
     <h2 class="section-label" id="work-label">作品</h2>

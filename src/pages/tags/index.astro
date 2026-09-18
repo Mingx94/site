@@ -6,8 +6,8 @@ const tags = getTags(await getPosts());
 <Base title="標籤 | Vartifact" description="依照標籤瀏覽 Vartifact 的文章。">
   <section class="tags-index" aria-labelledby="tags-label">
     <h1 class="section-label" id="tags-label">標籤 · {tags.length}</h1>
-    <ul class="tag-run">{tags.map(tag => <li><a href={`/tags/${encodeURIComponent(tag.slug)}`}><span class="name">{tag.name}</span><span class="count">{tag.count}</span></a></li>)}</ul>
-    {!tags.length && <p class="empty-state">目前沒有標籤。<a href="/blog">瀏覽所有文章 →</a></p>}
+    <ul class="tag-run">{tags.map(tag => <li><a data-astro-prefetch href={`/tags/${encodeURIComponent(tag.slug)}`}><span class="name">{tag.name}</span><span class="count">{tag.count}</span></a></li>)}</ul>
+    {!tags.length && <p class="empty-state">目前沒有標籤。<a data-astro-prefetch href="/blog">瀏覽所有文章 →</a></p>}
   </section>
 </Base>
 <style>

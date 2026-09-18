@@ -43,7 +43,7 @@ function imageResponse(
   return new Response(body, { headers });
 }
 
-export const GET: APIRoute = async ({ params, request }) => {
+const getCover: APIRoute = async ({ params, request }) => {
   const contentId = params.contentId ?? "";
   const mediaId = params.mediaId ?? "";
   const width = Number(params.width);
@@ -140,4 +140,16 @@ export const GET: APIRoute = async ({ params, request }) => {
     );
     return fallbackResponse(request, sourceKey);
   }
+};
+
+export const GET: APIRoute = async (context) => {
+  const response = await getCover(context);
+  // Opt in only after delivery succeeds; a missing or failed variant can recover.
+  if (response.status === 200) {
+    context.cache.set({ maxAge: 31536000, swr: 86400, tags: ["images"] });
+  } else {
+    context.cache.set(false);
+    response.headers.set("Cache-Control", "no-store");
+  }
+  return response;
 };

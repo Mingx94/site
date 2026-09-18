@@ -1,6 +1,7 @@
 ---
 import Base from "@/layouts/Base.astro";
 import config from "@/config";
+export const prerender = true;
 const socials = [{ name: "GitHub", href: config.social.github }, { name: "LinkedIn", href: config.social.linkedin }, { name: "X", href: config.social.twitter }, { name: "Bluesky", href: config.social.bluesky }].filter(item => item.href);
 ---
 <Base title="關於 | Vartifact" description="關於 Michael Tsai — 前端工程師，Vartifact 部落格的作者。">
