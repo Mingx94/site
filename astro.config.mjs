@@ -6,6 +6,7 @@ import { coverVariants } from "./src/plugins/cover-variants.config.ts";
 import { defineConfig } from "astro/config";
 import emdash from "emdash/astro";
 import expressiveCode from "astro-expressive-code";
+import { fileURLToPath } from "node:url";
 
 const siteUrl = "https://vartifact.cc";
 
@@ -57,6 +58,16 @@ export default defineConfig({
     }),
   ],
   vite: {
+    resolve: {
+      alias: [
+        {
+          find: /^shiki\/wasm$/,
+          replacement: fileURLToPath(
+            new URL("./src/lib/shikiWasm.ts", import.meta.url),
+          ),
+        },
+      ],
+    },
     plugins: [
       {
         name: "sienna-worker-dependencies",

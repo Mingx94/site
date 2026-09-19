@@ -6,8 +6,8 @@ pluginFramesTexts.addLocale("zh-TW", {
   copyButtonCopied: "已複製",
 });
 export default defineEcConfig({
-  // EmDash renders on Workers, which cannot compile the bundled WASM at runtime.
-  shiki: { engine: "javascript" },
+  // Vite maps shiki/wasm to a precompiled Workers module (see shikiWasm.ts).
+  shiki: { engine: "oniguruma" },
   styleOverrides: {
     borderRadius: "4px",
     codeBackground: ({ theme }) =>

@@ -8,7 +8,7 @@ describe("taxonomy page cache invalidation", () => {
     ["DELETE", "/_emdash/api/taxonomies/tag/terms/old-slug"],
     ["POST", "/_emdash/api/taxonomies/tag/terms"],
     ["DELETE", "/_emdash/api/taxonomies/tag"],
-    ["PUT", "/_emdash/api/content/posts/post-id/terms/tag"],
+    ["POST", "/_emdash/api/content/posts/post-id/terms/tag"],
   ])(
     "invalidates all post representations after %s %s",
     async (method, path) => {

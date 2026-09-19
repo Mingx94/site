@@ -1,6 +1,11 @@
 /// <reference types="astro/client" />
 /// <reference types="emdash/locals" />
 
+declare module "shiki/onig.wasm" {
+  const wasm: WebAssembly.Module;
+  export default wasm;
+}
+
 declare namespace App {
   interface Locals {}
 }

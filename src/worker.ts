@@ -1,4 +1,10 @@
-import handler, { createScheduledHandler } from "@emdash-cms/cloudflare/worker";
+import handler from "@emdash-cms/cloudflare/worker";
+import { cache } from "cloudflare:workers";
+import {
+  runScheduledMediaUsageTasks,
+  runScheduledTasks,
+} from "emdash/middleware";
+import { createScheduledHandler } from "@/lib/scheduled";
 import {
   CoverVariantError,
   createCloudflareCoverDependencies,
@@ -65,6 +71,10 @@ async function handleCoverVariantQueue(
 
 export default {
   ...handler,
-  scheduled: createScheduledHandler(),
+  scheduled: createScheduledHandler({
+    runTasks: runScheduledTasks,
+    runMediaUsage: runScheduledMediaUsageTasks,
+    purge: (options) => cache.purge(options),
+  }),
   queue: handleCoverVariantQueue,
 } satisfies ExportedHandler<Env, CoverVariantJob>;

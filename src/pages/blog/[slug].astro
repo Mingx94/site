@@ -8,14 +8,15 @@ import ShareButtons from "@/components/blog/ShareButtons.astro";
 import config from "@/config";
 import PostCover from "@/components/PostCover.astro";
 import { resolvePostSeo } from "@/lib/postSeo";
-import { getPost, getPosts } from "@/lib/posts";
+import { getPost } from "@/lib/posts";
+import { getPostLinks } from "@/lib/postNavigation";
 import Base from "@/layouts/Base.astro";
 import "@/content/styles/article.css";
 import { PortableText } from "emdash/ui";
 
 const slug = Astro.params.slug;
 if (!slug) return Astro.rewrite("/404");
-const [post, sortedPosts] = await Promise.all([getPost(slug), getPosts()]);
+const [post, sortedPosts] = await Promise.all([getPost(slug), getPostLinks()]);
 if (!post) return Astro.rewrite("/404");
 
 const seo = resolvePostSeo(post, {
