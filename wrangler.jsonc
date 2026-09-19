@@ -10,12 +10,8 @@
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": false,
   "preview_urls": false,
-  "routes": [
-    {
-      "pattern": "vartifact.cc",
-      "custom_domain": true,
-    },
-  ],
+  // The public domain belongs to blog-static. CMS requests use its service binding.
+  "routes": [],
   "cache": {
     "enabled": true,
   },
@@ -37,12 +33,20 @@
   },
   "queues": {
     "producers": [
+      { "binding": "STATIC_BUILDS", "queue": "blog-static-builds" },
       {
         "binding": "COVER_VARIANTS",
         "queue": "blog-cover-variants",
       },
     ],
     "consumers": [
+      {
+        "queue": "blog-static-builds",
+        "max_batch_size": 100,
+        "max_batch_timeout": 30,
+        "max_retries": 10,
+        "retry_delay": 60,
+      },
       {
         "queue": "blog-cover-variants",
         "max_batch_size": 1,

@@ -4,7 +4,7 @@
 
 ## 技術棧
 
-- Astro 7 server output + Cloudflare Workers
+- Astro 7 靜態公開網站 + 獨立的 EmDash Cloudflare Worker
 - EmDash CMS，D1 儲存內容，R2 儲存媒體
 - Astro components with native browser scripts
 - Native CSS
@@ -42,15 +42,20 @@ npm run dev
 | `npm run format` | 用 Oxfmt 格式化支援的檔案 |
 | `npm run lint` | 用 Oxlint 檢查程式碼 |
 | `npm test` | 執行 Vitest |
-| `npm run build` | 建立 production Worker |
+| `npm run build:cms` | 建立 EmDash Worker |
+| `npm run build:static` | 從正式 CMS 取得已發布內容，建置靜態網站 |
 | `npm run cf-typegen` | 產生 Cloudflare binding 型別 |
-| `npm run deploy` | 建置並部署 Worker |
+| `npm run deploy:cms` | 檢查、建置並部署 EmDash Worker |
+| `npm run deploy:static` | 部署已建置的公開靜態網站 |
+| `npm run deploy` | 依序驗證、建置並部署兩個 Worker |
 
 Cloudflare 資源、備份、部署與回復步驟請見 [部署指南](docs/deployment.md)。
 
 ## 內容管理
 
 文章由 EmDash 的 `posts` collection 管理。登入 `/_emdash/admin` 可編輯、排程與發布文章。公開文章保留 HTML、Markdown、RSS 與 sitemap 輸出。
+
+`blog-static` 管理公開網域與靜態檔案，透過 service binding 將後台、媒體與文章預覽交給 `blog`。發布、下架與刪除會透過 Queue 觸發 Workers Builds。公開內容在建置成功並部署後更新；建置失敗時保留上一版。`build:static` 需要 `STATIC_BUILD_TOKEN`，不會退回本機範例內容。
 
 ## 專案結構
 

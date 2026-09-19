@@ -9,6 +9,7 @@
     ".impeccable/**",
     ".emdash/migrations.json",
     "emdash-env.d.ts",
-    "src/worker-configuration.d.ts"
+    "src/worker-configuration.d.ts",
+    "src/static-worker-configuration.d.ts"
   ]
 }

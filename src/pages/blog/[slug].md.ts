@@ -1,6 +1,10 @@
 import { postToMarkdown } from "@/lib/markdown";
-import { getPost } from "@/lib/posts";
+import { getPost, getPosts } from "@/lib/posts";
 import type { APIRoute } from "astro";
+
+export async function getStaticPaths() {
+  return (await getPosts()).map((post) => ({ params: { slug: post.id } }));
+}
 
 export const GET: APIRoute = async ({ params }) => {
   const post = await getPost(params.slug ?? "");

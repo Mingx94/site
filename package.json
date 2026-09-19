@@ -7,6 +7,9 @@
     "dev": "astro dev",
     "dev:remote": "node scripts/dev-remote.mjs",
     "build": "astro build",
+    "build:cms": "astro build",
+    "build:static": "node scripts/build-static.mjs",
+    "deploy:static": "wrangler deploy --config wrangler.static.jsonc",
     "check": "npm run format:check && npm run lint && npm run check:astro",
     "check:astro": "astro check",
     "check:watch": "astro check --watch",
@@ -15,9 +18,10 @@
     "lint": "oxlint --deny-warnings",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "cf-typegen": "wrangler types ./src/worker-configuration.d.ts",
-    "deploy:dry-run": "npm run build && wrangler deploy --dry-run",
-    "deploy": "npm run check && npm test && npm run deploy:dry-run && wrangler deploy"
+    "cf-typegen": "wrangler types ./src/worker-configuration.d.ts && wrangler types ./src/static-worker-configuration.d.ts --config wrangler.static.jsonc --env-interface StaticEnv --include-runtime false",
+    "deploy:dry-run": "npm run build:cms && wrangler deploy --dry-run --config dist/cms/server/wrangler.json",
+    "deploy:cms": "npm run check && npm test && npm run deploy:dry-run && wrangler deploy --config dist/cms/server/wrangler.json",
+    "deploy": "npm run deploy:cms && npm run build:static && npm run deploy:static"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.2.5",

@@ -8,11 +8,15 @@ import ShareButtons from "@/components/blog/ShareButtons.astro";
 import config from "@/config";
 import PostCover from "@/components/PostCover.astro";
 import { resolvePostSeo } from "@/lib/postSeo";
-import { getPost } from "@/lib/posts";
+import { getPost, getPosts } from "@/lib/posts";
 import { getPostLinks } from "@/lib/postNavigation";
 import Base from "@/layouts/Base.astro";
 import "@/content/styles/article.css";
 import { PortableText } from "emdash/ui";
+
+export async function getStaticPaths() {
+  return (await getPosts()).map((post) => ({ params: { slug: post.id } }));
+}
 
 const slug = Astro.params.slug;
 if (!slug) return Astro.rewrite("/404");

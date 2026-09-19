@@ -2,6 +2,9 @@
 import { getPosts, getTags } from "@/lib/posts";
 import PostList from "@/components/blog/PostList.astro";
 import Base from "@/layouts/Base.astro";
+export async function getStaticPaths() {
+  return getTags(await getPosts()).map((tag) => ({ params: { tag: tag.slug } }));
+}
 const allPosts = await getPosts();
 const tag = getTags(allPosts).find(item => item.slug === Astro.params.tag);
 if (!tag) return Astro.rewrite("/404");

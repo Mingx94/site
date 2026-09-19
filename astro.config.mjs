@@ -3,16 +3,20 @@ import { cacheCloudflare } from "@astrojs/cloudflare/cache";
 import react from "@astrojs/react";
 import { d1, r2 } from "@emdash-cms/cloudflare";
 import { coverVariants } from "./src/plugins/cover-variants.config.ts";
+import { staticPublishing } from "./src/plugins/static-publishing.config.ts";
 import { defineConfig } from "astro/config";
 import emdash from "emdash/astro";
 import expressiveCode from "astro-expressive-code";
 import { fileURLToPath } from "node:url";
+import { staticBuildIntegration } from "./scripts/static-build-integration.mjs";
 
 const siteUrl = "https://vartifact.cc";
+const staticBuild = process.env.SITE_STATIC_BUILD === "1";
 
 export default defineConfig({
   site: siteUrl,
   output: "server",
+  outDir: staticBuild ? "./dist/static-build" : "./dist/cms",
   i18n: {
     defaultLocale: "zh-TW",
     locales: ["zh-TW"],
@@ -54,12 +58,29 @@ export default defineConfig({
       database: d1({ binding: "DB", session: "auto", coalesce: true }),
       storage: r2({ binding: "MEDIA" }),
       siteUrl,
-      plugins: [coverVariants()],
+      plugins: [coverVariants(), staticPublishing()],
     }),
+    staticBuildIntegration(staticBuild),
   ],
   vite: {
     resolve: {
       alias: [
+        ...(staticBuild
+          ? [
+              {
+                find: /^@\/lib\/posts$/,
+                replacement: fileURLToPath(
+                  new URL("./src/lib/staticPosts.ts", import.meta.url),
+                ),
+              },
+              {
+                find: /^@\/lib\/postNavigation$/,
+                replacement: fileURLToPath(
+                  new URL("./src/lib/staticPostNavigation.ts", import.meta.url),
+                ),
+              },
+            ]
+          : []),
         {
           find: /^shiki\/wasm$/,
           replacement: fileURLToPath(

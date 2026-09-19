@@ -1,6 +1,29 @@
 # Cloudflare 部署
 
-本專案由一個 Astro Worker 提供公開網站與 EmDash。以下指令使用 PowerShell，從專案根目錄執行。
+本專案分成兩個 Worker。以下指令使用 PowerShell，從專案根目錄執行。
+
+| Worker        | 設定                    | 職責                                              |
+| ------------- | ----------------------- | ------------------------------------------------- |
+| `blog-static` | `wrangler.static.jsonc` | `vartifact.cc` 靜態頁面、Markdown 協商與 CMS 轉送 |
+| `blog`        | `wrangler.jsonc`        | EmDash、D1、R2、媒體、文章預覽、排程與 Queue      |
+
+後台維持 `https://vartifact.cc/_emdash/admin`。前台透過 `CMS` service binding 轉送請求，保留原本網域與登入 cookie。`blog` 不綁定公開網域，兩個 Worker 都關閉 `workers.dev` 與版本預覽網址。
+
+Astro 的 CMS 建置輸出在 `dist/cms`。靜態建置使用相同版型與 EmDash renderer，但文章資料來自一次取得的已發布快照；只將 `dist/static-build/client` 與小型 `src/static-worker.ts` 部署到公開 Worker。公開頁面不執行 Astro SSR。媒體轉換與草稿預覽仍由 CMS 處理。
+
+## 發布後自動建置
+
+1. EmDash 發布、下架、刪除或還原文章，以及成功的標籤／媒體修改，送入 `blog-static-builds` Queue。
+2. Queue 將同批事件合併成一次 Deploy Hook 呼叫；失敗會重試。
+3. Workers Builds 從 GitHub 的 `main` 取得程式碼，執行 `npm run build:static`。
+4. 建置用 `STATIC_BUILD_TOKEN` 呼叫 `/_site/snapshot.json`，只讀取 EmDash 的已發布內容。資料取得失敗時停止，不使用舊快照或本機內容。
+5. Astro 預先產生文章、列表、標籤、Markdown、RSS 與 sitemap，驗證輸出後執行 `npm run deploy:static`。
+
+建置變數：`STATIC_BUILD_TOKEN`（secret）、`CMS_ORIGIN=https://vartifact.cc`。CMS secrets：同一個 `STATIC_BUILD_TOKEN`、Cloudflare Deploy Hook 網址 `STATIC_BUILD_HOOK`。Hook 網址也是憑證，不可提交 Git。
+
+Workers Builds 的 build command 為 `npm run build:static`，deploy command 為 `npm run deploy:static`。此流程只部署公開 Worker，不會重新部署後台或執行正式資料庫 migration。
+
+建置成功後公開網站才會更新，包括文章下架。建置失敗時上一版持續服務；在 Cloudflare 的 Builds 與 Queue 記錄確認失敗原因後重試。後台仍受帳號的 Worker CPU 限制，拆分不會增加 CPU 配額。
 
 ## 前置需求
 
@@ -76,8 +99,11 @@ npm ci
 npm run check
 npm test
 npm run build
-npx wrangler deploy --dry-run
-npx wrangler deploy
+npx wrangler deploy --dry-run --config dist/cms/server/wrangler.json
+npx wrangler deploy --config dist/cms/server/wrangler.json
+# 從密碼管理器或 CI 注入 STATIC_BUILD_TOKEN，再更新公開網站。
+npm run build:static
+npm run deploy:static
 ```
 
 每個步驟成功後才執行下一步。備份與版本紀錄需另外保存。日常部署不執行 `0001-content-dates.sql`，也不重新初始化 CMS 或 secrets。
@@ -97,6 +123,8 @@ npx wrangler deploy
 ```powershell
 npx wrangler rollback <WORKER_VERSION_ID>
 ```
+
+公開網站回復使用 `npx wrangler rollback <STATIC_WORKER_VERSION_ID> --config wrangler.static.jsonc`。不要把 `vartifact.cc` 加回 CMS 設定，否則會繞過靜態網站。保留兩個 Worker 各自的版本 ID。
 
 Worker rollback 不會還原 D1 或 R2 資料。回復後重新驗證受影響功能。詳見 [Cloudflare Worker rollback 文件](https://developers.cloudflare.com/workers/versions-and-deployments/rollbacks/)。
 

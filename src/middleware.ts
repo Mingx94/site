@@ -3,6 +3,7 @@ import { getPost } from "@/lib/posts";
 import { defineMiddleware } from "astro:middleware";
 import { prefersMarkdown } from "./lib/accept";
 import { invalidateTaxonomyPages } from "./lib/pageCache";
+import { enqueueStaticBuild, needsStaticRebuild } from "./lib/staticPublishing";
 
 const CSP = [
   "default-src 'self'",
@@ -30,6 +31,7 @@ const SECURITY_HEADERS: Record<string, string> = {
 const BLOG_POST_PATH = /^\/blog\/([^/]+?)\/?$/;
 
 export const onRequest = defineMiddleware(async (context, next) => {
+  if (context.isPrerendered) return next();
   const { request, url, cache } = context;
   const matchedSlug = BLOG_POST_PATH.exec(url.pathname)?.[1];
   const slug = matchedSlug?.endsWith(".md") ? undefined : matchedSlug;
@@ -54,6 +56,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   await invalidateTaxonomyPages(request, response, cache);
+  if (needsStaticRebuild(request, response))
+    await enqueueStaticBuild("taxonomy or media changed");
 
   if (response.status >= 400) {
     cache.set(false);

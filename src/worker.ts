@@ -6,6 +6,10 @@ import {
 } from "emdash/middleware";
 import { createScheduledHandler } from "@/lib/scheduled";
 import {
+  triggerStaticBuild,
+  type StaticBuildJob,
+} from "@/lib/staticPublishing";
+import {
   CoverVariantError,
   createCloudflareCoverDependencies,
   generateCoverVariants,
@@ -76,5 +80,18 @@ export default {
     runMediaUsage: runScheduledMediaUsageTasks,
     purge: (options) => cache.purge(options),
   }),
-  queue: handleCoverVariantQueue,
-} satisfies ExportedHandler<Env, CoverVariantJob>;
+  async queue(batch, env) {
+    if (batch.queue === "blog-static-builds") {
+      if (!env.STATIC_BUILD_HOOK)
+        throw new Error("STATIC_BUILD_HOOK is missing");
+      // A batch represents the latest CMS state, so one build covers every event.
+      await triggerStaticBuild(env.STATIC_BUILD_HOOK);
+      batch.ackAll();
+    } else {
+      await handleCoverVariantQueue(
+        batch as MessageBatch<CoverVariantJob>,
+        env,
+      );
+    }
+  },
+} satisfies ExportedHandler<Env, CoverVariantJob | StaticBuildJob>;
