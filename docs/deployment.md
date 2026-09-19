@@ -11,6 +11,8 @@
 
 Astro 的 CMS 建置輸出在 `dist/cms`。靜態建置使用相同版型與 EmDash renderer，但文章資料來自一次取得的已發布快照；只將 `dist/static-build/client` 與小型 `src/static-worker.ts` 部署到公開 Worker。公開頁面不執行 Astro SSR。媒體轉換與草稿預覽仍由 CMS 處理。
 
+公開網站已移除 Astro prefetch。Cloudflare 網域設定中的 Speed Brain 也應維持關閉；啟用時，正式環境曾拒絕帶有 `Sec-Purpose: prefetch` 的 Workers 請求，回傳 503 與 `Cf-Speculation-Refused: prefetch refused: disabled for worker requests`。這類預抓拒絕與一般瀏覽請求的 CPU 超限不同。
+
 ## 發布後自動建置
 
 1. EmDash 發布、下架、刪除或還原文章，以及成功的標籤／媒體修改，送入 `blog-static-builds` Queue。

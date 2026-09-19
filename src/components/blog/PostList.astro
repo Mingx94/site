@@ -20,7 +20,6 @@ const Heading = headingLevel;
 	posts.map((p, idx) => (
 		<a
 			class="post"
-			data-astro-prefetch
 			href={`/blog/${encodeURIComponent(p.id)}`}
 			style={`--i: ${startIndex + idx}`}
 		>

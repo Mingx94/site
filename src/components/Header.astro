@@ -5,7 +5,10 @@ const menuLinks = [{ path: "/", title: "首頁" }, { path: "/blog", title: "文�
 const withBase = (path: string) => path;
 import ThemeToggle from "./ThemeToggle.astro";
 
-const url = new URL(Astro.request.url);
+interface Props {
+	pathname: string;
+}
+const { pathname } = Astro.props;
 const wordmark = config.site.name;
 
 const visibleMenuLinks = menuLinks.filter((link) => {
@@ -15,8 +18,8 @@ const visibleMenuLinks = menuLinks.filter((link) => {
 
 const isActive = (path: string) => {
 	const target = withBase(path);
-	if (path === "/") return url.pathname === target;
-	return url.pathname === target || url.pathname.startsWith(`${target}/`);
+	if (path === "/") return pathname === target;
+	return pathname === target || pathname.startsWith(`${target}/`);
 };
 
 const navIcons: Record<string, string> = {
@@ -31,7 +34,7 @@ const navIcons: Record<string, string> = {
 ---
 
 <header class="site-header" id="main-header">
-	<a href={withBase("/")} class="wordmark" data-astro-prefetch>{wordmark}</a>
+	<a href={withBase("/")} class="wordmark">{wordmark}</a>
 	<div class="header-right">
 		<nav class="nav" aria-label="主要導覽">
 			{
@@ -39,7 +42,6 @@ const navIcons: Record<string, string> = {
 					<a
 						aria-current={isActive(link.path) ? "page" : false}
 						class:list={[{ active: isActive(link.path) }]}
-						data-astro-prefetch
 						href={withBase(link.path)}
 					>
 						<svg

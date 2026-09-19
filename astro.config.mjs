@@ -26,10 +26,6 @@ export default defineConfig({
     format: "file",
     inlineStylesheets: "always",
   },
-  prefetch: {
-    prefetchAll: false,
-    defaultStrategy: "hover",
-  },
   adapter: cloudflare(),
   cache: {
     provider: cacheCloudflare(),
