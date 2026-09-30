@@ -1,9 +1,6 @@
 import handler from "@emdash-cms/cloudflare/worker";
 import { cache } from "cloudflare:workers";
-import {
-  runScheduledMediaUsageTasks,
-  runScheduledTasks,
-} from "emdash/middleware";
+import { runScheduledTasks } from "emdash/middleware";
 import { createScheduledHandler } from "@/lib/scheduled";
 import {
   triggerStaticBuild,
@@ -77,7 +74,6 @@ export default {
   ...handler,
   scheduled: createScheduledHandler({
     runTasks: runScheduledTasks,
-    runMediaUsage: runScheduledMediaUsageTasks,
     purge: (options) => cache.purge(options),
   }),
   async queue(batch, env) {

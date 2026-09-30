@@ -6,6 +6,7 @@ build/
 # generated
 .astro/
 .content-collections/
+.emdash/migrations.json
 .svelte-kit/
 .wrangler/
 

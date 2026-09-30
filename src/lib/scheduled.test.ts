@@ -20,7 +20,6 @@ describe("scheduled publishing", () => {
     const purge = vi
       .fn<Dependencies["purge"]>()
       .mockResolvedValue({ success: true, errors: [] });
-    const runMediaUsage = vi.fn<Dependencies["runMediaUsage"]>();
     const refs = [
       { collection: "posts", id: "first" },
       { collection: "posts", id: "second" },
@@ -32,26 +31,20 @@ describe("scheduled publishing", () => {
         await onPublished([]);
         return { published: refs };
       },
-      runMediaUsage,
       purge,
     });
     await run("* * * * *", handler);
     expect(purge).toHaveBeenCalledExactlyOnceWith({
       tags: ["posts", "first", "second"],
     });
-    expect(runMediaUsage).not.toHaveBeenCalled();
   });
 
-  it("keeps media maintenance separate from publishing", async () => {
+  it("ignores unknown cron triggers", async () => {
     const runTasks = vi.fn<Dependencies["runTasks"]>();
     const purge = vi.fn<Dependencies["purge"]>();
-    const runMediaUsage = vi
-      .fn<Dependencies["runMediaUsage"]>()
-      .mockResolvedValue(undefined);
-    const handler = createScheduledHandler({ runTasks, runMediaUsage, purge });
+    const handler = createScheduledHandler({ runTasks, purge });
     await run("*/2 * * * *", handler);
     await run("unknown", handler);
-    expect(runMediaUsage).toHaveBeenCalledOnce();
     expect(runTasks).not.toHaveBeenCalled();
     expect(purge).not.toHaveBeenCalled();
   });
@@ -62,7 +55,6 @@ describe("scheduled publishing", () => {
         await onPublished([{ collection: "posts", id: "first" }]);
         return { published: [] };
       },
-      runMediaUsage: vi.fn<Dependencies["runMediaUsage"]>(),
       purge: vi
         .fn<Dependencies["purge"]>()
         .mockRejectedValue(new Error("Purge failed")),
@@ -76,7 +68,6 @@ describe("scheduled publishing", () => {
         await onPublished([{ collection: "posts", id: "first" }]);
         return { published: [] };
       },
-      runMediaUsage: vi.fn<Dependencies["runMediaUsage"]>(),
       purge: vi.fn<Dependencies["purge"]>().mockResolvedValue({
         success: false,
         errors: [{ code: 429, message: "Rate limited" }],

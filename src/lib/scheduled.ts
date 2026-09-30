@@ -7,20 +7,16 @@ interface ScheduledDependencies {
   runTasks: (options: {
     onPublished: (refs: PublishedRef[]) => Promise<void>;
   }) => Promise<{ published: PublishedRef[] }>;
-  runMediaUsage: () => Promise<unknown>;
   purge: (options: { tags: string[] }) => Promise<CachePurgeResult>;
 }
 
-/** Use the public Workers cache API; EmDash 0.35 uses Astro's private pipeline. */
+/** Use the public Workers cache API for scheduled publishing invalidation. */
 export function createScheduledHandler({
   runTasks,
-  runMediaUsage,
   purge,
 }: ScheduledDependencies): ExportedHandlerScheduledHandler<Env> {
   return (controller, _env, ctx) => {
-    if (controller.cron === "*/2 * * * *") {
-      ctx.waitUntil(runMediaUsage());
-    } else if (controller.cron === "* * * * *") {
+    if (controller.cron === "* * * * *") {
       ctx.waitUntil(
         runTasks({
           async onPublished(refs) {
