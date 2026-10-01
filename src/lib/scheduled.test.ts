@@ -33,7 +33,7 @@ describe("scheduled publishing", () => {
       },
       purge,
     });
-    await run("* * * * *", handler);
+    await run("0 18 * * *", handler);
     expect(purge).toHaveBeenCalledExactlyOnceWith({
       tags: ["posts", "first", "second"],
     });
@@ -43,6 +43,8 @@ describe("scheduled publishing", () => {
     const runTasks = vi.fn<Dependencies["runTasks"]>();
     const purge = vi.fn<Dependencies["purge"]>();
     const handler = createScheduledHandler({ runTasks, purge });
+    await run("* * * * *", handler);
+    await run("*/30 * * * *", handler);
     await run("*/2 * * * *", handler);
     await run("unknown", handler);
     expect(runTasks).not.toHaveBeenCalled();
@@ -59,7 +61,7 @@ describe("scheduled publishing", () => {
         .fn<Dependencies["purge"]>()
         .mockRejectedValue(new Error("Purge failed")),
     });
-    await expect(run("* * * * *", handler)).rejects.toThrow("Purge failed");
+    await expect(run("0 18 * * *", handler)).rejects.toThrow("Purge failed");
   });
 
   it("reports a resolved API failure to EmDash's onPublished error handler", async () => {
@@ -73,6 +75,6 @@ describe("scheduled publishing", () => {
         errors: [{ code: 429, message: "Rate limited" }],
       }),
     });
-    await expect(run("* * * * *", handler)).rejects.toThrow("Rate limited");
+    await expect(run("0 18 * * *", handler)).rejects.toThrow("Rate limited");
   });
 });

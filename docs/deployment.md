@@ -27,6 +27,16 @@ Workers Builds 的 build command 為 `npm run build:static`，deploy command 為
 
 建置成功後公開網站才會更新，包括文章下架。建置失敗時上一版持續服務；在 Cloudflare 的 Builds 與 Queue 記錄確認失敗原因後重試。後台仍受帳號的 Worker CPU 限制，拆分不會增加 CPU 配額。
 
+## 背景排程
+
+CMS 使用 `0 18 * * *`，每天台灣時間凌晨 2 點（UTC 18:00）執行一次 EmDash 維護。`src/lib/scheduled.ts` 的 Cron 判斷需與 `wrangler.jsonc` 同步。
+
+本站不使用預約發佈。手動發佈會直接透過 Queue 觸發靜態建置與封面圖片處理，不需等待 Cron。EmDash 1.0.1 的公開排程 API 無法分別關閉清理、外掛排程檢查與預約發佈檢查，因此保留內建維護流程，每天執行一次。降低頻率不會提高單次執行的 CPU 上限。
+
+自動備份維持關閉。此設定存放在 D1 `options` 的 `emdash:backups`，不在 Wrangler 設定內；未設定時，EmDash 1.0.1 預設為 `enabled: false`。需要變更時可使用後台備份設定。此設定不影響 Cloudflare D1 的平台 Time Travel 功能。
+
+EmDash 1.0.1 的排程健康檢查以 5 分鐘為門檻，因此每日執行會讓後台在大部分時間顯示排程過期提示。判斷排程是否正常時，需對照 Cloudflare 的 Cron 執行紀錄。
+
 ## 前置需求
 
 - Node.js 22.19 或更新版本

@@ -16,7 +16,7 @@ export function createScheduledHandler({
   purge,
 }: ScheduledDependencies): ExportedHandlerScheduledHandler<Env> {
   return (controller, _env, ctx) => {
-    if (controller.cron === "* * * * *") {
+    if (controller.cron === "0 18 * * *") {
       ctx.waitUntil(
         runTasks({
           async onPublished(refs) {

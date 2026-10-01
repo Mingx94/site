@@ -57,7 +57,8 @@
     ],
   },
   "triggers": {
-    "crons": ["* * * * *"],
+    // 02:00 Asia/Taipei (18:00 UTC), once a day.
+    "crons": ["0 18 * * *"],
   },
   "observability": {
     "enabled": true,
