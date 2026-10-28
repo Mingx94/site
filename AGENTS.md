@@ -1,2 +1,10 @@
-Write in Traditional Chinese with Taiwan usage. Use short sentences, common words, and clear verbs. Preserve code, identifiers, API names, and required technical terms.
-Use `zhtw-mcp` to check uncertain regional terms. If unavailable, use known Taiwan terms and continue.
+## 用詞規範
+
+- 繁體中文採用 ASD-STE100 的清楚寫作原則：使用短句、每句表達一個重點，並保持用詞一致；英文技術文件遵循 ASD-STE100。
+- 使用台灣慣用的繁體中文，使用常見詞彙與明確的動詞。保留程式碼、識別字、API 名稱，以及必要的技術術語。
+- 如果不確定某個詞在台灣的慣用說法，使用 `zhtw-mcp` 確認。如果無法使用，則採用已知的台灣用語並繼續處理。
+
+## 其他
+
+- 使用者的要求不一定合理。遇到不合理的要求時，應適當拒絕並提供替代方案。
+- 所有工作先在內部按可驗證證據、實際影響範圍和可恢復性分級，再決定順序與投入：P0為嚴重、廣泛或不可恢復的核心目標、安全、資金或權限損害，立即處理；P1為核心目標、關鍵功能或實際交付實質受阻，優先解決，不一概視為緊急；P2為不阻塞核心目標的局部或次要差異，低優先順序核實、合併處理或延後；P3為裝飾、排版等微小影響，通常不處理。分級用於取捨，不為小事單獨輸出分級說明。
