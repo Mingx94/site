@@ -39,7 +39,7 @@
     "@types/node": "^26.2.0",
     "@types/react": "^19.2.18",
     "kysely": "0.29.5",
-    "oxfmt": "^0.65.0",
+    "oxfmt": "^0.75.0",
     "oxlint": "^1.80.0",
     "react": "^19.2.8",
     "typescript": "^6.0.3",
@@ -53,7 +53,8 @@
   "allowScripts": {
     "esbuild@0.28.1": true,
     "esbuild@0.28.2": true,
-    "workerd@1.20260926.1": true
+    "workerd@1.20261019.1": true,
+    "workerd@1.20261023.1": true
   },
   "emdash": {
     "seed": ".emdash/seed.json"
